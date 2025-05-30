@@ -39,7 +39,7 @@
       class="group hidden h-10 w-72 items-center overflow-hidden rounded-primary bg-slate-100 px-3 shadow-sm dark:border-transparent dark:bg-slate-700 sm:flex"
     >
       <i class="text-slate-400" width="1em" height="1em" data-feather="search"></i>
-      <span class="ml-2 text-sm text-slate-400">Search</span>
+      <span class="ml-2 text-sm text-slate-400">Pesquisar telas</span>
     </button>
     <!-- Searchbar Ends -->
   </div>
