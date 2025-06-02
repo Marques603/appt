@@ -59,10 +59,11 @@
                     <span class="hidden sm:inline-block">Exportar</span>
                   </button>
                 </div>
-
+@can('edit', App\Models\User::class)
                 <a class="btn btn-primary" href="{{ route('macro.create') }}" role="button">
                     <i data-feather="plus" height="1rem" width="1rem"></i>
                     <span class="hidden sm:inline-block">Criar</span>
+                    @endcan
                 </a>
             </div>
         </div>
@@ -99,15 +100,18 @@
                                     <div class="badge badge-soft-danger">Inativo</div>
                                 @endif
                             </td>
+                            
                             <td class="text-right">
                                 <div class="flex justify-end">
                                     <div class="dropdown" data-placement="bottom-start">
                                         <div class="dropdown-toggle">
                                             <i class="w-6 text-slate-400" data-feather="more-horizontal"></i>
                                         </div>
+                                        
                                         <div class="dropdown-content">
                                             <ul class="dropdown-list">
                                                 <li class="dropdown-list-item">
+                                                    @can('edit', App\Models\User::class)
                                                     <a href="{{ route('macro.edit', $macro->id) }}" class="dropdown-link">
                                                         <i class="h-5 text-slate-400" data-feather="edit"></i>
                                                         <span>Editar</span>
@@ -117,10 +121,12 @@
                                                     <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $macro->id }}">
                                                         <i class="h-5 text-slate-400" data-feather="trash"></i>
                                                         <span>Excluir</span>
+                                                        @endcan
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
+                                       
                                     </div>
                                 </div>
 

@@ -27,45 +27,54 @@
             <div class="flex w-full items-center justify-between gap-x-4 md:w-auto">
                 <div class="flex items-center gap-x-4">
                     <div class="dropdown" data-placement="bottom-end">
-                        <div class="dropdown-toggle">
-                            <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
-                                <i class="w-4" data-feather="filter"></i>
-                                <span class="hidden sm:inline-block">Filtros</span>
-                                <i class="w-4" data-feather="chevron-down"></i>
-                            </button>
-                        </div>
-                        <div class="dropdown-content w-72 !overflow-visible">
+                    <div class="dropdown-toggle">
+                        <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+                            <i class="w-4" data-feather="filter"></i>
+                            <span class="hidden sm:inline-block">Filtros</span>
+                            <i class="w-4" data-feather="chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="dropdown-content w-72 !overflow-visible">
+                        <form method="GET" action="{{ route('documents.index') }}">
                             <ul class="dropdown-list space-y-4 p-4">
                                 <li class="dropdown-list-item">
                                     <h2 class="my-1 text-sm font-medium">Setor</h2>
-                                    <select class="tom-select w-full" autocomplete="off">
+                                    <select name="sector" class="tom-select w-full" autocomplete="off">
                                         <option value="">Selecione um setor</option>
-                                        <option value="1">Tecnologia</option>
-                                        <option value="2">Qualidade</option>
-                                        <option value="3">Processos</option>
+                                        @foreach($sectors as $sector)
+                                            <option value="{{ $sector->id }}" {{ request('sector') == $sector->id ? 'selected' : '' }}>
+                                                {{ $sector->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </li>
                                 <li class="dropdown-list-item">
                                     <h2 class="my-1 text-sm font-medium">Status</h2>
-                                    <select class="tom-select w-full" autocomplete="off">
+                                    <select name="status" class="tom-select w-full" autocomplete="off">
                                         <option value="">Selecione um status</option>
-                                        <option value="1">Ativo</option>
-                                        <option value="0">Inativo</option>
+                                        <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ativo</option>
+                                        <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Inativo</option>
                                     </select>
                                 </li>
+                                <li class="dropdown-list-item pt-2 border-t">
+                                    <button type="submit" class="btn btn-primary w-full">Aplicar</button>
+                                </li>
                             </ul>
-                        </div>
+                        </form>
                     </div>
+                </div>
+
                     <button class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
                         <i class="h-4" data-feather="upload"></i>
                         <span class="hidden sm:inline-block">Exportar</span>
                     </button>
                 </div>
-                
+                @can('edit', App\Models\User::class)
                 <a href="{{ route('documents.create') }}" class="btn btn-primary flex items-center gap-2">
                     <i data-feather="plus" class="w-4 h-4"></i>
                     <span class="hidden sm:inline-block">Criar</span>
                 </a>
+                @endcan
              
             </div>
         </div>
@@ -130,6 +139,7 @@
                                                         <span>Ver</span>
                                                     </a>
                                                 </li>
+                                                @can('edit', App\Models\User::class)
                                                 <li class="dropdown-list-item">
                                                     <a href="{{ route('documents.edit', $document->id) }}" class="dropdown-link">
                                                         <i class="h-5 text-slate-400" data-feather="edit"></i>
@@ -142,6 +152,7 @@
                                                         <span>Excluir</span>
                                                     </a>
                                                 </li>
+                                                @endcan
                                             </ul>
                                         </div>
                                     </div>

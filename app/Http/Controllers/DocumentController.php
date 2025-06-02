@@ -18,7 +18,7 @@ class DocumentController extends Controller
     }
 
     // Index e outros métodos (create, store, edit) podem ficar iguais
-    public function index(Request $request)
+public function index(Request $request)
 {
     if (!Gate::allows('view', Menu::find(2))) {
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
@@ -27,8 +27,8 @@ class DocumentController extends Controller
     $user = auth()->user();
     $sectorIds = $user->sectors->pluck('id');
     $isQuality = $sectorIds->contains(function ($id) {
-    return in_array($id, [1, 16]);
-}); // Verifica se usuário pertence ao setor ID 1
+        return in_array($id, [1, 16]);
+    });
 
     $documents = Document::query()
         ->when(!$isQuality, function ($query) use ($sectorIds) {
@@ -40,11 +40,23 @@ class DocumentController extends Controller
         ->when($request->search, function ($query, $search) {
             return $query->where('code', 'like', "%{$search}%");
         })
+        ->when($request->filled('status'), function ($query) use ($request) {
+            $query->where('status', $request->status);
+        })
+        ->when($request->filled('sector'), function ($query) use ($request) {
+            $query->whereHas('sectors', function ($q) use ($request) {
+                $q->where('sector_id', $request->sector);
+            });
+        })
         ->orderBy('created_at', 'desc')
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString(); // mantém os filtros na paginação
 
-    return view('documents.index', compact('documents'));
+        $sectors = \App\Models\Sector::all();
+
+    return view('documents.index', compact('documents','sectors'));
 }
+
 
 
     public function create()
