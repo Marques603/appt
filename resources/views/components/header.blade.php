@@ -15,7 +15,7 @@
         <!-- Dark Mood Toggle Ends -->
 
         <!-- Notification Dropdown Starts -->
-        <x-notification/>
+
         <!-- Notification Dropdown Ends -->
 
         <!-- Profile Dropdown Starts -->

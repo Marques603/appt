@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-page-title page="Documentos" header="Lista de Documentos" />
 
-    @section('title', 'Listagem e gerenciamento de documentos')
+    @section('title', 'Lista de Documentos | Inusittá')
     
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -116,7 +116,7 @@
                     {{-- Setores --}}
                     <td>
                         @foreach($document->sectors as $sector)
-                            <span class="badge badge-soft-secondary">{{ $sector->acronym }}</span>
+                            <span class="badge badge-soft-secondary">{{ $sector->name }}</span>
                         @endforeach
                     </td>
                             
