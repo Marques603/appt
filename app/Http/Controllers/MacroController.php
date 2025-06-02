@@ -16,8 +16,9 @@ class MacroController extends Controller
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
     }
 
-    $macros = Macro::with('responsibleUsers') // carrega os responsáveis
-        ->paginate(10); // não inclui deletados
+    $macros = Macro::with('responsibleUsers')
+    ->withCount('documents') // carrega a contagem de documentos
+    ->paginate(10);
 
     return view('macro.index', compact('macros'));
 }
