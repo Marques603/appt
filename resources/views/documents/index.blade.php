@@ -103,11 +103,13 @@
                         <span class="hidden sm:inline-block">Exportar</span>
                     </button>
                 </div>
-                    <a href="{{ route('documents.create') }}" class="btn btn-primary flex items-center gap-2">
+                
+                <a href="{{ route('documents.create') }}" class="btn btn-primary flex items-center gap-2">
                     <i data-feather="plus" class="w-4 h-4"></i>
                     <span class="hidden sm:inline-block">Criar</span>
                 </a>
-                             
+             
+             
             </div>
         </div>
 
@@ -144,11 +146,19 @@
                     </td>
 
                     {{-- Setores --}}
-                    <td>
-                        @foreach($document->sectors as $sector)
-                            <span class="badge badge-soft-secondary">{{ $sector->name }}</span>
-                        @endforeach
-                    </td>
+                            <td>
+                                @if($document->sectors->count() === 1)
+                                    <span class="badge badge-soft-secondary">
+                                        {{ $document->sectors->first()->name }}
+                                    </span>
+                                @elseif($document->sectors->count() > 1)
+                                    <span class="badge badge-soft-secondary">
+                                        Todos setores
+                                    </span>
+                                @else
+                                    <span class="text-muted">Nenhum setor</span>
+                                @endif
+                            </td>
                             
                             <td>
                                 @if($document->status)
