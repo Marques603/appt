@@ -33,28 +33,23 @@
     <div class="dropdown-toggle">
         <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
             <i class="w-4" data-feather="download"></i>
-            <span class="hidden sm:inline-block">Arquivos Padrão</span>
+            <span class="hidden sm:inline-block">Modelo Padrão</span>
             <i class="w-4" data-feather="chevron-down"></i>
         </button>
     </div>
     <div class="dropdown-content w-72 !overflow-visible">
         <ul class="dropdown-list space-y-4 p-4">
             <li class="dropdown-list-item">
-                <h2 class="my-1 text-sm font-medium">Arquivos Padrão</h2>
+                <h2 class="my-1 text-sm font-medium">Modelo Padrão</h2>
                 <ul class="list-disc pl-5 text-sm space-y-1">
                     <li>
-                        <a href="{{ asset('downloads/Modelo padrao de procedimento.docx') }}" class="text-blue-600 hover:underline" download>
-                            Modelo padrão de documento de procedimento
+                        <a href="{{ asset('downloads/MODELO PADRÃO DE PROCEDIMENTO.docx') }}" class="text-blue-600 hover:underline" download>
+                            Modelo padrão de procedimento
                         </a>
                     </li>
                     <li>
-                        <a href="{{ asset('downloads/Modelo padrao instrucao de trabalho.xlsx') }}" class="text-blue-600 hover:underline" download>
+                        <a href="{{ asset('downloads/MODELO PADRÃO DE INSTRUÇÃO DE TRABALHO.xlsx') }}" class="text-blue-600 hover:underline" download>
                             Modelo padrão de instrução de trabalho
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ asset('downloads/Modelo padrao instrucao de trabalho.xlsx') }}" class="text-blue-600 hover:underline" download>
-                            Instruções Gerais
                         </a>
                     </li>
                 </ul>
