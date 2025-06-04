@@ -140,9 +140,17 @@
                 </div>
               </td>
               <td>{{ $user->email }}</td>
-              <td>@if($user->sectors->isEmpty())Nenhum setor vinculado @else {{ $user->sectors->pluck('name')->join(', ') }} @endif </td>
+              <td>
+    @if($user->sectors->isEmpty())
+        Nenhum setor vinculado
+    @elseif($user->sectors->count() === 1)
+        {{ $user->sectors->first()->name }}
+    @else
+        {{ $user->sectors->pluck('acronym')->join(', ') }}
+    @endif
+</td>
               <td>{{ $user->companies->isEmpty() ? 'Nenhuma empresa vinculada' : $user->companies->pluck('name')->join(', ') }}</td>
-              <td>{{ $user->created_at }}</td>
+              <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
               <td>@if($user->status)<div class="badge badge-soft-success">Ativo</div> @else <div class="badge badge-soft-danger">Inativo</div> @endif </td>
               @can('edit', App\Models\User::class)
               <td>
