@@ -226,7 +226,20 @@ public function update(Request $request, User $user)
     $user->save();
 
     return redirect()->back()->with('success', 'Senha atualizada com sucesso!');
+}public function updateAvatar(Request $request, User $user)
+{
+    $request->validate([
+        'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    if ($avatarPath = $this->handleAvatarUpload($request)) {
+        $user->avatar = $avatarPath;
+        $user->save();
+    }
+
+    return redirect()->back()->with('success', 'Avatar atualizado com sucesso!');
 }
+
 
     
 }

@@ -122,7 +122,8 @@
               <td>
                 <div class="flex items-center gap-3">
                   <div class="avatar avatar-circle">
-                    <img class="avatar-img" src="{{asset('images/avatar1.png')}}" alt="Avatar 1" />
+                    <img class="avatar-img" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/avatar1.png') }}" 
+                alt="{{ $user->name }}" />
                   </div>
                   <div>
                     <h6 class="whitespace-nowrap text-sm font-medium text-slate-700 dark:text-slate-100">

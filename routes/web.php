@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/users/{user}/status', [UserController::class, 'updateStatus'])->name('users.update.status');
     Route::put('/users/{user}/menus', [UserController::class, 'updateMenus'])->name('users.update.menus');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar'])->name('users.update.avatar');
+
 
     // Rotas de cargos (CRUD)
     Route::resource('position', PositionController::class);

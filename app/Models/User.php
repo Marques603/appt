@@ -24,6 +24,7 @@ class User extends Authenticatable
         'type', 
         'registration',
         'admission',
+        'avatar',
     ];
 
     /**

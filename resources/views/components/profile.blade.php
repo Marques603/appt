@@ -3,10 +3,14 @@
         <button class="group relative flex items-center gap-x-1.5" type="button">
             <div class="avatar avatar-circle avatar-indicator avatar-indicator-online">
                 <img class="avatar-img group-focus-within:ring group-focus-within:ring-primary-500"
-                    src="{{asset('images/avatar1.png')}}" alt="Avatar 1" />
+                    src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('images/avatar11.png') }}"
+                    alt="{{ Auth::user()->name }}" />
+                    
             </div>
         </button>
     </div>
+
+
 
     <div class="dropdown-content mt-1 w-56 divide-y dark:divide-slate-600">
         <div class="px-4 py-3">

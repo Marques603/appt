@@ -11,9 +11,14 @@
         <!-- Coluna Esquerda - Avatar -->
         <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">
             <div class="card">
+
+                <form method="POST" action="{{ route('users.update.avatar', $user->id) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
                 <div class="card-body flex flex-col items-center">
                     <div class="relative my-2 h-24 w-24 rounded-full">
-                        <img src="{{ asset('images/avatar11.png') }}"
+                        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/avatar11.png') }}"
                              alt="avatar-img" id="user-image-preview"
                              class="h-full w-full rounded-full object-cover" />
                         <label for="upload-avatar"
@@ -25,7 +30,12 @@
                                    class="hidden" id="upload-avatar" />
                         </label>
                     </div>
-                    <h2 class="text-[16px] font-medium text-slate-700 dark:text-slate-200">Upload Imagem</h2>
+                    <button type="submit">
+                    <h2 class="text-[16px] font-medium text-slate-700 dark:text-slate-200">Salvar foto</h2>
+                    </button>
+                    
+                  </form>
+                   
                 </div>
             </div>
         </section>
