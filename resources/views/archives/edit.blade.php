@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-page-title page="Editar Documento" pageUrl="{{ route('archives.index') }}" header="Editar Documento" />
+    <x-page-title page="Editar Arquivo" pageUrl="{{ route('archives.index') }}" header="Editar Arquivo" />
 
        @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -17,7 +17,7 @@
                     </div>
                     <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">{{ $archive->code }}</h2>
                     <p class="text-sm text-slate-400 mt-2 text-center">{{ $archive->file_type }}</p>
-                    <a href="{{ Storage::url($archive->file_path) }}" target="_blank" class="text-blue-500 text-sm mt-2">Ver documento</a>
+                    <a href="{{ Storage::url($archive->file_path) }}" target="_blank" class="text-blue-500 text-sm mt-2">Ver Arquivo</a>
                 </div>
             </div>
         </section>
@@ -30,8 +30,8 @@
                     <form method="POST" action="{{ route('archives.update.code', $archive->id) }}">
                         @csrf
                         @method('PUT')
-                        <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Código do Documento</h2>
-                        <p class="mb-4 text-sm text-slate-400">Altere o código identificador do documento.</p>
+                        <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Código do Arquivo</h2>
+                        <p class="mb-4 text-sm text-slate-400">Altere o código identificador do Arquivo.</p>
 
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -88,8 +88,8 @@
 <!-- Formulário 2: Status -->
 <div class="card">
     <div class="card-body">
-        <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Status do Documento</h2>
-        <p class="mb-4 text-sm font-normal text-slate-400">Ative ou inative este documento</p>
+        <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Status do Arquivo</h2>
+        <p class="mb-4 text-sm font-normal text-slate-400">Ative ou inative este Arquivo</p>
 
         <form method="POST" action="{{ route('archives.update.status', $archive->id) }}">
             @csrf
@@ -97,7 +97,7 @@
 
             <label for="status" class="toggle my-2 flex items-center justify-between">
                 <div class="label">
-                    <p class="text-sm font-normal text-slate-400">Ativar Documento</p>
+                    <p class="text-sm font-normal text-slate-400">Ativar Arquivo</p>
                 </div>
                 <div class="relative">
                     <input type="hidden" name="status" value="0">
@@ -132,7 +132,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Macros Vinculados</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina as macros vinculados a este documento</p>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina as macros vinculados a este Arquivo</p>
 
                      <form method="POST" action="{{ route('archives.update.macros', $archive->id) }}">
                            @csrf
@@ -168,7 +168,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Setores Vinculados</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os setores vinculados a este documento</p>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os setores vinculados a este Arquivo</p>
 
                     <form method="POST" action="{{ route('archives.update.sectors', $archive->id) }}">
                         @csrf

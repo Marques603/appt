@@ -1,7 +1,7 @@
 <x-app-layout>
-    <x-page-title page="Documentos" header="Lista de Documentos" />
+    <x-page-title page="Arquivos" header="Lista de Arquivos" />
 
-    @section('title', 'Lista de Documentos | Inusittá')
+    @section('title', 'Lista de Arquivos | Inusittá')
     
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -9,54 +9,54 @@
         </div>
     @endif
 
-    <div class="space-y-4">
-        <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
-            <div class="flex w-full flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-start md:w-auto md:flex-1">
-                <form method="GET" action="{{ route('archives.index') }}" class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 dark:bg-slate-800 sm:max-w-xs">
-                    <div class="flex h-full items-center px-2">
-                        <i class="h-4 text-slate-400 group-focus-within:text-primary-500" data-feather="search"></i>
-                    </div>
-                    <input
-                        name="search"
-                        class="h-full w-full border-transparent bg-transparent px-0 text-sm placeholder-slate-400 placeholder:text-sm focus:border-transparent focus:outline-none focus:ring-0"
-                        type="text"
-                        value="{{ request()->input('search') }}"
-                        placeholder="Buscar..."
-                    />
-                </form>
-            </div>
+                <div class="space-y-4">
+                    <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
+                        <div class="flex w-full flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-start md:w-auto md:flex-1">
+                            <form method="GET" action="{{ route('archives.index') }}" class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 dark:bg-slate-800 sm:max-w-xs">
+                                <div class="flex h-full items-center px-2">
+                                    <i class="h-4 text-slate-400 group-focus-within:text-primary-500" data-feather="search"></i>
+                                </div>
+                                <input
+                                    name="search"
+                                    class="h-full w-full border-transparent bg-transparent px-0 text-sm placeholder-slate-400 placeholder:text-sm focus:border-transparent focus:outline-none focus:ring-0"
+                                    type="text"
+                                    value="{{ request()->input('search') }}"
+                                    placeholder="Buscar..."
+                                />
+                            </form>
+                        </div>
 
-            <div class="flex w-full items-center justify-between gap-x-4 md:w-auto">
-                <div class="flex items-center gap-x-4">
-    <!-- Botão de Arquivos Padrão -->                    
-<div class="dropdown" data-placement="bottom-end">
-    <div class="dropdown-toggle">
-        <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
-            <i class="w-4" data-feather="download"></i>
-            <span class="hidden sm:inline-block">Modelo Padrão</span>
-            <i class="w-4" data-feather="chevron-down"></i>
-        </button>
-    </div>
-    <div class="dropdown-content w-72 !overflow-visible">
-        <ul class="dropdown-list space-y-4 p-4">
-            <li class="dropdown-list-item">
-                <h2 class="my-1 text-sm font-medium">Modelo Padrão</h2>
-                <ul class="list-disc pl-5 text-sm space-y-1">
-                    <li>
-                        <a href="{{ asset('downloads/MODELO PADRÃO DE PROCEDIMENTO.docx') }}" class="text-blue-600 hover:underline" download>
-                            Modelo padrão de procedimento
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ asset('downloads/MODELO PADRÃO DE INSTRUÇÃO DE TRABALHO.xlsx') }}" class="text-blue-600 hover:underline" download>
-                            Modelo padrão de instrução de trabalho
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
+                                <div class="flex w-full items-center justify-between gap-x-4 md:w-auto">
+                                    <div class="flex items-center gap-x-4">
+                        <!-- Botão de Arquivos Padrão -->                    
+                    <div class="dropdown" data-placement="bottom-end">
+                        <div class="dropdown-toggle">
+                            <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+                                <i class="w-4" data-feather="download"></i>
+                                <span class="hidden sm:inline-block">Modelo Padrão</span>
+                                <i class="w-4" data-feather="chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="dropdown-content w-72 !overflow-visible">
+                            <ul class="dropdown-list space-y-4 p-4">
+                                <li class="dropdown-list-item">
+                                    <h2 class="my-1 text-sm font-medium">Modelo Padrão</h2>
+                                    <ul class="list-disc pl-5 text-sm space-y-1">
+                                        <li>
+                                            <a href="{{ asset('downloads/MODELO PADRÃO DE PROCEDIMENTO.docx') }}" class="text-blue-600 hover:underline" download>
+                                                Modelo padrão de procedimento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ asset('downloads/MODELO PADRÃO DE INSTRUÇÃO DE TRABALHO.xlsx') }}" class="text-blue-600 hover:underline" download>
+                                                Modelo padrão de instrução de trabalho
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
                     
                     <!-- Filtros e Exportar -->
@@ -232,7 +232,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center ">Nenhum documento encontrado.</td>
+                            <td colspan="8" class="text-center ">Nenhum arquivo encontrado.</td>
                         </tr>
                     @endforelse
                 </tbody>

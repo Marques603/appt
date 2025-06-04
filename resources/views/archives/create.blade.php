@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-page-title page="Enviar Documento" pageUrl="{{ route('archives.index') }}" header="Enviar Documento" />
+    <x-page-title page="Enviar Arquivo" pageUrl="{{ route('archives.index') }}" header="Enviar Arquivo" />
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Preview -->
@@ -9,7 +9,7 @@
                     <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-700 p-4">
                         <i data-feather="file" class="w-10 h-10 text-slate-600 dark:text-slate-200"></i>
                     </div>
-                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Documento</h2>
+                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Arquivo</h2>
                 </div>
             </div>
         </section>
@@ -18,8 +18,8 @@
         <section class="col-span-1 flex w-full flex-1 flex-col gap-6 lg:col-span-3 lg:w-auto">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes do Documento</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Preencha as informações do documento</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes do Arquivo</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Preencha as informações do Arquivo</p>
 
                     <form method="POST" action="{{ route('archives.store') }}" enctype="multipart/form-data" class="flex flex-col gap-6">
                         @csrf
@@ -53,12 +53,12 @@
 
                         <!-- Botões -->
                         <div class="flex items-center justify-end gap-4">
-                            <a href="{{ route('documents.index') }}"
+                            <a href="{{ route('archives.index') }}"
                                class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
                                 Cancelar
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-upload"></i> Enviar Documento
+                                <i class="bi bi-upload"></i> Enviar Arquivo
                             </button>
                         </div>
                     </form>
