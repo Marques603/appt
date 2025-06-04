@@ -31,6 +31,9 @@ class Sector extends Model
     {
         return $this->belongsToMany(Document::class, 'document_sector');
     }
-
+    public function archives()
+    {
+        return $this->belongsToMany(Archive::class, 'archive_sector');
+    }
 
 }

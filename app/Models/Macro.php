@@ -25,6 +25,10 @@ class Macro extends Model
     {
         return $this->belongsToMany(Document::class, 'document_macro');
     }
+    public function archives()
+    {
+        return $this->belongsToMany(Archive::class, 'archive_macro');
+    }
 
 
 
