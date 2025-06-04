@@ -142,4 +142,32 @@
            </ul>
               @endcan
         </li>
+         <!-- Engenharia -->
+                 <li>
+            @can('view', App\Models\Menu::find(4))    
+            <a href="javascript:void(0);"
+                class="sidebar-menu {{ request()->routeIs(['cost_center','position.index']) ? 'active' : '' }}">
+
+                <span class="sidebar-menu-icon">
+                    <i data-feather="heart"></i>
+                </span>
+                <span class="sidebar-menu-text">Gestão Engenharia</span>
+                <span class="sidebar-menu-arrow">
+                    <i data-feather="chevron-right"></i>
+                </span>
+            </a>
+            <ul class="sidebar-submenu ">
+                <li>
+                    <a href="{{ route('cost_center.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('cost_center.index') ? 'active' : '' }}">
+                        Centro de Custo</a>
+                </li>
+                <li>
+                    <a href="{{ route('position.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('position.index') ? 'active' : '' }}">
+                        Cargos</a>
+                </li>
+           </ul>
+              @endcan
+        </li>
 </aside>
