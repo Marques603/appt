@@ -78,7 +78,9 @@
                         <th class="w-[20%] uppercase">Nome</th>
                         <th class="w-[20%] uppercase">Descrição</th>
                         <th class="w-[20%] uppercase">Responsável</th>
+                        @can('edit', App\Models\User::class)
                         <th class="w-[20%] uppercase">Documentos</th>
+                        @endcan
                         <th class="w-[10%] uppercase">Status</th>
                         <th class="w-[5%] !text-right uppercase">Ações</th>
                     </tr>
@@ -92,7 +94,9 @@
                             <td>{{ $macro->name }}</td>
                             <td>{{ $macro->description ?? 'Sem descrição' }}</td>
                             <td>{{ $macro->responsibleUsers->isNotEmpty() ? $macro->responsibleUsers->pluck('name')->join(', ') : 'não há responsável vinculado' }}</td>
-                            <td>{{ $macro->documents_count ?? 0 }}</td>
+                            @can('edit', App\Models\User::class)<td>
+                                {{ $macro->documents_count ?? 0 }}</td>
+                            @endcan
                             <td>
                                 @if($macro->status)
                                     <div class="badge badge-soft-success">Ativo</div>
