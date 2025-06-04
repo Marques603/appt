@@ -93,7 +93,7 @@ public function index(Request $request)
     $archive->macros()->sync($request->macros ?? []);
     $archive->sectors()->sync($request->sectors ?? []);
 
-    return redirect()->route('archives.index')->with('success', 'Documento criado com sucesso.');
+    return redirect()->route('archives.index')->with('success', 'Arquivo criado com sucesso.');
 }
 
     public function edit(Archive $archive)
@@ -118,7 +118,7 @@ public function index(Request $request)
         $archive->revision = $request->revision;
         $archive->save();
 
-        return redirect()->back()->with('success', 'Código do documento atualizado com sucesso.');
+        return redirect()->back()->with('success', 'Código do Arquivo atualizado com sucesso.');
     }
 
     // Atualiza apenas o arquivo
@@ -128,13 +128,13 @@ public function updateFile(Request $request, Archive $archive)
         'file' => 'required|file',
     ]);
 
-    // Soft delete do documento atual
+    // Soft delete do Arquivo atual
     $archive->delete();
 
     // Armazena novo arquivo
     $filePath = $request->file('file')->store('archives', 'public');
 
-    // Cria novo documento com base no anterior
+    // Cria novo Arquivo com base no anterior
     $newArchive = Archive::create([
         'code' => $archive->code,
         'description' => $archive->description,
@@ -150,7 +150,7 @@ public function updateFile(Request $request, Archive $archive)
     $newArchive->sectors()->sync($archive->sectors->pluck('id'));
 
     return redirect()->route('archives.edit', $newArchive->id)
-                     ->with('success', 'Arquivo atualizado. Documento anterior arquivado e nova revisão criada.');
+                     ->with('success', 'Arquivo atualizado. Arquivo anterior arquivado e nova revisão criada.');
 }
 
 
@@ -191,7 +191,7 @@ public function updateFile(Request $request, Archive $archive)
         $archive = Archive::findOrFail($archiveId);
 
         if ($archive->approvals()->where('user_id', auth()->id())->exists()) {
-            return redirect()->route('archives.index')->with('info', 'Você já aprovou este documento.');
+            return redirect()->route('archives.index')->with('info', 'Você já aprovou este Arquivo.');
         }
 
         
@@ -202,7 +202,7 @@ public function updateFile(Request $request, Archive $archive)
             'approved_at' => now(),
         ]);
 
-        return redirect()->route('archives.index')->with('success', 'Documento aprovado com sucesso.');
+        return redirect()->route('archives.index')->with('success', 'Arquivo aprovado com sucesso.');
     }
 
     public function updateApprovalStatus(Request $request, $archiveId)
@@ -231,12 +231,12 @@ public function updateFile(Request $request, Archive $archive)
     $archive->status = $request->input('status', 0);
     $archive->save();
 
-    return redirect()->back()->with('success', 'Status do documento atualizado com sucesso.');
+    return redirect()->back()->with('success', 'Status do Arquivo atualizado com sucesso.');
 }public function destroy(Archive $archive)
 {
     $archive->delete(); // ou $document->forceDelete() se quiser deletar permanentemente
 
-    return redirect()->route('archives.index')->with('success', 'Documento deletado com sucesso.');
+    return redirect()->route('archives.index')->with('success', 'Arquivo deletado com sucesso.');
 }
 
 
