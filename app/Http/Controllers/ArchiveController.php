@@ -20,7 +20,7 @@ class ArchiveController extends Controller
     // Index e outros métodos (create, store, edit) podem ficar iguais
 public function index(Request $request)
 {
-    if (!Gate::allows('view', Menu::find(2))) {
+    if (!Gate::allows('view', Menu::find(4))) {
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
     }
 
@@ -237,7 +237,18 @@ public function updateFile(Request $request, Archive $archive)
     $archive->delete(); // ou $document->forceDelete() se quiser deletar permanentemente
 
     return redirect()->route('archives.index')->with('success', 'Arquivo deletado com sucesso.');
+}// ArchiveController.php
+public function bySector($id)
+{
+    $sector = Sector::findOrFail($id);
+    $archives = Archive::whereHas('sectors', function ($q) use ($id) {
+        $q->where('sector.id', $id); // <-- aqui o fix
+    })->paginate(12);
+
+    return view('archives.by-sector', compact('archives', 'sector'));
 }
+
+
 
 
 }

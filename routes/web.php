@@ -103,5 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('archives/{archive}/macros', [ArchiveController::class, 'updateMacros'])->name('archives.update.macros');
     Route::put('archives/{archive}/sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
     Route::put('/archives/{archive}/status', [ArchiveController::class, 'updateStatus'])->name('archives.update.status');
+    Route::get('/archives/sector/{id}', [ArchiveController::class, 'bySector'])->name('archives.bySector');
+
 
 });

@@ -27,7 +27,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <label class="label">
                                 <span class="block mb-1">Código</span>
-                                <input type="text" name="code" class="input @error('code') border-red-500 @enderror" value="{{ old('code') }}" required />
+                                <input type="text" name="code" class="input @error('code') border-red-500 @enderror" value="{{ old('code', 'Não Preencher') }}"/>
                                 @error('code')
                                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
@@ -47,7 +47,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <label class="label">
                                 <span class="block mb-1">Descrição</span>
-                                <input type="text" name="description" class="input" value="{{ old('description') }}" />
+                                <input type="text" name="description" class="input" value="{{ old('description','Arquivo para validação') }}" />
                             </label>
                         </div>
 
