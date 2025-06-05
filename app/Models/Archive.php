@@ -34,8 +34,5 @@ class Archive extends Model
         return $this->belongsTo(User::class, 'user_upload');
     }
 
-    public function fileHistory()
-    {
-        return $this->hasMany(ArchiveFileHistory::class);
-    }
+    
 }
