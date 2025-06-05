@@ -118,7 +118,7 @@
                  <li>
             @can('view', App\Models\Menu::find(3))    
             <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['cost_center','position.index']) ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs(['cost_center.index','position.index']) ? 'active' : '' }}">
 
                 <span class="sidebar-menu-icon">
                     <i data-feather="heart"></i>
@@ -146,10 +146,10 @@
                  <li>
             @can('view', App\Models\Menu::find(4))    
             <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['cost_center','position.index']) ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs(['archives.index']) ? 'active' : '' }}">
 
                 <span class="sidebar-menu-icon">
-                    <i data-feather="heart"></i>
+                    <i data-feather="folder"></i>
                 </span>
                 <span class="sidebar-menu-text">Gestão Engenharia</span>
                 <span class="sidebar-menu-arrow">
@@ -158,15 +158,11 @@
             </a>
             <ul class="sidebar-submenu ">
                 <li>
-                    <a href="{{ route('cost_center.index') }}"
-                        class="sidebar-submenu-item {{ request()->routeIs('cost_center.index') ? 'active' : '' }}">
-                        Centro de Custo</a>
+                    <a href="{{ route('archives.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('archives.index') ? 'active' : '' }}">
+                        Arquivos</a>
                 </li>
-                <li>
-                    <a href="{{ route('position.index') }}"
-                        class="sidebar-submenu-item {{ request()->routeIs('position.index') ? 'active' : '' }}">
-                        Cargos</a>
-                </li>
+
            </ul>
               @endcan
         </li>
