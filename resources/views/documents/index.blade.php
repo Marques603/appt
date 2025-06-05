@@ -156,7 +156,7 @@
                                         Todos setores
                                     </span>
                                 @else
-                                    <span class="text-muted">Nenhum setor</span>
+                                    <span class="badge badge-soft-danger">Nenhum setor</span>
                                 @endif
                             </td>
                             
