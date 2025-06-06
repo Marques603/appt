@@ -27,6 +27,13 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes(); 
         });
+        Schema::create('users_logs', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->ipAddress('ip_address')->nullable();
+        $table->text('user_agent')->nullable();
+        $table->timestamps(); // created_at = data do login
+});
     }
 
     /**
@@ -34,6 +41,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('users_logs'); // <- Primeiro droppa os logs
         Schema::dropIfExists('users');
     }
 };

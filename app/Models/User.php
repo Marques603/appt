@@ -102,4 +102,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(\App\Models\Macro::class, 'macro_responsible_user');
     }
+    public function loginLogs()
+{
+    return $this->hasMany(LoginLog::class);
+}
 }
