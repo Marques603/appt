@@ -176,10 +176,11 @@
                                         <div class="dropdown-content">
                                             <ul class="dropdown-list">
                                                 <li class="dropdown-list-item">
-                                                    <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="dropdown-link">
-                                                        <i class="h-5 text-slate-400" data-feather="eye"></i>
-                                                        <span>Ver</span>
-                                                    </a>
+                                                    <a href="{{ route('documents.logAndShow', $document->id) }}" target="_blank" class="dropdown-link">
+                                                <i class="h-5 text-slate-400" data-feather="eye"></i>
+                                                <span>Ver</span>
+                                            </a>
+
                                                 </li>
                                                 @can('edit', App\Models\User::class)
                                                 <li class="dropdown-list-item">

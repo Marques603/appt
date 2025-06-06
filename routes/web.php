@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('documents/{document}/macros', [DocumentController::class, 'updateMacros'])->name('documents.update.macros');
     Route::put('documents/{document}/sectors', [DocumentController::class, 'updateSectors'])->name('documents.update.sectors');
     Route::put('/documents/{document}/status', [DocumentController::class, 'updateStatus'])->name('documents.update.status');
+    Route::get('/documents/{document}/view', [DocumentController::class, 'logAndShow'])->name('documents.logAndShow');
 
 
 
@@ -103,6 +104,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('archives/{archive}/macros', [ArchiveController::class, 'updateMacros'])->name('archives.update.macros');
     Route::put('archives/{archive}/sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
     Route::put('/archives/{archive}/status', [ArchiveController::class, 'updateStatus'])->name('archives.update.status');
+
     
 
 

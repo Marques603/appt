@@ -7,6 +7,7 @@ use App\Models\Macro;
 use App\Models\Sector;
 use App\Models\DocumentApproval;
 use App\Models\Menu;
+use App\Models\DocumentLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -236,6 +237,22 @@ public function updateFile(Request $request, Document $document)
 
     return redirect()->route('documents.index')->with('success', 'Documento deletado com sucesso.');
 }
+public function logAndShow(Document $document)
+{
+    $user = auth()->user();
+
+    // Salvar log
+    \App\Models\DocumentLog::create([
+        'document_id' => $document->id,
+        'user_id' => $user->id,
+        'ip_address' => request()->ip(),
+        'user_agent' => request()->userAgent(),
+    ]);
+
+    // Redirecionar para o arquivo (exibir documento)
+    return redirect()->away(asset('storage/' . $document->file_path));
+}
+
 
 
 }
