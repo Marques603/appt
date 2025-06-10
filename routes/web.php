@@ -9,7 +9,7 @@ use App\Http\Controllers\PositionController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\CostCenterController;
-use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\CategorieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +55,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/macro/{macro}/status', [MacroController::class, 'updateStatus'])->name('macro.update.status');
     Route::get('/macro/{macro}/restore', [MacroController::class, 'restore'])->name('macro.restore');
     Route::put('/macro/{macro}/responsibles', [MacroController::class, 'updateResponsibles'])->name('macro.update.responsibles');
+
+    // Rotas de categorie (CRUD)
+    Route::resource('categorie', CategorieController::class);
+    Route::put('/categorie/{categorie}/status', [CategorieController::class, 'updateStatus'])->name('categorie.update.status');
+    Route::get('/categorie/{categorie}/restore', [CategorieController::class, 'restore'])->name('categorie.restore');
+    Route::put('/categorie/{categorie}/responsibles', [CategorieController::class, 'updateResponsibles'])->name('categorie.update.responsibles');
 
 
     // Rotas de documentos (CRUD)
