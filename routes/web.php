@@ -10,6 +10,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\FolderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,11 +57,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/macro/{macro}/restore', [MacroController::class, 'restore'])->name('macro.restore');
     Route::put('/macro/{macro}/responsibles', [MacroController::class, 'updateResponsibles'])->name('macro.update.responsibles');
 
-    // Rotas de categorie (CRUD)
-    Route::resource('categorie', CategorieController::class);
-    Route::put('/categorie/{categorie}/status', [CategorieController::class, 'updateStatus'])->name('categorie.update.status');
-    Route::get('/categorie/{categorie}/restore', [CategorieController::class, 'restore'])->name('categorie.restore');
-    Route::put('/categorie/{categorie}/responsibles', [CategorieController::class, 'updateResponsibles'])->name('categorie.update.responsibles');
+       // Rotas de folder (CRUD)
+    Route::resource('folder', FolderController::class);
+    Route::put('/folder/{folder}/status', [FolderController::class, 'updateStatus'])->name('folder.update.status');
+    Route::get('/folder/{folder}/restore', [FolderController::class, 'restore'])->name('folder.restore');
+    Route::put('/folder/{folder}/responsibles', [FolderController::class, 'updateResponsibles'])->name('folder.update.responsibles');
 
 
     // Rotas de documentos (CRUD)

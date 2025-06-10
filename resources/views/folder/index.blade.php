@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-page-title page="Lista de Categoria" header="Lista de Categorias" />
+    <x-page-title page="Lista de Pastas" header="Lista de pastas" />
 
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -9,7 +9,7 @@
 
     <div class="space-y-4">
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
-            <form method="GET" action="{{ route('categorie.index') }}" class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 dark:border-transparent dark:bg-slate-800 dark:focus-within:border-primary-500 md:w-72">
+            <form method="GET" action="{{ route('folder.index') }}" class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 dark:border-transparent dark:bg-slate-800 dark:focus-within:border-primary-500 md:w-72">
                 <div class="flex h-full items-center px-2">
                     <i class="h-4 text-slate-400 group-focus-within:text-primary-500" data-feather="search"></i>
                 </div>
@@ -60,7 +60,7 @@
                   </button>
                 </div>
 @can('edit', App\Models\User::class)
-                <a class="btn btn-primary" href="{{ route('categorie.create') }}" role="button">
+                <a class="btn btn-primary" href="{{ route('folder.create') }}" role="button">
                     <i data-feather="plus" height="1rem" width="1rem"></i>
                     <span class="hidden sm:inline-block">Criar</span>
                     @endcan
@@ -86,19 +86,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($categories as $categorie)
+                    @foreach($folders as $folder)
                         <tr>
                             <td>
                                 <input class="checkbox procedure-checkbox" type="checkbox" />
                             </td>
-                            <td>{{ $categorie->name }}</td>
-                            <td>{{ $categorie->description ?? 'Sem descrição' }}</td>
-                            <td>{{ $categorie->responsibleUsers->isNotEmpty() ? $categorie->responsibleUsers->pluck('name')->join(', ') : 'não há responsável vinculado' }}</td>
+                            <td>{{ $folder->name }}</td>
+                            <td>{{ $folder->description ?? 'Sem descrição' }}</td>
+                            <td>{{ $folder->responsibleUsers->isNotEmpty() ? $folder->responsibleUsers->pluck('name')->join(', ') : 'não há responsável vinculado' }}</td>
                             @can('edit', App\Models\User::class)<td>
-                                {{ $categorie->documents_count ?? 0 }}</td>
+                                {{ $folder->documents_count ?? 0 }}</td>
                             @endcan
                             <td>
-                                @if($categorie->status)
+                                @if($folder->status)
                                     <div class="badge badge-soft-success">Ativo</div>
                                 @else
                                     <div class="badge badge-soft-danger">Inativo</div>
@@ -116,13 +116,13 @@
                                             <ul class="dropdown-list">
                                                 <li class="dropdown-list-item">
                                                     @can('edit', App\Models\User::class)
-                                                    <a href="{{ route('categorie.edit', $categorie->id) }}" class="dropdown-link">
+                                                    <a href="{{ route('folder.edit', $folder->id) }}" class="dropdown-link">
                                                         <i class="h-5 text-slate-400" data-feather="edit"></i>
                                                         <span>Editar</span>
                                                     </a>
                                                 </li>
                                                 <li class="dropdown-list-item">
-                                                    <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $categorie->id }}">
+                                                    <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $folder->id }}">
                                                         <i class="h-5 text-slate-400" data-feather="trash"></i>
                                                         <span>Excluir</span>
                                                         @endcan
@@ -134,7 +134,7 @@
                                     </div>
                                 </div>
 
-                                <div class="modal modal-centered" id="deleteModal-{{ $categorie->id }}">
+                                <div class="modal modal-centered" id="deleteModal-{{ $folder->id }}">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -147,11 +147,11 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p class="text-sm text-slate-500 dark:text-slate-300">
-                                                    Tem certeza que deseja excluir <strong>{{ $categorie->name }}</strong>?
+                                                    Tem certeza que deseja excluir <strong>{{ $folder->name }}</strong>?
                                                 </p>
                                             </div>
                                             <div class="modal-footer flex justify-center">
-                                                <form method="POST" action="{{ route('categorie.destroy', $categorie->id) }}">
+                                                <form method="POST" action="{{ route('folder.destroy', $folder->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -170,9 +170,9 @@
 
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row">
             <p class="text-xs font-normal text-slate-400">
-                Mostrando {{ $categories->firstItem() }} a {{ $categories->lastItem() }} de {{ $categories->total() }} resultados
+                Mostrando {{ $folders->firstItem() }} a {{ $folders->lastItem() }} de {{ $folders->total() }} resultados
             </p>
-            {{ $categories->appends(request()->query())->links('vendor.pagination.custom') }}
+            {{ $folders->appends(request()->query())->links('vendor.pagination.custom') }}
         </div>
     </div>
 </x-app-layout>

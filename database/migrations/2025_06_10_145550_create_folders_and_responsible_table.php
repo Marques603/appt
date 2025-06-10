@@ -11,8 +11,8 @@ return new class extends Migration
      */
       public function up(): void
     {
-        // Tabela categorie
-        Schema::create('categorie', function (Blueprint $table) {
+        // Tabela folder
+        Schema::create('folder', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
@@ -21,10 +21,10 @@ return new class extends Migration
             $table->softDeletes(); // <- soft deletes
         });
 
-        // Tabela pivô categorie_responsible_user
-        Schema::create('categorie_responsible_user', function (Blueprint $table) {
+        // Tabela pivô folder_responsible_user
+        Schema::create('folder_responsible_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('categorie_id')->constrained('categorie')->onDelete('cascade');
+            $table->foreignId('folder_id')->constrained('folder')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes(); 
@@ -33,7 +33,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('categorie_responsible_user');
-        Schema::dropIfExists('categorie');
+        Schema::dropIfExists('folder_responsible_user');
+        Schema::dropIfExists('folder');
     }
 };

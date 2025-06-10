@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-page-title page="Lista de Categorias" pageUrl="{{ route('categorie.index') }}" header="Editar Categoria" />
+    <x-page-title page="Lista de Macros" pageUrl="{{ route('macro.index') }}" header="Editar Macro" />
 
 
     @if(session('success'))
@@ -16,7 +16,7 @@
                     <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-700 p-4">
                         <i data-feather="layers" class="w-10 h-10 text-slate-600 dark:text-slate-200"></i>
                     </div>
-                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Categoria</h2>
+                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Macro</h2>
                 </div>
             </div>
         </section>
@@ -24,13 +24,13 @@
         <!-- Formulários -->
         <section class="col-span-1 flex w-full flex-1 flex-col gap-6 lg:col-span-3 lg:w-auto">
 
-            <!-- Formulário 1: Detalhes da categorie -->
+            <!-- Formulário 1: Detalhes da Macro -->
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes da Categoria</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Atualize as informações da Categoria</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes da Macro</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Atualize as informações da macro</p>
 
-                    <form method="POST" action="{{ route('categorie.update', $categorie) }}" class="flex flex-col gap-6">
+                    <form method="POST" action="{{ route('folder.update', $folder) }}" class="flex flex-col gap-6">
                         @csrf
                         @method('PUT')
 
@@ -39,7 +39,7 @@
                             <label class="label">
                                 <span class="block mb-1">Nome</span>
                                 <input type="text" name="name" class="input @error('name') border-red-500 @enderror"
-                                       value="{{ old('name', $categorie->name) }}" />
+                                       value="{{ old('name', $folder->name) }}" />
                                 @error('name')
                                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
@@ -49,7 +49,7 @@
                             <label class="label">
                                 <span class="block mb-1">Descrição</span>
                                 <input type="text" name="description" class="input @error('description') border-red-500 @enderror"
-                                       value="{{ old('description', $categorie->description) }}" />
+                                       value="{{ old('description', $folder->description) }}" />
                                 @error('description')
                                     <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
@@ -58,7 +58,7 @@
 
                         <!-- Botões -->
                         <div class="flex items-center justify-end gap-4">
-                            <a href="{{ route('categorie.index') }}"
+                            <a href="{{ route('folder.index') }}"
                                class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
                                 Cancelar
                             </a>
@@ -70,20 +70,20 @@
                 </div>
             </div>
 
-<!-- Atualizar Status da Categoria -->
+<!-- Atualizar Status da Macro -->
 <div class="card">
     <div class="card-body">
-        <form method="POST" action="{{ route('categorie.update.status', $categorie->id) }}">
+        <form method="POST" action="{{ route('folder.update.status', $folder->id) }}">
             @csrf
             @method('PUT')
             <input type="hidden" name="status" value="0">
 
-            <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Ativar Caterogia</h2>
-            <p class="text-sm font-normal text-slate-400">Defina se esta categorie estará ativa no sistema.</p>
+            <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Ativar Macro</h2>
+            <p class="text-sm font-normal text-slate-400">Defina se esta macro estará ativa no sistema.</p>
 
             <label for="status" class="toggle my-2 flex items-center justify-between">
                 <div class="label">
-                    <p class="text-sm font-normal text-slate-400">Ativar esta categorie</p>
+                    <p class="text-sm font-normal text-slate-400">Ativar esta macro</p>
                 </div>
                 <div class="relative">
                     <input
@@ -92,7 +92,7 @@
                         type="checkbox"
                         name="status"
                         value="1"
-                        {{ old('status', $categorie->status) == 1 ? 'checked' : '' }}>
+                        {{ old('status', $folder->status) == 1 ? 'checked' : '' }}>
                     <div class="toggle-body"></div>
                 </div>
             </label>
@@ -102,7 +102,7 @@
             @enderror
 
             <div class="flex items-center justify-end gap-4 mt-6">
-                <a href="{{ route('categorie.index') }}"
+                <a href="{{ route('folder.index') }}"
                    class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
                     Cancelar
                 </a>
@@ -117,9 +117,9 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Usuários Responsáveis</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os usuários responsáveis por esta categoria</p>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os usuários responsáveis por esta macro</p>
 
-                    <form method="POST" action="{{ route('categorie.update.responsibles', $categorie) }}">
+                    <form method="POST" action="{{ route('folder.update.responsibles', $folder) }}">
                         @csrf
                         @method('PUT')
 
@@ -130,7 +130,7 @@
                                 autocomplete="off">
                                 @foreach($users as $user)
                                     <option value="{{ $user->id }}"
-                                        {{ $categorie->responsibleUsers->contains($user->id) ? 'selected' : '' }}>
+                                        {{ $folder->responsibleUsers->contains($user->id) ? 'selected' : '' }}>
                                         {{ $user->name }}
                                     </option>
                                 @endforeach
@@ -141,7 +141,7 @@
                         </div>
 
                         <div class="flex items-center justify-end gap-4 mt-4">
-                            <a href="{{ route('categorie.index') }}"
+                            <a href="{{ route('folder.index') }}"
                                class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
                                Cancelar
                             </a>
