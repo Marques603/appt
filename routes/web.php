@@ -94,18 +94,4 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cost_center/{cost_center}/update-sectors', [CostCenterController::class, 'updateSectors'])->name('cost_center.update.sectors');
 
 
-    // Rotas de archive (CRUD)
-    Route::resource('archives', ArchiveController::class);
-    Route::get('/archives/{archive}/approve', [ArchiveController::class, 'showApproveForm'])->name('archives.approve.form');
-    Route::post('/archives/{archive}/approve', [ArchiveController::class, 'approve'])->name('archives.approve');
-    Route::post('/archives/{archive}/approve/status', [ArchiveController::class, 'updateApprovalStatus'])->name('archives.updateApprovalStatus');
-    Route::put('archives/{archive}/code', [ArchiveController::class, 'updateCode'])->name('archives.update.code');
-    Route::put('archives/{archive}/file', [ArchiveController::class, 'updateFile'])->name('archives.update.file');
-    Route::put('archives/{archive}/macros', [ArchiveController::class, 'updateMacros'])->name('archives.update.macros');
-    Route::put('archives/{archive}/sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
-    Route::put('/archives/{archive}/status', [ArchiveController::class, 'updateStatus'])->name('archives.update.status');
-
-    
-
-
 });
