@@ -142,28 +142,5 @@
            </ul>
               @endcan
         </li>
-         <!-- Engenharia -->
-                 <li>
-            @can('view', App\Models\Menu::find(4))    
-            <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['archives.index']) ? 'active' : '' }}">
 
-                <span class="sidebar-menu-icon">
-                    <i data-feather="folder"></i>
-                </span>
-                <span class="sidebar-menu-text">Gestão Engenharia</span>
-                <span class="sidebar-menu-arrow">
-                    <i data-feather="chevron-right"></i>
-                </span>
-            </a>
-            <ul class="sidebar-submenu ">
-                <li>
-                    <a href="{{ route('archives.index') }}"
-                        class="sidebar-submenu-item {{ request()->routeIs('archives.index') ? 'active' : '' }}">
-                        Arquivos</a>
-                </li>
-
-           </ul>
-              @endcan
-        </li>
 </aside>
