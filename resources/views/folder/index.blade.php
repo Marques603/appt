@@ -79,7 +79,7 @@
                         <th class="w-[20%] uppercase">Descrição</th>
                         <th class="w-[20%] uppercase">Responsável</th>
                         @can('edit', App\Models\User::class)
-                        <th class="w-[20%] uppercase">Documentos</th>
+                        <th class="w-[20%] uppercase">Arquivos</th>
                         @endcan
                         <th class="w-[10%] uppercase">Status</th>
                         <th class="w-[5%] !text-right uppercase">Ações</th>

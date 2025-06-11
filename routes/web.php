@@ -11,6 +11,7 @@ use App\Http\Controllers\SectorController;
 use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\ArchiveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/documents/{document}/view', [DocumentController::class, 'logAndShow'])->name('documents.logAndShow');
 
 
+    // Rotas de archives (CRUD) 
+    Route::resource('archives', ArchiveController::class);
+    Route::get('/archives/{archive}/approve', [ArchiveController::class, 'showApproveForm'])->name('archives.approve.form');
+    Route::post('/archives/{archive}/approve', [ArchiveController::class, 'approve'])->name('archives.approve');
+    Route::post('/archives/{archive}/approve/status', [ArchiveController::class, 'updateApprovalStatus'])->name('archives.updateApprovalStatus');
+    Route::put('archives/{archive}/code', [ArchiveController::class, 'updateCode'])->name('archives.update.code');
+    Route::put('archives/{archive}/file', [ArchiveController::class, 'updateFile'])->name('archives.update.file');
+    Route::put('archives/{archive}/folders', [ArchiveController::class, 'updateFolders'])->name('archives.update.folders');
+    Route::put('archives/{archive}/sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
+    Route::put('/archives/{archive}/status', [ArchiveController::class, 'updateStatus'])->name('archives.update.status');
+    Route::get('/archives/{archive}/view', [ArchiveController::class, 'logAndShow'])->name('archives.logAndShow');
 
 
     // Rotas de empresas (CRUD)

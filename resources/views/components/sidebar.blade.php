@@ -146,7 +146,7 @@
                  <li>
             @can('view', App\Models\Menu::find(4))    
             <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['folder.index','folder.index']) ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs(['folder.index','archives.index']) ? 'active' : '' }}">
 
                 <span class="sidebar-menu-icon">
                     <i data-feather="folder"></i>
@@ -163,9 +163,9 @@
                         Pasta</a>
                 </li>
                 <li>
-                    <a href="{{ route('folder.index') }}"
-                        class="sidebar-submenu-item {{ request()->routeIs('folder.index') ? 'active' : '' }}">
-                        Cargos</a>
+                    <a href="{{ route('archives.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('archives.index') ? 'active' : '' }}">
+                        Arquivos</a>
                 </li>
            </ul>
               @endcan

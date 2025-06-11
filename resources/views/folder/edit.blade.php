@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-page-title page="Lista de Macros" pageUrl="{{ route('macro.index') }}" header="Editar Macro" />
+    <x-page-title page="Lista de Pastas" pageUrl="{{ route('folder.index') }}" header="Editar Pasta" />
 
 
     @if(session('success'))
@@ -16,7 +16,7 @@
                     <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-700 p-4">
                         <i data-feather="layers" class="w-10 h-10 text-slate-600 dark:text-slate-200"></i>
                     </div>
-                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Macro</h2>
+                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Pasta</h2>
                 </div>
             </div>
         </section>
@@ -27,8 +27,8 @@
             <!-- Formulário 1: Detalhes da Macro -->
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes da Macro</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Atualize as informações da macro</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes da Pasta</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Atualize as informações da Pasta</p>
 
                     <form method="POST" action="{{ route('folder.update', $folder) }}" class="flex flex-col gap-6">
                         @csrf
@@ -70,7 +70,7 @@
                 </div>
             </div>
 
-<!-- Atualizar Status da Macro -->
+<!-- Atualizar Status da Pasta -->
 <div class="card">
     <div class="card-body">
         <form method="POST" action="{{ route('folder.update.status', $folder->id) }}">
@@ -78,12 +78,12 @@
             @method('PUT')
             <input type="hidden" name="status" value="0">
 
-            <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Ativar Macro</h2>
-            <p class="text-sm font-normal text-slate-400">Defina se esta macro estará ativa no sistema.</p>
+            <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Ativar Pasta</h2>
+            <p class="text-sm font-normal text-slate-400">Defina se esta pasta estará ativa no sistema.</p>
 
             <label for="status" class="toggle my-2 flex items-center justify-between">
                 <div class="label">
-                    <p class="text-sm font-normal text-slate-400">Ativar esta macro</p>
+                    <p class="text-sm font-normal text-slate-400">Ativar esta pasta</p>
                 </div>
                 <div class="relative">
                     <input
@@ -117,7 +117,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Usuários Responsáveis</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os usuários responsáveis por esta macro</p>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os usuários responsáveis por esta Pasta</p>
 
                     <form method="POST" action="{{ route('folder.update.responsibles', $folder) }}">
                         @csrf

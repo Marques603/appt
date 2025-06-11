@@ -16,21 +16,16 @@ class Archive extends Model
     // Relacionamento com Macro
     public function folders()
     {
-        return $this->belongsToMany(Macro::class, 'folder_macro');
+        return $this->belongsToMany(Folder::class, 'archive_folder');
     }
 
     // Relacionamento com Sector
     public function sectors()
     {
-        return $this->belongsToMany(Sector::class, 'folder_sector');
+        return $this->belongsToMany(Sector::class, 'archive_sector');
     }
 
-    // Relacionamento com Approval
-    public function approvals()
-    {
-        return $this->hasMany(DocumentApproval::class);
-    }
-
+    
     // Relacionamento com User (quem fez o upload)
     public function user()
     {

@@ -21,9 +21,9 @@ class Folder extends Model
     {
     return $this->belongsToMany(User::class, 'folder_responsible_user', 'folder_id', 'user_id');
     }
-    public function documents()
+    public function archives()
     {
-        return $this->belongsToMany(Document::class, 'document_macro');
+        return $this->belongsToMany(Archive::class, 'archive_folder');
     }
 
 }

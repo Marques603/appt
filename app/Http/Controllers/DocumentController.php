@@ -28,7 +28,7 @@ public function index(Request $request)
     $user = auth()->user();
     $sectorIds = $user->sectors->pluck('id');
     $isQuality = $sectorIds->contains(function ($id) {
-        return in_array($id, [1, 16]);
+        return in_array($id, [1,2, 16]);
     });
 
     $documents = Document::query()
