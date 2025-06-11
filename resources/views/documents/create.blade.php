@@ -51,6 +51,20 @@
                             </label>
                         </div>
 
+                        <!-- Outros campos... -->
+
+@if ($showSectorSelect)
+    <div class="mb-3">
+        <label for="sector_id" class="form-label">Selecione o setor</label>
+        <select name="sector_id" id="sector_id" class="form-control" required>
+            <option value="">-- Selecione --</option>
+            @foreach ($userSectors as $sector)
+                <option value="{{ $sector->id }}">{{ $sector->name }}</option>
+            @endforeach
+        </select>
+    </div>
+@endif
+
                         <!-- Botões -->
                         <div class="flex items-center justify-end gap-4">
                             <a href="{{ route('documents.index') }}"

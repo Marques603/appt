@@ -61,41 +61,57 @@ public function index(Request $request)
 
 
     public function create()
-    {
-        $macros = Macro::all();
-        $sectors = Sector::all();
-        return view('documents.create', compact('macros', 'sectors'));
-    }
+{
+    $macros = Macro::all();
+    $user = auth()->user();
+    $userSectors = $user->sectors;
+    $showSectorSelect = $userSectors->count() > 1;
+
+    return view('documents.create', compact('macros', 'userSectors', 'showSectorSelect'));
+}
+
 
     public function store(Request $request)
 {
     $request->validate([
         'code' => 'required|string',
         'file' => 'required|file',
-        'macros' => 'nullable|array',   // Agora pode ser nulo ou vazio
-        'sectors' => 'nullable|array',  // Agora pode ser nulo ou vazio
+        'macros' => 'nullable|array',
+        'sector_id' => 'nullable|exists:sector,id', // novo campo opcional
     ]);
 
-    $userId = auth()->id();
+    $user = auth()->user();
 
     $filePath = $request->file('file')->store('documents', 'public');
 
     $document = Document::create([
         'code' => $request->code,
         'description' => $request->description,
-        'user_upload' => $userId,
+        'user_upload' => $user->id,
         'revision' => $request->revision ?? 1,
         'file_path' => $filePath,
         'file_type' => $request->file('file')->getClientOriginalExtension(),
         'status' => 0,
     ]);
 
-    // Se vier vazio ou não vier, sincroniza com array vazio = desvincula tudo
     $document->macros()->sync($request->macros ?? []);
-    $document->sectors()->sync($request->sectors ?? []);
+
+    // ✅ Vincular setor
+    if ($request->filled('sector_id')) {
+        // Se veio do formulário
+        $document->sectors()->sync([$request->sector_id]);
+    } else {
+        // Se usuário só tem 1 setor
+        $userSectorIds = $user->sectors->pluck('id')->toArray();
+        if (count($userSectorIds) === 1) {
+            $document->sectors()->sync($userSectorIds);
+        }
+    }
 
     return redirect()->route('documents.index')->with('success', 'Documento criado com sucesso.');
 }
+
+
 
     public function edit(Document $document)
     {
