@@ -96,7 +96,7 @@ public function index(Request $request)
 
     $document->macros()->sync($request->macros ?? []);
 
-    // ✅ Vincular setor
+    //  Vincular setor
     if ($request->filled('sector_id')) {
         // Se veio do formulário
         $document->sectors()->sync([$request->sector_id]);
