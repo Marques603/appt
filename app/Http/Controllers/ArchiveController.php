@@ -27,7 +27,7 @@ class ArchiveController extends Controller
         $user = auth()->user();
         $sectorIds = $user->sectors->pluck('id');
         $isQuality = $sectorIds->contains(function ($id) {
-            return in_array($id, [1, 16]);
+            return in_array($id, [1, 3]);
         });
 
         $archives = Archive::query()
