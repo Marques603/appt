@@ -53,20 +53,23 @@
 
                         <!-- Outros campos... -->
 
-                            @if ($showSectorSelect)
-                                <label class="label">
-                                    <span class="block mb-1">Selecione o setor</span>
-                                    <select name="sector_id" id="sector_id" class="input @error('sector_id') border-red-500 @enderror" required>
-                                        <option value="">-- Selecione --</option>
-                                        @foreach ($userSectors as $sector)
-                                            <option value="{{ $sector->id }}" {{ old('sector_id') == $sector->id ? 'selected' : '' }}>
-                                                {{ $sector->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </label>
-                            @endif
+                         @if ($showSectorSelect)
+                            <label class="label">
+                                <span class="block mb-1">Selecione o setores</span>
+                                <select class="tom-select" name="sector_ids[]" id="sector_ids" multiple autocomplete="off" required>
+                            <optgroup label="Setores disponíveis">
+                                @foreach ($userSectors as $sector)
+                                    <option value="{{ $sector->id }}"
+                                        {{ (collect(old('sector_ids'))->contains($sector->id)) ? 'selected' : '' }}>
+                                        {{ $sector->name }}
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        </select>
+                            </label>
+                        @endif
 
+                            
                         <!-- Botões -->
                         <div class="flex items-center justify-end gap-4">
                             <a href="{{ route('documents.index') }}"

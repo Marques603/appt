@@ -96,17 +96,18 @@ public function index(Request $request)
 
     $document->macros()->sync($request->macros ?? []);
 
-    //  Vincular setor
-    if ($request->filled('sector_id')) {
-        // Se veio do formulário
-        $document->sectors()->sync([$request->sector_id]);
-    } else {
-        // Se usuário só tem 1 setor
-        $userSectorIds = $user->sectors->pluck('id')->toArray();
-        if (count($userSectorIds) === 1) {
-            $document->sectors()->sync($userSectorIds);
-        }
+   // Verifica se veio algum setor selecionado
+if ($request->filled('sector_ids')) {
+    // `sector_ids` é um array, então sincroniza tudo
+    $document->sectors()->sync($request->sector_ids);
+} else {
+    // Se não veio setor selecionado, verifica se usuário tem 1 setor só e vincula
+    $userSectorIds = $user->sectors->pluck('id')->toArray();
+    if (count($userSectorIds) === 1) {
+        $document->sectors()->sync($userSectorIds);
     }
+}
+
 
     return redirect()->route('documents.index')->with('success', 'Documento criado com sucesso.');
 }
