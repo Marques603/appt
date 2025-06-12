@@ -140,15 +140,31 @@
                 </div>
               </td>
               <td>{{ $user->email }}</td>
-              <td>
-    @if($user->sectors->isEmpty())
-        Nenhum setor vinculado
-    @elseif($user->sectors->count() === 1)
-        {{ $user->sectors->first()->name }}
+@php
+    $userSectors = $user->sectors;
+    $totalSectors = \App\Models\Sector::count();
+    $sectorAcronyms = $userSectors->pluck('name')->toArray();
+    $tooltipContent = implode(', ', $sectorAcronyms);
+@endphp
+
+<td>
+    @if($userSectors->isEmpty())
+        <span class="badge badge-soft-danger">Nenhum setor vinculado</span>
+    @elseif($userSectors->count() === 1)
+    <span class="badge badge-soft-secondary">
+        {{ $userSectors->first()->name }}
     @else
-        {{ $user->sectors->pluck('acronym')->join(', ') }}
+        <button
+            type="button"
+            class="badge badge-soft-secondary"
+            data-tooltip="tippy"
+            data-tippy-content="{{ $tooltipContent }}"
+        >
+            {{ $userSectors->count() === $totalSectors ? 'Todos os setores' : $userSectors->count() . ' setores' }}
+        </button>
     @endif
 </td>
+
               <td>{{ $user->companies->isEmpty() ? 'Nenhuma empresa vinculada' : $user->companies->pluck('name')->join(', ') }}</td>
               <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
               <td>@if($user->status)<div class="badge badge-soft-success">Ativo</div> @else <div class="badge badge-soft-danger">Inativo</div> @endif </td>

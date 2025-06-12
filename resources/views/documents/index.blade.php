@@ -145,20 +145,34 @@
                         @endforeach
                     </td>
 
-                    {{-- Setores --}}
-                            <td>
-                                @if($document->sectors->count() === 1)
-                                    <span class="badge badge-soft-secondary">
-                                        {{ $document->sectors->first()->name }}
-                                    </span>
-                                @elseif($document->sectors->count() > 1)
-                                    <span class="badge badge-soft-secondary">
-                                        Todos setores
-                                    </span>
-                                @else
-                                    <span class="badge badge-soft-danger">Nenhum setor</span>
-                                @endif
-                            </td>
+                        @php
+                            $documentSectors = $document->sectors;
+                            $totalSectors = \App\Models\Sector::count();
+                            $sectorNames = $documentSectors->pluck('name')->toArray();
+
+                            $tooltipContent = implode(', ', $sectorNames);
+                        @endphp
+
+                        <td>
+                            @if($documentSectors->isEmpty())
+                                <span class="badge badge-soft-danger">Nenhum setor</span>
+                            @elseif($documentSectors->count() === 1)
+                                <span class="badge badge-soft-secondary">
+                                    {{ $documentSectors->first()->name }}
+                                </span>
+                            @else
+                                <button
+                                    type="button"
+                                    class="badge badge-soft-secondary"
+                                    data-tooltip="tippy"
+                                    data-tippy-content="{{ $tooltipContent }}"
+                                >
+                                    {{ $documentSectors->count() === $totalSectors ? 'Todos os setores' : $documentSectors->count() . ' setores' }}
+                                </button>
+                            @endif
+                        </td>
+
+
                             
                             <td>
                                 @if($document->status)

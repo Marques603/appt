@@ -65,6 +65,12 @@ public function index(Request $request)
     $macros = Macro::all();
     $user = auth()->user();
     $userSectors = $user->sectors;
+    $sectorIds = $userSectors->pluck('id')->toArray();
+
+    if (array_intersect([1, 2], $sectorIds)) {
+    $userSectors = Sector::all();
+}
+
     $showSectorSelect = $userSectors->count() > 1;
 
     return view('documents.create', compact('macros', 'userSectors', 'showSectorSelect'));

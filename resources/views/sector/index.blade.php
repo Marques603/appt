@@ -92,37 +92,68 @@
                             <td><input class="checkbox sector-checkbox" type="checkbox" /></td>
                             <td>{{ $sector->name }}</td>
                             <td>
-    <span class="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md">
-        {{ $sector->acronym }}
-    </span>
-</td>
-                            <td>
+                    <span class="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md">
+                        {{ $sector->acronym }}
+                    </span>
+                </td>
                             @php
-                            $count = $sector->users->count();
+                                $users = $sector->users;
+                                $count = $users->count();
+                                $userNames = $users->pluck('name')->toArray();
+                                $tooltipContent = implode(', ', $userNames);
                             @endphp
 
-                            @if($count === 0)
-                            Não há funcionários
-                            @elseif($count === 1)
-                            1 Funcionário
-                            @else
-                            {{ $count }} funcionários
-                            @endif
+                            <td>
+                                @if($count === 0)
+                                    <span class="badge badge-soft-danger">Não há funcionários</span>
+                                @elseif($count === 1)
+                                    <span class="badge badge-soft-secondary" data-tooltip="tippy" data-tippy-content="{{ $tooltipContent }}">
+                                        1 Funcionário
+                                    </span>
+                                @else
+                                    <button
+                                        type="button"
+                                        class="badge badge-soft-secondary"
+                                        data-tooltip="tippy"
+                                        data-tippy-content="{{ $tooltipContent }}"
+                                    >
+                                        {{ $count }} funcionários
+                                    </button>
+                                @endif
                             </td>
                             <td>
+                                
                             @if($sector->responsibleUsers->isNotEmpty())
-                            {{ $sector->responsibleUsers->pluck('name')->join(', ') }}
+                            <span class="badge badge-soft-dark">{{ $sector->responsibleUsers->pluck ('name')->join(', ') }}</span>
                             @else
-                            Não definido
+                            <span class="badge badge-soft-danger">Não definido</span>
                             @endif
                             </td>
-                            <td>
-                            @if($sector->costCenters->isNotEmpty())
-                            {{ $sector->costCenters->map(fn($cc) => $cc->name . ' (' . $cc->code . ')')->join(', ') }}
-                            @else
-                            Não definido
-                            @endif
-                            </td>
+                                @php
+                                    $costCenters = $sector->costCenters;
+                                    $tooltipCostCenters = $costCenters->map(fn($cc) => $cc->name . ' (' . $cc->code . ')')->toArray();
+                                    $tooltipText = implode(', ', $tooltipCostCenters);
+                                @endphp
+
+                                <td>
+                                    @if ($costCenters->isEmpty())
+                                        <span class="badge badge-soft-danger">Não definido</span>
+                                    @elseif ($costCenters->count() === 1)
+                                        <span class="badge badge-soft-primary">
+                                            {{ $costCenters->first()->name }} ({{ $costCenters->first()->code }})
+                                        </span>
+                                    @else
+                                        <button
+                                            type="button"
+                                            class="badge badge-soft-primary"
+                                            data-tooltip="tippy"
+                                            data-tippy-content="{{ $tooltipText }}"
+                                        >
+                                            {{ $costCenters->count() }} centros de custo
+                                        </button>
+                                    @endif
+                                </td>
+
                             <td>
                                 @if($sector->status)
                                     <div class="badge badge-soft-success">Ativo</div>
@@ -164,7 +195,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- Modal de Confirmação -->
                                 <div class="modal modal-centered" id="deleteModal-{{ $sector->id }}">
                                     <div class="modal-dialog modal-dialog-centered">
