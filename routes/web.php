@@ -9,9 +9,10 @@ use App\Http\Controllers\PositionController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\CostCenterController;
-use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ArchiveController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +25,12 @@ use App\Http\Controllers\ArchiveController;
 
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard principal
-    Route::view('/', 'dashboard.index')->name('dashboard');
+    // home principal
+    Route::view('/', 'home.index')->name('home');
+
+    // Rota dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
     // Rotas de usuários (CRUD)
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

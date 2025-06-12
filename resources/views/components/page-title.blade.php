@@ -5,7 +5,7 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="{{ route('dashboard') }}">Início</a>
+            <a href="{{ route('home') }}">Início</a>
         </li>
         @if ($page && $pageUrl)
             <li class="breadcrumb-item">

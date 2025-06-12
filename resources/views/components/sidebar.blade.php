@@ -1,6 +1,6 @@
 <aside class="sidebar">
     <!-- Sidebar Header Starts -->
-    <a href="{{ route('dashboard') }}">
+    <a href="{{ route('home') }}">
         <div class="sidebar-header">
             <div class="sidebar-logo-icon">
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
@@ -24,7 +24,7 @@
 
         <li>
             <a href="javascript:void(0);"
-                class="sidebar-menu  {{ request()->routeIs('dashboard', '#') ? 'active' : '' }}">
+                class="sidebar-menu  {{ request()->routeIs('home', '#') ? 'active' : '' }}">
                 <span class="sidebar-menu-icon">
                     <i data-feather="home"></i>
                 </span>
@@ -36,7 +36,7 @@
             <ul class="sidebar-submenu">
                 <li>
                     <a href="#"
-                        class="sidebar-submenu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+                        class="sidebar-submenu-item {{ request()->routeIs('home') ? 'active' : '' }}">Dashboard</a>
                 </li>
                <!--  <li>
                     <a href="#  "
