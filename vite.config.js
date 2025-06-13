@@ -6,13 +6,17 @@ export default defineConfig({
   resolve: {
     alias: {
       '@tailwind.config': resolve(__dirname, './tailwind.config.js'),
-      '@': resolve(__dirname, '/resources'),
+      '@': resolve(__dirname, './resources'), // <-- Corrigido o path
     }
   },
   plugins: [
     laravel({
-        input: ['resources/scss/app.scss', 'resources/js/app.js'],
-        refresh: true,
+      input: [
+        'resources/scss/app.scss',
+        'resources/js/app.js',
+        'resources/js/custom/analytics.js', // <-- ADICIONE esta linha
+      ],
+      refresh: true,
     }),
   ], 
 });

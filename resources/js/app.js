@@ -15,7 +15,6 @@ function loadScriptForRoute(route, path) {
 // Scripts dinâmicos por rota
 const routeScripts = {
     'ecommerce.report': './custom/ecommerce.js',
-    'dashboard': './custom/analytics.js',
     'calendar': './custom/calendar.js',
     'chat': './custom/chat.js',
     'email': './custom/email.js',

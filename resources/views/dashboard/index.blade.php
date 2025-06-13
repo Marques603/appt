@@ -13,13 +13,13 @@
                 <div class="card-body flex items-center gap-4">
                     <div
                         class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-500 bg-opacity-20 text-primary-500">
-                      <i class='bx  bx-folder-code bx-rotate-270 bx-flip-horizontal'  ></i> 
-                        <i class='bx  bx-van'  ></i> 
+                        <i class="bx bx-archive text-3xl"></i>
+
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
-                        <p class="text-sm tracking-wide text-slate-500">Total Sales</p>
+                        <p class="text-sm tracking-wide text-slate-500">Total Documentos</p>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <h4>{{ number_format($totalMacros) }}</h4>
+                            <h4>{{ number_format($totalDocumentos) }}</h4>
                             <span class="flex items-center text-xs font-medium text-success-500"><i class="h-3 w-3"
                                     stroke-width="3px" data-feather="arrow-up-right"></i>2.2%</span>
                         </div>
@@ -51,9 +51,9 @@
                         <i class="ti ti-users text-3xl"></i>
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
-                        <p class="text-sm tracking-wide text-slate-500">Total Customers</p>
+                        <p class="text-sm tracking-wide text-slate-500">Total Usuarios</p>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <h4>46,256</h4>
+                            <h4>{{ number_format($totalUsers) }}</h4>
                             <span class="flex items-center text-xs font-medium text-success-500">
                                 <i class="h-3 w-3" stroke-width="3px" data-feather="arrow-up-right"></i> 1.2%</span>
                         </div>
