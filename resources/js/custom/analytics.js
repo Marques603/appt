@@ -6,6 +6,7 @@ import themeConfig, { themeColors } from '@tailwind.config';
 import ApexCharts from 'apexcharts';
 import colors from 'tailwindcss/colors';
 
+
 const theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 
 // ========Store Analytics Chart Start ===========
@@ -258,3 +259,91 @@ polygonSeries.data.setAll([
 ]);
 
 // ========Sale Location Cart End ===========
+// ========Profit Growth Chart Start ===========
+
+const profitGrowthChartOptions = {
+  series: [{
+    name: 'Profit',
+    data: [12000, 18000, 10000, 22000, 20000, 30000, 25000],
+  }],
+  colors: [themeColors.success['500']],
+  chart: {
+    type: 'area',
+    height: 150,
+    toolbar: { show: false },
+    zoom: { enabled: false },
+    fontFamily: themeConfig.theme.fontFamily.sans,
+  },
+  dataLabels: { enabled: false },
+  stroke: {
+    curve: 'smooth',
+    width: 2,
+  },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shadeIntensity: 1,
+      opacityFrom: 0.6,
+      opacityTo: 0.05,
+      stops: [0, 90, 100]
+    }
+  },
+  xaxis: {
+    categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+    axisBorder: {
+      color: theme === 'dark' ? colors.slate['600'] : colors.slate['200'],
+    },
+    axisTicks: {
+      color: theme === 'dark' ? colors.slate['600'] : colors.slate['200'],
+    },
+  },
+  yaxis: {
+    labels: {
+      formatter: function (value) {
+        return 'R$ ' + value / 1000 + 'K';
+      }
+    }
+  },
+  grid: {
+    borderColor: theme === 'dark' ? colors.slate['600'] : colors.slate['200'],
+  },
+  tooltip: {
+    y: {
+      formatter: function (value) {
+        return 'R$ ' + Intl.NumberFormat().format(value);
+      }
+    }
+  }
+};
+
+const profitGrowthEl = document.querySelector('#profit-growth-chart');
+if (profitGrowthEl) {
+  const profitGrowthChart = new ApexCharts(profitGrowthEl, profitGrowthChartOptions);
+  profitGrowthChart.render();
+}
+
+// ========Profit Growth Chart End ===========
+document.addEventListener('DOMContentLoaded', function () {
+  const chartElement = document.querySelector('#profit-growth-chart');
+
+  if (chartElement) {
+    const profitChart = new ApexCharts(chartElement, {
+      chart: {
+        type: 'line',
+        height: 200,
+      },
+      series: [{
+        name: 'Profit',
+        data: [0, 2000, 5000, 8000, 12000, 15000, 18000]
+      }],
+      xaxis: {
+        categories: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+      },
+      colors: ['#6366F1'] // Cor estática (indigo-500)
+    });
+
+    profitChart.render();
+  } else {
+    console.error('Elemento #profit-growth-chart não encontrado');
+  }
+});

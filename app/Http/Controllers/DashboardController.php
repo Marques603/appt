@@ -9,11 +9,22 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $totalMacros = Macro::count();
         $totalDocumentos = Document::count();
-        $totalUsers = User::count(); // Assuming you want to count users as well
-        return view('dashboard.index', compact('totalMacros','totalDocumentos' , 'totalUsers'));
+        $totalUsers = User::count();
+
+        $ultimosDocumentos = Document::with(['user', 'macro', 'sectors'])
+            ->latest()
+            ->take(10);
+            
+        return view('dashboard.index', compact('totalMacros', 'totalDocumentos', 'totalUsers', 'ultimosDocumentos'));
     }
 }
+
