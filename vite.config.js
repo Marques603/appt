@@ -14,7 +14,8 @@ export default defineConfig({
       input: [
         'resources/scss/app.scss',
         'resources/js/app.js',
-        'resources/js/custom/analytics.js', // <-- ADICIONE esta linha
+        'resources/js/custom/analytics.js',
+       
       ],
       refresh: true,
     }),
