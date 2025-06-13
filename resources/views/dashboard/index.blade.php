@@ -1,7 +1,7 @@
 <x-app-layout>
     <!-- Page Title Starts -->
      
-    <x-page-title header="Ecommerce Report" />
+    <x-page-title header="Dashboard" />
 
     <!-- Page Title Ends -->
 
@@ -13,12 +13,13 @@
                 <div class="card-body flex items-center gap-4">
                     <div
                         class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-500 bg-opacity-20 text-primary-500">
-                        <i class="bx bx-dollar-circle text-3xl"></i>
+                      <i class='bx  bx-folder-code bx-rotate-270 bx-flip-horizontal'  ></i> 
+                        <i class='bx  bx-van'  ></i> 
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
                         <p class="text-sm tracking-wide text-slate-500">Total Sales</p>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <h4>$25,275</h4>
+                            <h4>{{ number_format($totalMacros) }}</h4>
                             <span class="flex items-center text-xs font-medium text-success-500"><i class="h-3 w-3"
                                     stroke-width="3px" data-feather="arrow-up-right"></i>2.2%</span>
                         </div>

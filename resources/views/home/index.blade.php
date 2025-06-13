@@ -1,7 +1,7 @@
 <x-app-layout>
     <!-- Page Title Starts -->
 
-   <x-page-title header="Inicio" />
+   
 
     <!-- Page Title Ends -->
 

@@ -35,7 +35,7 @@
             </a>
             <ul class="sidebar-submenu">
                 <li>
-                    <a href="#"
+                    <a href="{{ route('dashboard') }}"
                         class="sidebar-submenu-item {{ request()->routeIs('home') ? 'active' : '' }}">Dashboard</a>
                 </li>
                <!--  <li>
