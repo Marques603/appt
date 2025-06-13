@@ -15,7 +15,7 @@ export default defineConfig({
         'resources/scss/app.scss',
         'resources/js/app.js',
         'resources/js/custom/analytics.js',
-       
+        'resources/js/custom/ecommerce.js',
       ],
       refresh: true,
     }),
