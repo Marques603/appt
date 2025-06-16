@@ -1,10 +1,20 @@
+
+
 <x-app-layout>
     <!-- Page Title Starts -->
 
     <x-page-title header="Analytics" />
-     @vite(['resources/js/custom/analytics.js', 'resources/js/custom/ecommerce.js'])
+
+    @vite(['resources/js/custom/analytics.js',])
 
     <!-- Page Title Ends -->
+
+    @if(session('status'))
+  <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
+    <p>{{ session('status') }}</p>
+  </div>
+  @endif
+
 
     <div class="space-y-6">
         <!-- Overview Section Start -->
@@ -17,9 +27,9 @@
                         <i data-feather="box" class="text-3xl"></i>
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
-                        <p class="text-sm tracking-wide text-slate-500">Product Views</p>
+                        <p class="text-sm tracking-wide text-slate-500">Total documentos inseridos</p>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <h4>$24,92</h4>
+                            <h4>{{ $totalDocuments }}</h4>
                             <span class="flex items-center text-xs font-medium text-success-500"><i class="h-3 w-3"
                                     stroke-width="3px" data-feather="arrow-up-right"></i>2.2%</span>
                         </div>
@@ -34,7 +44,7 @@
                         <i class="bx bx-dollar-circle text-3xl"></i>
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
-                        <p class="text-sm tracking-wide text-slate-500">Product Sold</p>
+                        <p class="text-sm tracking-wide text-slate-500">Arquivos</p>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
                             <h4>8,430</h4>
                             <span class="flex items-center text-xs font-medium text-danger-500">
@@ -48,12 +58,12 @@
                 <div class="card-body flex items-center gap-4">
                     <div
                         class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-warning-500 bg-opacity-20 text-warning-500">
-                        <i class="ti ti-thumb-up text-3xl"></i>
+                        <i class="ti ti-hand-click text-3xl"></i>
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
-                        <p class="text-sm tracking-wide text-slate-500">Total Likes</p>
+                        <p class="text-sm tracking-wide text-slate-500">Total documentos visualizados</p>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <h4>46,256</h4>
+                            <h4>{{ $totalClicks }}</h4>
                             <span class="flex items-center text-xs font-medium text-success-500">
                                 <i class="h-3 w-3" stroke-width="3px" data-feather="arrow-up-right"></i> 1.2%</span>
                         </div>
@@ -65,12 +75,12 @@
                 <div class="card-body flex items-center gap-4">
                     <div
                         class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-info-500 bg-opacity-20 text-info-500">
-                        <i class="ti ti-message-2-cog text-3xl"></i>
+                        <i class="ti ti-users-group text-3xl"></i>
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
-                        <p class="text-sm tracking-wide text-slate-500">Conversation</p>
+                        <p class="text-sm tracking-wide text-slate-500">Total Usuários</p>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <h4>$200,56</h4>
+                            <h4>{{ $totalUsers }}</h4>
                             <span class="flex items-center text-xs font-medium text-success-500">
                                 <i class="h-3 w-3" stroke-width="3px" data-feather="arrow-up-right"></i> 3.2%</span>
                         </div>
@@ -79,15 +89,6 @@
             </div>
         </section>
         <!-- Overview Section End -->
-
-        <div>
-    <h3>Usuários ativos (últimos 7 dias): {{ $activeUsersCount }} ({{ $percentActive }}%)</h3>
-    <h3>Usuários inativos: {{ $inactiveUsersCount }} ({{ $percentInactive }}%)</h3>
-
-    <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
-        <div class="bg-green-500 h-4 rounded-full" style="width: {{ $percentActive }}%"></div>
-    </div>
-</div>
 
         <!-- Store Analytics, Active Users, Sales By Location, Top & Most Viewed Product Section Start  -->
         <section class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -98,34 +99,31 @@
                     <div id="chart-wrap" class="flex flex-col justify-between">
                         <div class="flex flex-wrap items-center justify-between gap-3 md:gap-0">
                             <!-- Chart Title  -->
-                            <h6>Store Analytics</h6>
+                            <h6>Ultimos Login</h6>
                             <!-- Legends  -->
                             <div id="store-analytics-chart-legend" class="flex items-center gap-4">
                                 <label for="visitors">
                                     <input type="checkbox" id="visitors" class="hidden" checked value="Visitors" />
                                     <div class="flex items-center gap-1">
                                         <div class="h-[10px] w-[10px] rounded-full bg-primary-500"></div>
-                                        <p class="text-sm font-medium text-slate-600 dark:text-slate-300">Visitors</p>
+                                        <p class="text-sm font-medium text-slate-600 dark:text-slate-300">Login </p>
                                     </div>
                                 </label>
 
-                                <label for="orders">
-                                    <input type="checkbox" id="orders" class="hidden" checked value="Orders" />
-                                    <div class="flex items-center gap-1">
-                                        <div class="h-[10px] w-[10px] rounded-full bg-sky-500"></div>
-                                        <span
-                                            class="text-sm font-medium text-slate-600 dark:text-slate-300">Orders</span>
-                                    </div>
-                                </label>
+
                             </div>
                             <!-- Select By Chart -->
                             <select class="select select-sm w-full md:w-32">
-                                <option value="1">Yearly</option>
-                                <option value="2">Monthly</option>
+                                <option value="1">Anual</option>
+                                <option value="2">Mês</option>
                             </select>
                         </div>
                         <!-- Chart  -->
                         <div id="store-analytics-chart" class="-mx-4"></div>
+                        <script>
+                        window.activeUsersChartData = @json($activeUsersChartData);
+                        window.loginChartData = @json($loginChartData);
+                    </script>
                     </div>
                 </div>
             </div>
@@ -134,7 +132,7 @@
                 <div class="card-body flex flex-col items-center justify-between">
                     <!-- Header  -->
                     <div class="flex w-full justify-between">
-                        <h6>Active Users</h6>
+                        <h6>Usuarios Ativos</h6>
                         <div class="dropdown" data-placement="bottom-end">
                             <div class="dropdown-toggle">
                                 <i class="ti ti-dots-vertical text-lg text-slate-500"></i>
@@ -152,7 +150,10 @@
                         </div>
                     </div>
                     <!-- Chart  -->
-                    <div id="active-users-chart" class="w-full"></div>
+                    <div id="donutChart" class="w-full"></div>
+                    <script>
+            window.activeUsersChartData = @json($activeUsersChartData);
+        </script>
                 </div>
             </div>
             <!-- Sales By Location  -->
@@ -784,116 +785,63 @@
                 </div>
             </div>
             <!-- Top Customers  -->
-            <div class="card">
-                <div class="card-body flex h-full flex-col justify-between gap-2">
-                    <!-- Header  -->
-                    <div class="flex w-full justify-between">
-                        <h6>Top Customers</h6>
-                        <div class="dropdown" data-placement="bottom-end">
-                            <div class="dropdown-toggle">
-                                <i class="ti ti-dots-vertical text-lg text-slate-500"></i>
-                            </div>
-                            <div class="dropdown-content w-[160px]">
-                                <ul class="dropdown-list">
-                                    <li class="dropdown-list-item">
-                                        <a href="javascript:void(0)" class="dropdown-link gap-2"> Action </a>
-                                    </li>
-                                    <li class="dropdown-list-item">
-                                        <a href="javascript:void(0)" class="dropdown-link gap-2"> Another Action </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Customers Table  -->
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>
-                                        <p class="whitespace-nowrap">Join Date</p>
-                                    </th>
-                                    <th>
-                                        <p class="whitespace-nowrap">Total Order</p>
-                                    </th>
-                                    <th>Revenue</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="flex gap-2">
-                                            <div class="avatar avatar-circle">
-                                                <img src="{{ asset('images/avatar1.png') }}" alt="avatar-img"
-                                                    class="avatar-img" />
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-medium">Ahmed Shakil</p>
-                                                <p class="text-xs font-normal text-slate-400">ahmed@example.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap">19 Aug 2022</td>
-                                    <td>$20,500</td>
-                                    <td>$5,000</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="flex gap-2">
-                                            <div class="avatar avatar-circle">
-                                                <img src="{{ asset('images/avatar2.png') }}" alt="avatar-img"
-                                                    class="avatar-img" />
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-medium">Mehedi Hasan</p>
-                                                <p class="text-xs font-normal text-slate-400">mehedi@example.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap">01 Jan 2022</td>
-                                    <td>$18,250</td>
-                                    <td>$4,250</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="flex gap-2">
-                                            <div class="avatar avatar-circle">
-                                                <img src="{{ asset('images/avatar3.png') }}" alt="avatar-img"
-                                                    class="avatar-img" />
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">Mirazul Islam</p>
-                                                <p class="text-xs font-normal text-slate-400">mirazul@example.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap">07 Feb 2022</td>
-                                    <td>$15,250</td>
-                                    <td>$4,000</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="flex gap-2">
-                                            <div class="avatar avatar-circle">
-                                                <img src="{{ asset('images/avatar4.png') }}" alt="avatar-img"
-                                                    class="avatar-img" />
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">Tanvir Ahmed</p>
-                                                <p class="text-xs font-normal text-slate-400">tanvir@example.com</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap">03 May 2022</td>
-                                    <td>$12,650</td>
-                                    <td>$3,500</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <!-- Usuários Mais Ativos -->
+<div class="card">
+    <div class="card-body flex h-full flex-col justify-between gap-2">
+        <!-- Header  -->
+        <div class="flex w-full justify-between">
+            <h6>Usuários Mais Ativos</h6>
+            <div class="dropdown" data-placement="bottom-end">
+                <div class="dropdown-toggle">
+                    <i class="ti ti-dots-vertical text-lg text-slate-500"></i>
+                </div>
+                <div class="dropdown-content w-[160px]">
+                    <ul class="dropdown-list">
+                        <li class="dropdown-list-item">
+                            <a href="javascript:void(0)" class="dropdown-link gap-2">Exportar CSV</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </div>
+
+        <!-- Tabela de Usuários -->
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                                                <th>Logins</th>
+                        <th>Último Acesso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($usuariosMaisAtivos as $item)
+                        @php
+                            $user = \App\Models\User::find($item->user_id);
+                        @endphp
+                        @if ($user)
+                            <tr>
+                                <td class="whitespace-nowrap">
+                                    <div class="flex gap-2 items-center">
+                                         <div class="avatar avatar-circle">
+                    <img class="avatar-img" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/avatar1.png') }}" 
+                alt="{{ $user->name }}" />
+                  </div>
+                                        <p class="text-sm font-medium">{{ $user->name }}</p>
+                                    </div>
+                                </td>
+                                <td class="text-sm text-center">{{ $item->total }}</td>
+                                <td class="text-sm text-slate-400">{{ $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->format('d/m/Y H:i') : '-' }}</td>
+                            </tr>
+                        @endif
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
         </section>
         <!-- Customer Satisfaction & Top Customers Section End -->
     </div>
