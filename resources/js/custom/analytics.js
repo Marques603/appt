@@ -69,4 +69,63 @@ document.addEventListener('DOMContentLoaded', function () {
         const loginChart = new ApexCharts(document.querySelector("#store-analytics-chart"), loginChartOptions);
         loginChart.render();
     }
+
+    // --------- Bar Chart: Documentos por Macro e Setor ---------
+    const macroSectorData = window.macroSectorChartData;
+
+    if (macroSectorData) {
+        const macros = Object.keys(macroSectorData);
+
+        const sectorsSet = new Set();
+        macros.forEach(macro => {
+            macroSectorData[macro].forEach(item => {
+                sectorsSet.add(item.sector);
+            });
+        });
+
+        const sectors = Array.from(sectorsSet);
+
+        const series = sectors.map(sector => {
+            return {
+                name: sector,
+                data: macros.map(macro => {
+                    const found = macroSectorData[macro].find(item => item.sector === sector);
+                    return found ? found.total : 0;
+                })
+            };
+        });
+
+        const macroSectorChartOptions = {
+            chart: {
+                type: 'bar',
+                height: 400,
+                stacked: true,
+                toolbar: { show: false }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                }
+            },
+            series: series,
+            xaxis: {
+                categories: macros,
+                labels: {
+                    style: {
+                        colors: theme === 'dark' ? colors.slate[300] : colors.slate[600]
+                    }
+                }
+            },
+            colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'],
+            legend: {
+                position: 'top'
+            },
+            dataLabels: {
+                enabled: true
+            }
+        };
+
+        const macroSectorChart = new ApexCharts(document.querySelector("#macroSectorChart"), macroSectorChartOptions);
+        macroSectorChart.render();
+    }
 });

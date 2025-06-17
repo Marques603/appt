@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Document;
 use App\Models\DocumentLog;
+use App\Models\Sector;
 use Illuminate\Http\Request;
+use App\Models\Macro;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -14,6 +16,7 @@ class DashboardController extends Controller
     public function index()
     {
         $totalUsers = User::count();
+        $totalSetores = Sector::count();
         $totalDocuments = Document::count();
         $totalClicks = DocumentLog::count();
 
@@ -52,7 +55,7 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // Setores com mais documentos (assumindo tabela pivot document_sector)
+        // Setores com mais documentos
         $setoresMaisAtivos = DB::table('document_sector')
             ->select('sector_id', DB::raw('count(*) as total'))
             ->groupBy('sector_id')
@@ -60,13 +63,57 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // Usuários com mais logins (assumindo tabela users_logs)
+        // Usuários com mais logins
         $usuariosMaisAtivos = DB::table('users_logs')
             ->select('user_id', DB::raw('count(*) as total'))
             ->groupBy('user_id')
             ->orderByDesc('total')
             ->limit(5)
             ->get();
+
+        // Total de documentos por setor (Top 5)
+        $totalPorSetor = DB::table('document_sector')
+            ->join('sector', 'document_sector.sector_id', '=', 'sector.id')
+            ->select('sector.name', DB::raw('count(document_sector.document_id) as total'))
+            ->groupBy('sector.name')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+
+        // Total de documentos por macro
+        $totalPorMacro = Macro::withCount('documents')
+            ->orderByDesc('documents_count')
+            ->limit(5)
+            ->get();
+
+        // Total por Macro por Setor (o novo)
+        $documentsBySectorMacro = DB::table('document')
+            ->join('document_macro', 'document_macro.document_id', '=', 'document.id')
+            ->join('macro', 'macro.id', '=', 'document_macro.macro_id')
+            ->join('document_sector', 'document_sector.document_id', '=', 'document.id')
+            ->join('sector', 'sector.id', '=', 'document_sector.sector_id')
+            ->select('macro.name as macro', 'sector.name as sector', DB::raw('COUNT(document_sector.document_id) as total'))
+            ->groupBy('macro.name', 'sector.name')
+            ->orderBy('macro.name')
+            ->orderByDesc('total')
+            ->get();
+
+        // Formatar para o gráfico JS
+        $macroSectorChartData = [];
+        foreach ($documentsBySectorMacro as $row) {
+            $macro = $row->macro;
+            $sector = $row->sector;
+            $total = $row->total;
+
+            if (!isset($macroSectorChartData[$macro])) {
+                $macroSectorChartData[$macro] = [];
+            }
+
+            $macroSectorChartData[$macro][] = [
+                'sector' => $sector,
+                'total' => $total,
+            ];
+        }
 
         // Percentuais por status
         $totalAprovados = Document::where('status', 'aprovado')->count();
@@ -89,7 +136,11 @@ class DashboardController extends Controller
             'usuariosMaisAtivos',
             'percentAprovados',
             'percentReprovados',
-            'percentPendentes'
+            'percentPendentes',
+            'totalPorMacro',
+            'totalPorSetor',
+            'totalSetores',
+            'macroSectorChartData' // <-- Adicionado
         ));
     }
 }

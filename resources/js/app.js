@@ -91,7 +91,7 @@ document.addEventListener('click', function(event) {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Remover toast automaticamente após 2 segundos
+    // Toast auto remove
     const toast = document.getElementById('toast');
     if (toast) {
         setTimeout(function () {
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 2000);
     }
 
-    // Abrir/fechar modal de ícones
+    // Modal de ícones
     const openBtn = document.getElementById('openIconPicker');
     const closeBtn = document.getElementById('closeIconPicker');
     const modal = document.getElementById('iconModal');
@@ -119,7 +119,44 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedIcon = this.getAttribute('data-icon');
             iconInput.value = selectedIcon;
             modal.classList.add('hidden');
-            feather.replace(); // Atualiza os ícones
+            feather.replace();
         });
     });
+
+    // Mostrar/ocultar botão Editar
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    const editButton = document.getElementById('edit-user-button');
+
+    function toggleEditButton() {
+        const selectedUsers = document.querySelectorAll('.user-checkbox:checked');
+        if (selectedUsers.length > 0) {
+            editButton.classList.remove('hidden');
+        } else {
+            editButton.classList.add('hidden');
+        }
+    }
+
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', toggleEditButton);
+    });
+
+    toggleEditButton();  // Garantir que o botão começa oculto se nada selecionado
+
+    // Ação ao clicar no botão Editar
+    if (editButton) {
+        editButton.addEventListener('click', function() {
+            const selected = document.querySelectorAll('.user-checkbox:checked');
+            if (selected.length === 1) {
+                // Apenas 1 usuário → redireciona para página de edição
+                const userId = selected[0].value;
+                const url = window.usersEditBaseUrl + "/" + userId + "/";
+                window.location.href = url;
+            } else if (selected.length > 1) {
+                // Mais de 1 usuário → abre nova aba como placeholder
+                window.open('https://google.com', '_blank');
+            } else {
+                alert('Selecione ao menos um usuário!');
+            }
+        });
+    }
 });

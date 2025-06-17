@@ -68,19 +68,28 @@
               </div>
             </div>
             <form action="#" method="POST">
-    @csrf
-    <button type="submit" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
-        <i class="h-4" data-feather="upload"></i>
-        <span class="hidden sm:inline-block">Exportar Excel</span>
-    </button>
-</form>
+            @csrf
+            <button type="submit" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+                <i class="h-4" data-feather="upload"></i>
+                <span class="hidden sm:inline-block">Exportar Excel</span>
+            </button>
+        </form>
 
-<form action="#" method="GET">
-    <button type="submit" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
-        <i class="h-4" data-feather="upload"></i>
-        <span class="hidden sm:inline-block">Exportar PDF</span>
-    </button>
-</form>
+        <form action="#" method="GET">
+            <button type="submit" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+                <i class="h-4" data-feather="upload"></i>
+                <span class="hidden sm:inline-block">Exportar PDF</span>
+            </button>
+        </form>
+
+        @csrf
+        @can('edit', App\Models\User::class)
+    <a class="btn btn-danger hidden" id="edit-user-button" href="#" role="button">
+        <i data-feather="edit" height="1rem" width="1rem"></i>
+        <span class="hidden sm:inline-block">Editar</span>
+    </a>
+@endcan
+          </form>
 
           </div>
           @can('edit', App\Models\User::class)
@@ -101,6 +110,7 @@
             <tr>
               <th class="w-[5%]">
                 <input class="checkbox" type="checkbox" data-check-all data-check-all-target=".user-checkbox" />
+
               </th>
               <th class="w-[30%] uppercase">Nome</th>
               <th class="w-[20%] uppercase">Email</th>
@@ -117,7 +127,10 @@
             @foreach($users as $user)
             <tr>
               <td>
-                <input class="checkbox user-checkbox" type="checkbox" />
+                <script>
+    window.usersEditBaseUrl = "{{ url('users') }}";
+</script>
+                <input class="checkbox user-checkbox" type="checkbox" value="{{ $user->id }}" />
               </td>
               <td>
                 <div class="flex items-center gap-3">
