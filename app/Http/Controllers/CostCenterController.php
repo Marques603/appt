@@ -10,16 +10,26 @@ use Illuminate\Support\Facades\Gate;
 
 class CostCenterController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
         if (!Gate::allows('view', Menu::find(3))) {
             return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
         }
 
-        $costCenters = CostCenter::with('sectors')->paginate(10);
-        return view('cost_center.index', compact('costCenters'));
+        $search = $request->input('search');
+
+        $costCenters = CostCenter::with('sectors')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%");
+                });
+            })
+            ->paginate(10);
+
+        return view('cost_center.index', compact('costCenters', 'search'));
     }
+
 
     public function create()
     {

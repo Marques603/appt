@@ -10,18 +10,27 @@ use Illuminate\Support\Facades\Gate;
 
 class MacroController extends Controller
 {
-   public function index(Request $request)
+ public function index(Request $request)
 {
     if (!Gate::allows('view', Menu::find(2))) {
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
     }
 
-    $macros = Macro::with('responsibleUsers')
-    ->withCount('documents') // carrega a contagem de documentos
-    ->paginate(10);
+    $search = $request->input('search');
 
-    return view('macro.index', compact('macros'));
+    $macros = Macro::with('responsibleUsers')
+        ->withCount('documents')
+        ->when($search, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        })
+        ->paginate(10);
+
+    return view('macro.index', compact('macros', 'search'));
 }
+
 
 
     public function create()

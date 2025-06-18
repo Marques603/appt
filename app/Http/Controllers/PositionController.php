@@ -13,14 +13,24 @@ class PositionController extends Controller
     
     public function index(Request $request)
     {
-
-    if (!Gate::allows('view', Menu::find(3))) {
+        if (!Gate::allows('view', Menu::find(3))) {
             return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
         }
 
-        $positions = Position::with('users')->paginate(10);
-        return view('position.index', compact('positions'));
+        $search = $request->input('search');
+
+        $positions = Position::with('users')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->paginate(10);
+
+        return view('position.index', compact('positions', 'search'));
     }
+
 
     public function create()
     {
