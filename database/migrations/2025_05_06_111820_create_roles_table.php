@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('module');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,11 +25,6 @@ return new class extends Migration
             $table->primary(['user_id', 'role_id']);
         });
 
-        Schema::create('role_document', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->primary(['user_id', 'role_id']);
-        });
     }
 
     /**
