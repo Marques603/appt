@@ -144,19 +144,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Ação ao clicar no botão Editar
     if (editButton) {
-        editButton.addEventListener('click', function() {
-            const selected = document.querySelectorAll('.user-checkbox:checked');
-            if (selected.length === 1) {
-                // Apenas 1 usuário → redireciona para página de edição
-                const userId = selected[0].value;
-                const url = window.usersEditBaseUrl + "/" + userId + "/";
-                window.location.href = url;
-            } else if (selected.length > 1) {
-                // Mais de 1 usuário → abre nova aba como placeholder
-                window.open('https://google.com', '_blank');
-            } else {
-                alert('Selecione ao menos um usuário!');
-            }
-        });
-    }
+    editButton.addEventListener('click', function() {
+        const selected = document.querySelectorAll('.user-checkbox:checked');
+        if (selected.length === 1) {
+            // Apenas 1 usuário → redireciona
+            const userId = selected[0].value;
+            const url = window.usersEditBaseUrl + "/" + userId + "/";
+            window.location.href = url;
+        } else if (selected.length > 1) {
+            // Mais de 1 → Alerta o usuário
+            alert('Por favor, selecione apenas um usuário por vez para editar.');
+        } else {
+            alert('Selecione ao menos um usuário!');
+        }
+    });
+}
+
 });
