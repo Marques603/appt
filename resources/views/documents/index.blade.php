@@ -171,9 +171,6 @@
                                 </button>
                             @endif
                         </td>
-
-
-                            
                             <td>
                                 @if($document->status)
                                     <div class="badge badge-soft-success">Ativo</div>
