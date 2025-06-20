@@ -2,65 +2,34 @@
 
 namespace App\Policies;
 
-use App\Models\Document;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\Document;
 
 class DocumentPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    public function create(User $user)
     {
-        return false;
+        return $user->roles()->where('module', 'qualidade')->where('name', 'admin')->exists();
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Document $document)
+    public function edit(User $user)
     {
-    return $user->sectors()->whereIn('sector_id', $document->sectors->pluck('id'))->exists();
+        return $user->roles()
+            ->where('module', 'qualidade')
+            ->whereIn('name', ['admin', 'edit'])
+            ->exists();
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function view(User $user)
     {
-        return false;
+        return $user->roles()
+            ->where('module', 'qualidade')
+            ->whereIn('name', ['admin', 'edit', 'view'])
+            ->exists();
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Document $document): bool
+    public function delete(User $user)
     {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Document $document): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Document $document): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Document $document): bool
-    {
-        return false;
+        return $user->roles()->where('module', 'qualidade')->where('name', 'admin')->exists();
     }
 }

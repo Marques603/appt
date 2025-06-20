@@ -245,6 +245,7 @@ value="{{ old('admission', $user->admission ? $user->admission->format('d-m-Y') 
 </div>
 
             <!-- Vincular Papéis (Roles) -->
+<!-- Vincular Papéis (Roles) -->
 <div class="card">
     <div class="card-body">
         <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Vincular Papéis</h2>
@@ -256,15 +257,16 @@ value="{{ old('admission', $user->admission ? $user->admission->format('d-m-Y') 
 
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 @foreach ($roles as $role)
-                    <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-2">
                         <input id="role-{{ $role->id }}"
                                class="checkbox checkbox-primary"
                                type="checkbox"
                                name="roles[]"
                                value="{{ $role->id }}"
                                {{ $user->roles->contains($role->id) ? 'checked' : '' }} />
-                        <label for="role-{{ $role->id }}" class="label">
-                            {{ $role->name }}
+                        <label for="role-{{ $role->id }}" class="label flex items-center gap-2 cursor-pointer">
+                            <span>{{ $role->name }}</span>
+                            <span class="text-xs text-slate-400 dark:text-slate-500 italic">[{{ $role->module }}]</span>
                         </label>
                     </div>
                 @endforeach
