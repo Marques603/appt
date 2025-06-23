@@ -204,11 +204,30 @@ public function updateFile(Request $request, Document $document)
 }
 
     // Métodos de aprovação (showApproveForm, approve, updateApprovalStatus) mantém iguais
-    public function showApproveForm($documentId)
-    {
-        $document = Document::with('approvals.user')->findOrFail($documentId);
-        return view('documents.approve', compact('document'));
-    }
+    public function showApproveForm(Document $document)
+{
+    $approvals = $document->approvals()->with('user')->orderBy('created_at', 'desc')->get();
+
+    return view('documents.approve', compact('document', 'approvals'));
+}
+
+public function storeApproval(Request $request, Document $document)
+{
+    $request->validate([
+        'status' => 'required|in:0,1,2', // Apenas aprovar (1) ou reprovar (2)
+        'comments' => 'nullable|string|max:1000',
+    ]);
+
+    DocumentApproval::create([
+        'document_id' => $document->id,
+        'user_id' => auth()->id(),
+        'status' => $request->status,
+        'comments' => $request->comments,
+        'approved_at' => now(),
+    ]);
+
+    return redirect()->back()->with('success', 'Aprovação registrada com sucesso.');
+}
 
     public function approve($documentId)
     {
@@ -228,26 +247,36 @@ public function updateFile(Request $request, Document $document)
     }
 
     public function updateApprovalStatus(Request $request, $documentId)
-    {
-        $document = Document::findOrFail($documentId);
+{
+    $request->validate([
+        'status' => 'required|in:0,1,2',
+        'comments' => 'nullable|string|max:1000',
+    ]);
 
-        $approval = DocumentApproval::where('document_id', $documentId)
-                                    ->where('user_id', auth()->id())
-                                    ->first();
+    $document = Document::findOrFail($documentId);
 
-        if (!$approval) {
-            $approval = new DocumentApproval();
-            $approval->document_id = $documentId;
-            $approval->user_id = auth()->id();
-        }
+    $approval = $document->approvals()->where('user_id', auth()->id())->first();
 
-        $approval->status = $request->status ?? 0;
-        $approval->approved_at = now();
-        $approval->comments = $request->comments ?? null;
-        $approval->save();
-
-        return redirect()->route('documents.index')->with('success', 'Status de aprovação atualizado com sucesso.');
+    if ($approval) {
+        // Atualiza histórico existente para o usuário
+        $approval->update([
+            'status' => $request->status,
+            'comments' => $request->comments,
+            'approved_at' => now(),
+        ]);
+    } else {
+        // Cria novo histórico de aprovação para o usuário
+        $document->approvals()->create([
+            'user_id' => auth()->id(),
+            'status' => $request->status,
+            'comments' => $request->comments,
+            'approved_at' => now(),
+        ]);
     }
+
+    return redirect()->back()->with('success', 'Status de aprovação atualizado.');
+}
+
     public function updateStatus(Request $request, Document $document)
     {
     $document->status = $request->input('status', 0);
@@ -274,7 +303,25 @@ public function logAndShow(Document $document)
 
     // Redirecionar para o arquivo (exibir documento)
     return redirect()->away(asset('storage/' . $document->file_path));
+}public function approvalIndex()
+{
+    // Exemplo de filtro por status de aprovação
+
+    $documentsPending = Document::whereHas('approvals', function ($q) {
+        $q->where('status', 0); // Em análise
+    })->get();
+
+    $documentsApproved = Document::whereHas('approvals', function ($q) {
+        $q->where('status', 1); // Aprovado
+    })->get();
+
+    $documentsRejected = Document::whereHas('approvals', function ($q) {
+        $q->where('status', 2); // Reprovado
+    })->get();
+
+    return view('documents.approval_index', compact('documentsPending', 'documentsApproved', 'documentsRejected'));
 }
+
 
 
 

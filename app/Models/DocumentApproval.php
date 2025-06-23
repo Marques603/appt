@@ -8,11 +8,20 @@ class DocumentApproval extends Model
 {
     protected $table = 'document_approvals';
 
+   
     protected $fillable = [
         'document_id',
         'user_id',
+        'status',
+        'comments',
         'approved_at',
+        'approval_type',
+        'approval_level',
     ];
+
+    protected $casts = [
+    'approved_at' => 'datetime',
+];
 
     public $timestamps = true;
 

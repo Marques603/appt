@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-page-title page="Aprovar Documento" pageUrl="{{ route('documents.index') }}" header="Aprovar Documento" />
+    <x-page-title page="Aprovação de Documento" pageUrl="{{ route('documents.index') }}" header="Aprovar Documento" />
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Informações do Documento -->
@@ -11,76 +11,73 @@
                     </div>
                     <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">{{ $document->code }}</h2>
                     <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank"
-                        class="text-sm text-blue-500 mt-2 hover:underline">Visualizar Arquivo</a>
+                       class="text-sm text-blue-500 mt-2 hover:underline">Visualizar Arquivo</a>
                 </div>
             </div>
         </section>
 
-        <!-- Aprovação -->
+        <!-- Formulário de Aprovação -->
         <section class="col-span-1 flex w-full flex-1 flex-col gap-6 lg:col-span-3 lg:w-auto">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Informações do Documento</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Revise as informações antes de aprovar ou reprovar.</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Aprovação</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Informe o seu parecer sobre este documento.</p>
 
-                    <div class="mb-4 space-y-2">
-                        <div><strong>Descrição:</strong> {{ $document->description ?? '---' }}</div>
-                        <div><strong>Revisão:</strong> {{ $document->revision ?? '---' }}</div>
-                        <div><strong>Status:</strong> {{ $document->status ? 'Ativo' : 'Inativo' }}</div>
-                    </div>
+                    <form method="POST" action="{{ route('documents.approve.store', $document->id) }}" class="flex flex-col gap-5">
+                        @csrf
 
-                    <!-- Status de Aprovação -->
-                    @php
-                        $userApproval = $document->approvals->where('user_id', auth()->id())->first();
-                    @endphp
+                        <label class="label">
+                            <span class="block mb-1">Comentário</span>
+                            <textarea name="comments" rows="3" class="input @error('comments') border-red-500 @enderror">{{ old('comments') }}</textarea>
+                            @error('comments')
+                                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </label>
 
-                    <div class="mb-6">
-                        <h3 class="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Status de Aprovação:</h3>
-                        <div class="flex space-x-4">
-                            <form action="{{ route('documents.updateApprovalStatus', $document->id) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="status" value="1">
-                                <button type="submit" class="btn btn-success" {{ optional($userApproval)->status === 1 ? 'disabled' : '' }}>
-                                    Aprovar
-                                </button>
-                            </form>
+                        <div class="flex gap-4">
+    <button type="submit" name="status" value="1" class="btn btn-success">
+        <i class="bi bi-check-circle"></i> Aprovar
+    </button>
 
-                            <form action="{{ route('documents.updateApprovalStatus', $document->id) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="status" value="2">
-                                <button type="submit" class="btn btn-danger" {{ optional($userApproval)->status === 2 ? 'disabled' : '' }}>
-                                    Reprovar
-                                </button>
-                            </form>
+    <button type="submit" name="status" value="2" class="btn btn-danger">
+        <i class="bi bi-x-circle"></i> Reprovar
+    </button>
 
-                            <form action="{{ route('documents.updateApprovalStatus', $document->id) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="status" value="0">
-                                <button type="submit" class="btn btn-warning" {{ optional($userApproval)->status === 0 ? 'disabled' : '' }}>
-                                    Em Análise
-                                </button>
-                            </form>
+    <button type="submit" name="status" value="0" class="btn btn-warning">
+        <i class="bi bi-hourglass-split"></i> Em Análise
+    </button>
+</div>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- Histórico de Aprovações -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Histórico de Aprovações</h2>
+
+                    @forelse ($approvals as $approval)
+                        <div class="p-2 border rounded mb-3">
+                            <strong>{{ $approval->user->name }}</strong>
+                            <span class="text-xs text-slate-500"> • {{ $approval->approved_at->format('d/m/Y H:i') }}</span>
+                            <div class="mt-1 text-sm">
+                                <span>Status: 
+                                    @if ($approval->status == 1)
+                                        <span class="text-green-600">Aprovado</span>
+                                    @elseif ($approval->status == 2)
+                                        <span class="text-red-600">Reprovado</span>
+                                    @else
+                                        <span class="text-yellow-500">Em Análise</span>
+                                    @endif
+                                </span>
+                                <br>
+                                <span>Comentário: {{ $approval->comments ?: 'Sem comentário' }}</span>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Lista de aprovações -->
-                    <div class="mb-6">
-                        <h3 class="text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Aprovado por:</h3>
-                        <ul class="list-disc pl-5 text-sm text-slate-500">
-                            @forelse($document->approvals as $approval)
-                                <li>{{ $approval->user->name }} — 
-                                    @switch($approval->status)
-                                        @case(1) Aprovado @break
-                                        @case(2) Reprovado @break
-                                        @default Em Análise
-                                    @endswitch
-                                </li>
-                            @empty
-                                <li>Nenhuma aprovação registrada ainda.</li>
-                            @endforelse
-                        </ul>
-                    </div>
-
+                    @empty
+                        <p class="text-sm text-slate-500">Nenhum histórico de aprovação ainda.</p>
+                    @endforelse
                 </div>
             </div>
         </section>

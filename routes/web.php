@@ -81,6 +81,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('documents/{document}/sectors', [DocumentController::class, 'updateSectors'])->name('documents.update.sectors');
     Route::put('/documents/{document}/status', [DocumentController::class, 'updateStatus'])->name('documents.update.status');
     Route::get('/documents/{document}/view', [DocumentController::class, 'logAndShow'])->name('documents.logAndShow');
+    // Formulário de Aprovação
+Route::get('/documents/{document}/approve', [DocumentController::class, 'showApproveForm'])->name('documents.approve.form');
+
+// Salvar Aprovação
+Route::post('/documents/{document}/approve', [DocumentController::class, 'storeApproval'])->name('documents.approve.store');
+
+
+
 
 
     // Rotas de archives (CRUD) 
