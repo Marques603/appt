@@ -71,21 +71,29 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Rotas de documentos (CRUD)
-    Route::resource('documents', DocumentController::class);
+    // Documentos - todas rotas exceto update (já que você tem update separado por partes)
+    Route::resource('documents', DocumentController::class)->except(['update']);
+
+    // Tela só de aprovação
+    Route::get('/documents/approval-index', [DocumentController::class, 'approvalIndex'])->name('documents.approval.index');
+
+    // Formulário de Aprovação
     Route::get('/documents/{document}/approve', [DocumentController::class, 'showApproveForm'])->name('documents.approve.form');
-    Route::post('/documents/{document}/approve', [DocumentController::class, 'approve'])->name('documents.approve');
+    Route::post('/documents/{document}/approve', [DocumentController::class, 'storeApproval'])->name('documents.approve.store');
+
+    // Update de status de aprovação
     Route::post('/documents/{document}/approve/status', [DocumentController::class, 'updateApprovalStatus'])->name('documents.updateApprovalStatus');
+
+    // Atualizações separadas
     Route::put('documents/{document}/code', [DocumentController::class, 'updateCode'])->name('documents.update.code');
     Route::put('documents/{document}/file', [DocumentController::class, 'updateFile'])->name('documents.update.file');
     Route::put('documents/{document}/macros', [DocumentController::class, 'updateMacros'])->name('documents.update.macros');
     Route::put('documents/{document}/sectors', [DocumentController::class, 'updateSectors'])->name('documents.update.sectors');
     Route::put('/documents/{document}/status', [DocumentController::class, 'updateStatus'])->name('documents.update.status');
-    Route::get('/documents/{document}/view', [DocumentController::class, 'logAndShow'])->name('documents.logAndShow');
-    // Formulário de Aprovação
-Route::get('/documents/{document}/approve', [DocumentController::class, 'showApproveForm'])->name('documents.approve.form');
 
-// Salvar Aprovação
-Route::post('/documents/{document}/approve', [DocumentController::class, 'storeApproval'])->name('documents.approve.store');
+    // Log visualização
+    Route::get('/documents/{document}/view', [DocumentController::class, 'logAndShow'])->name('documents.logAndShow');
+
 
 
 
@@ -102,6 +110,8 @@ Route::post('/documents/{document}/approve', [DocumentController::class, 'storeA
     Route::put('archives/{archive}/sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
     Route::put('/archives/{archive}/status', [ArchiveController::class, 'updateStatus'])->name('archives.update.status');
     Route::get('/archives/{archive}/view', [ArchiveController::class, 'logAndShow'])->name('archives.logAndShow');
+    Route::get('/documentsapprove', [DocumentController::class, 'documentsapprove'])->name('documentsapprove.index');
+
 
 
     // Rotas de empresas (CRUD)

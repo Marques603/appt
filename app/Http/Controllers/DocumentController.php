@@ -303,24 +303,18 @@ public function logAndShow(Document $document)
 
     // Redirecionar para o arquivo (exibir documento)
     return redirect()->away(asset('storage/' . $document->file_path));
-}public function approvalIndex()
+}public function documentsapprove(Request $request)
 {
-    // Exemplo de filtro por status de aprovação
+    $documents = Document::where('status', 0) // Exemplo: pegando só documentos com status "Em aprovação"
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-    $documentsPending = Document::whereHas('approvals', function ($q) {
-        $q->where('status', 0); // Em análise
-    })->get();
-
-    $documentsApproved = Document::whereHas('approvals', function ($q) {
-        $q->where('status', 1); // Aprovado
-    })->get();
-
-    $documentsRejected = Document::whereHas('approvals', function ($q) {
-        $q->where('status', 2); // Reprovado
-    })->get();
-
-    return view('documents.approval_index', compact('documentsPending', 'documentsApproved', 'documentsRejected'));
+    return view('documents.approve-index', compact('documents'));
 }
+
+
+
+
 
 
 
