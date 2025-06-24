@@ -114,8 +114,8 @@
               </th>
               <th class="w-[30%] uppercase">Nome</th>
               <th class="w-[20%] uppercase">Email</th>
-              <th class="w-[15%] uppercase">Setor</td>
-              <th class="w-[15%] uppercase">Empresa</td>
+              <th class="w-[15%] uppercase">Setor</th>
+              <th class="w-[15%] uppercase">Empresa</th>
               <th class="w-[15%] uppercase">Data de Criação</th>
               <th class="w-[15%] uppercase">Status</th>
               @can('edit', App\Models\User::class)
