@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use PDF;
 
 class UserController extends Controller
 {
@@ -226,7 +227,8 @@ public function update(Request $request, User $user)
     $user->save();
 
     return redirect()->back()->with('success', 'Senha atualizada com sucesso!');
-}public function updateAvatar(Request $request, User $user)
+}
+public function updateAvatar(Request $request, User $user)
 {
     $request->validate([
         'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -239,7 +241,48 @@ public function update(Request $request, User $user)
 
     return redirect()->back()->with('success', 'Avatar atualizado com sucesso!');
 }
+public function exportCsv()
+    {
+        $users = User::with('sectors', 'roles')->get();
 
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=users.csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
 
-    
+        $callback = function() use ($users) {
+            $file = fopen('php://output', 'w');
+
+            // Cabeçalho do CSV
+            fputcsv($file, ['ID', 'Nome', 'Email', 'Setores', 'Funções', 'Status', 'Data de Criação']);
+
+            foreach ($users as $user) {
+                fputcsv($file, [
+                    $user->id,
+                    $user->name,
+                    $user->email,
+                    $user->sectors->pluck('name')->implode(', '),
+                    $user->roles->pluck('name')->implode(', '),
+                    $user->status ? 'Ativo' : 'Inativo',
+                    $user->created_at->format('d/m/Y H:i')
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportPdf()
+    {
+        $users = User::with('sectors', 'roles')->get();
+
+        $pdf = PDF::loadView('users.export-pdf', compact('users'));
+
+        return $pdf->download('users.pdf');
+    }
 }

@@ -67,20 +67,18 @@
                 </ul>
               </div>
             </div>
-            <form action="#" method="POST">
-            @csrf
-            <button type="submit" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
-                <i class="h-4" data-feather="upload"></i>
-                <span class="hidden sm:inline-block">Exportar Excel</span>
-            </button>
-        </form>
+<!-- Export CSV -->
+<a href="{{ route('users.export.csv') }}" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+    <i class="h-4" data-feather="upload"></i>
+    <span class="hidden sm:inline-block">Exportar CSV</span>
+</a>
 
-        <form action="#" method="GET">
-            <button type="submit" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
-                <i class="h-4" data-feather="upload"></i>
-                <span class="hidden sm:inline-block">Exportar PDF</span>
-            </button>
-        </form>
+<!-- Export PDF -->
+<a href="{{ route('users.export.pdf') }}" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+    <i class="h-4" data-feather="upload"></i>
+    <span class="hidden sm:inline-block">Exportar PDF</span>
+</a>
+
 
         @csrf
         @can('edit', App\Models\User::class)

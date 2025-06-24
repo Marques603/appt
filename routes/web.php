@@ -23,6 +23,8 @@ use App\Http\Controllers\ArchiveController;
 |
 */
 
+
+
 Route::middleware(['auth'])->group(function () {
 
     // home principal
@@ -31,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
     // Rota dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        Route::get('/users/export-csv', [UserController::class, 'exportCsv'])->name('users.export.csv');
+Route::get('/users/export-pdf', [UserController::class, 'exportPdf'])->name('users.export.pdf');
 
     // Rotas de usuários (CRUD)
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -45,6 +49,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/users/{user}/menus', [UserController::class, 'updateMenus'])->name('users.update.menus');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar'])->name('users.update.avatar');
+
+
+
 
 
     // Rotas de cargos (CRUD)
