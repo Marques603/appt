@@ -3,16 +3,16 @@
     <a href="{{ route('home') }}">
         <div class="sidebar-header">
             <div class="sidebar-logo-icon">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                <x-application-logo class="w-20 h-15 fill-current text-gray-500" />
             </div>
 
             <div class="sidebar-logo-text">
                 <h1 class="flex text-xl">
-                    <span class="font-bold text-slate-800 dark:text-slate-200"> Ap </span>
-                    <span class="font-semibold text-primary-500">pz</span>
+                    <span class="whitespace-nowrap text-x  dark:text-slate-200"> INUSITTÁ </span>
+                    
                 </h1>
 
-                <p class="whitespace-nowrap text-xs text-slate-400"> ... &amp; ...</p>
+                <p class="whitespace-nowrap text-xs text-slate-400"> Ambientes Planejados.</p>
             </div>
         </div>
     </a>
