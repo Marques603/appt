@@ -30,11 +30,12 @@ class DashboardController extends Controller
         ];
 
         // Logins por dia (últimos 7 dias)
-        $loginsPorDia = User::whereNotNull('last_login_at')
-            ->where('last_login_at', '>=', now()->subDays(6))
-            ->selectRaw('DATE(last_login_at) as data, COUNT(*) as total')
-            ->groupBy('data')
-            ->pluck('total', 'data');
+        $loginsPorDia = DB::table('users_logs')
+        ->where('created_at', '>=', now()->subDays(6)) // últimos 7 dias contando hoje
+        ->selectRaw('DATE(created_at) as data, COUNT(*) as total')
+        ->groupBy('data')
+        ->orderBy('data')
+        ->pluck('total', 'data');
 
         $ultimos7Dias = collect(range(6, 0))->map(function ($i) {
             return now()->subDays($i)->format('Y-m-d');
