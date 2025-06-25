@@ -7,7 +7,7 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 
 
 export const themeColors = {
-    primary: colors.blue,
+    primary: colors.slate,
     secondary: colors.gray,
     success: colors.emerald,
     warning: colors.amber,
