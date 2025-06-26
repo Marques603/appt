@@ -8,7 +8,8 @@
 
             <div class="sidebar-logo-text">
                 <h1 class="flex text-xl">
-                    <span class="whitespace-nowrap text-base  dark:text-slate-800"> INUSITTÁ </span>
+                    
+                    <span class="whitespace-nowrap text-base  dark:text-slate-200"> INUSITTÁ </span>
                     
                 </h1>
 
