@@ -2,6 +2,8 @@
     <!-- Título da Página -->
     <x-page-title page="Lista de Empresas" pageUrl="{{ route('company.index') }}" header="{{ isset($company) ? 'Editar Empresa' : 'Criar Empresa' }}" />
 
+     @section('title', 'Criar empresa | Inusittá')
+
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Preview fixo à esquerda -->
         <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">

@@ -2,6 +2,8 @@
     <!-- Título da Página -->
     <x-page-title page="Lista de Centros de Custo" pageUrl="{{ route('cost_center.index') }}" header="Editar Centro de Custo" />
 
+    @section('title', 'Editar centro de custo | Inusittá')
+
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
             <p>{{ session('success') }}</p>

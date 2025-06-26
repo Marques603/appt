@@ -3,6 +3,8 @@
     <x-page-title page="Lista de Usuários" pageUrl="{{ route('users.index') }}" header="Criar Usuário" />
     <!-- Page Title Ends -->
 
+    @section('title', 'Criar usuário | Inusittá')
+
     <!-- User Profile Start  -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Left Section Start  -->

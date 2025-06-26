@@ -3,17 +3,17 @@
   
     <x-page-title page="Lista de Usuários" header="Lista de Usuários" />
 
+    @section('title', 'Lista de usuários | Inusittá')
 
-  <!-- Page Title Ends -->
+    <!-- Page Title Ends -->
 
-  @if(session('status'))
-  <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
-    <p>{{ session('status') }}</p>
-  </div>
-  @endif
+    @if(session('status'))
+    <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
+      <p>{{ session('status') }}</p>
+    </div>
+    @endif
 
 
-  
     <!-- User List Starts -->
     <div class="space-y-4">
       <!-- User Header Starts -->

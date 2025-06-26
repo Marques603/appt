@@ -2,6 +2,8 @@
     <!-- Título da Página -->
     <x-page-title page="{{ isset($cost_center) ? 'Editar Centro de Custo' : 'Criar Centro de Custo' }}" pageUrl="{{ route('cost_center.index') }}" header="{{ isset($cost_center) ? 'Editar Centro de Custo' : 'Criar Centro de Custo' }}" />
 
+    @section('title', 'Criar centro de custo | Inusittá')
+
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Preview fixo à esquerda -->
         <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">

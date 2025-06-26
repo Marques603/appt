@@ -5,6 +5,8 @@
 
     <x-page-title header="Dashboard Analítico" />
 
+    @section('title', 'Dashboard analítico | Inusittá')
+
     @vite(['resources/js/custom/analytics.js',])
 
     <!-- Page Title Ends -->

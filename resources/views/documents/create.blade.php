@@ -1,6 +1,8 @@
 <x-app-layout>
     <x-page-title page="Enviar Documento" pageUrl="{{ route('documents.index') }}" header="Enviar Documento" />
 
+    @section('title', 'Criar documento | Inusittá')
+
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Preview -->
         <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">

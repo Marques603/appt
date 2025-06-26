@@ -1,7 +1,7 @@
 <x-app-layout>
     <!-- Page Title Starts -->
 
-   
+   @section('title', 'Home | Inusittá')
 
     <!-- Page Title Ends -->
 

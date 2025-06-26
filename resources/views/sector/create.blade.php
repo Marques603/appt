@@ -2,6 +2,8 @@
     <!-- Título da Página -->
     <x-page-title page="{{ isset($sector) ? 'Editar Setor' : 'Criar Setor' }}" pageUrl="{{ route('sector.index') }}" header="{{ isset($sector) ? 'Editar Setor' : 'Criar Setor' }}" />
 
+    @section('title', 'Criar setor | Inusittá')
+
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Preview fixo à esquerda -->
         <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">
