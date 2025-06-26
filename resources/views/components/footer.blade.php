@@ -1,7 +1,7 @@
 <footer class="footer">
     <p class="text-sm">
       Copyright © {{now()->year}}
-      <a class="text-dark-600 hover:underline" href="https://inusitta.com.br/" target="_blank">
+      <a class="text-slate-600 hover:underline" href="https://inusitta.com.br/" target="_blank">
         Desenvolvido por Inusittá
       </a>
     </p>

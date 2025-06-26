@@ -151,30 +151,30 @@
                 </div>
               </td>
               <td>{{ $user->email }}</td>
-@php
-    $userSectors = $user->sectors;
-    $totalSectors = \App\Models\Sector::count();
-    $sectorAcronyms = $userSectors->pluck('name')->toArray();
-    $tooltipContent = implode(', ', $sectorAcronyms);
-@endphp
+              @php
+                  $userSectors = $user->sectors;
+                  $totalSectors = \App\Models\Sector::count();
+                  $sectorAcronyms = $userSectors->pluck('name')->toArray();
+                  $tooltipContent = implode(', ', $sectorAcronyms);
+              @endphp
 
-<td>
-    @if($userSectors->isEmpty())
-        <span class="badge badge-soft-danger">Nenhum setor vinculado</span>
-    @elseif($userSectors->count() === 1)
-    <span class="badge badge-soft-secondary">
-        {{ $userSectors->first()->name }}
-    @else
-        <button
-            type="button"
-            class="badge badge-soft-secondary"
-            data-tooltip="tippy"
-            data-tippy-content="{{ $tooltipContent }}"
-        >
-            {{ $userSectors->count() === $totalSectors ? 'Todos os setores' : $userSectors->count() . ' setores' }}
-        </button>
-    @endif
-</td>
+              <td>
+                  @if($userSectors->isEmpty())
+                      <span class="badge badge-soft-danger">Nenhum setor vinculado</span>
+                  @elseif($userSectors->count() === 1)
+                  <span class="badge badge-soft-info">
+                      {{ $userSectors->first()->name }}
+                  @else
+                      <button
+                          type="button"
+                          class="badge badge-soft-secondary"
+                          data-tooltip="tippy"
+                          data-tippy-content="{{ $tooltipContent }}"
+                      >
+                          {{ $userSectors->count() === $totalSectors ? 'Todos os setores' : $userSectors->count() . ' setores' }}
+                      </button>
+                  @endif
+              </td>
 
               <td>{{ $user->companies->isEmpty() ? 'Nenhuma empresa vinculada' : $user->companies->pluck('name')->join(', ') }}</td>
               <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>

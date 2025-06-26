@@ -124,7 +124,7 @@
                             <td>
                                 
                             @if($sector->responsibleUsers->isNotEmpty())
-                            <span class="badge badge-soft-dark">{{ $sector->responsibleUsers->pluck ('name')->join(', ') }}</span>
+                            <span class="badge badge-soft-info">{{ $sector->responsibleUsers->pluck ('name')->join(', ') }}</span>
                             @else
                             <span class="badge badge-soft-danger">Não definido</span>
                             @endif

@@ -13,7 +13,7 @@ export const themeColors = {
     warning: colors.amber,
     danger: colors.rose,
     info: colors.indigo,
-    dark: colors.slate,
+    dark: colors.purple,
   };
   
 export default {

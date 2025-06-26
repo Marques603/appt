@@ -141,7 +141,7 @@
                             {{-- Macros --}}
                     <td>
                         @foreach($document->macros as $macro)
-                            <span class="badge badge-soft-primary">{{ $macro->name }}</span>
+                            <span class="badge badge-soft-info">{{ $macro->name }}</span>
                         @endforeach
                     </td>
 
