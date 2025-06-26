@@ -8,11 +8,11 @@
 
             <div class="sidebar-logo-text">
                 <h1 class="flex text-xl">
-                    <span class="whitespace-nowrap text-x  dark:text-slate-200"> INUSITTÁ </span>
+                    <span class="whitespace-nowrap text-base  dark:text-slate-800"> INUSITTÁ </span>
                     
                 </h1>
 
-                <p class="whitespace-nowrap text-xs text-slate-400"> Ambientes Planejados.</p>
+                <p class="whitespace-nowrap text-xs text-slate-400"> Ambientes Planejados Ltda</p>
             </div>
         </div>
     </a>
