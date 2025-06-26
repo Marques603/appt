@@ -39,9 +39,9 @@
             <div class="dropdown" data-placement="bottom-end">
               <div class="dropdown-toggle">
                 <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
-                  <i class="w-4" data-feather="filter"></i>
+                  <i class="w-4 h-4" data-feather="filter"></i>
                   <span class="hidden sm:inline-block">Filtros</span>
-                  <i class="w-4" data-feather="chevron-down"></i>
+                  <i class="w-4 h-4" data-feather="chevron-down"></i>
                 </button>
               </div>
               <div class="dropdown-content w-72 !overflow-visible">
