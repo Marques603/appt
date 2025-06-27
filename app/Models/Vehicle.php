@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vehicle extends Model
 {
+    use SoftDeletes;
     const STATUS_DISPONIVEL = 1;
     const STATUS_EM_TRANSITO = 2;
 

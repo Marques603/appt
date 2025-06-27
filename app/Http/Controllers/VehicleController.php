@@ -8,14 +8,32 @@ use Illuminate\Http\Request;
 class VehicleController extends Controller
 {
     public function index(Request $request)
-    {
-        $vehicles = Vehicle::when($request->search, function ($query, $search) {
-            $query->where('plate', 'like', "%{$search}%")
-                  ->orWhere('model', 'like', "%{$search}%");
-        })->paginate(10);
+{
+    $vehicles = Vehicle::query();
 
-        return view('vehicles.index', compact('vehicles'));
+    if ($request->has('search')) {
+        $vehicles->where(function ($query) use ($request) {
+            $query->where('plate', 'like', '%' . $request->search . '%')
+                  ->orWhere('model', 'like', '%' . $request->search . '%');
+        });
     }
+
+    if ($request->has('status') && $request->status !== '') {
+        $vehicles->where('status', $request->status);
+    }
+
+    if ($request->has('brand') && $request->brand !== '') {
+        $vehicles->where('brand', $request->brand);
+    }
+
+    $vehicles = $vehicles->paginate(10)->appends($request->query());
+
+    // Pega lista única de marcas cadastradas
+    $brands = Vehicle::select('brand')->distinct()->pluck('brand');
+
+    return view('vehicles.index', compact('vehicles', 'brands'));
+}
+
 
     public function create()
     {

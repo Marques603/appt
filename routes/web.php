@@ -37,8 +37,8 @@ Route::middleware(['auth'])->group(function () {
     // Rota dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        Route::get('/users/export-csv', [UserController::class, 'exportCsv'])->name('users.export.csv');
-Route::get('/users/export-pdf', [UserController::class, 'exportPdf'])->name('users.export.pdf');
+    Route::get('/users/export-csv', [UserController::class, 'exportCsv'])->name('users.export.csv');
+    Route::get('/users/export-pdf', [UserController::class, 'exportPdf'])->name('users.export.pdf');
 
     // Rotas de usuários (CRUD)
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -146,22 +146,20 @@ Route::get('/users/export-pdf', [UserController::class, 'exportPdf'])->name('use
     Route::put('/cost_center/{cost_center}/update-status', [CostCenterController::class, 'updateStatus'])->name('cost_center.update.status');
     Route::put('/cost_center/{cost_center}/update-sectors', [CostCenterController::class, 'updateSectors'])->name('cost_center.update.sectors');
 
-    // Rotas de veículos (CRUD)
+    // CRUD de veículos
+    Route::resource('vehicles', VehicleController::class);
+    Route::get('/vehicles/export/csv', [VehicleController::class, 'exportCsv'])->name('vehicles.export.csv');
+    Route::get('/vehicles/export/pdf', [VehicleController::class, 'exportPdf'])->name('vehicles.export.pdf');
 
-
-
-// CRUD de veículos
-Route::resource('vehicles', VehicleController::class);
-
-// Registro de saída
-Route::prefix('vehicles/{vehicle}')->group(function () {
+    // Registro de saída
+    Route::prefix('vehicles/{vehicle}')->group(function () {
     Route::get('saida', [VehicleMovementController::class, 'create'])->name('vehicles.movement.create');
     Route::post('saida', [VehicleMovementController::class, 'store'])->name('vehicles.movement.store');
-});
+    });
 
-// Registro de retorno
-Route::get('movements/{movement}/retorno', [VehicleMovementController::class, 'edit'])->name('vehicles.movement.edit');
-Route::put('movements/{movement}/retorno', [VehicleMovementController::class, 'update'])->name('vehicles.movement.update');
+    // Registro de retorno
+    Route::get('movements/{movement}/retorno', [VehicleMovementController::class, 'edit'])->name('vehicles.movement.edit');
+    Route::put('movements/{movement}/retorno', [VehicleMovementController::class, 'update'])->name('vehicles.movement.update');
 
 
 });

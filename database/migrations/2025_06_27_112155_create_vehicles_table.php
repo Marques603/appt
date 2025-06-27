@@ -20,6 +20,7 @@ return new class extends Migration
         $table->tinyInteger('status')->default(1); // 1: disponível, 2: em trânsito
         $table->text('observations')->nullable();
         $table->timestamps();
+        $table->softDeletes();
 });
         Schema::create('vehicle_movements', function (Blueprint $table) {
         $table->id();
@@ -38,6 +39,7 @@ return new class extends Migration
         $table->text('observations')->nullable();
 
         $table->timestamps();
+        $table->softDeletes();
         });
     }
 
