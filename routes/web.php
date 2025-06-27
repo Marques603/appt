@@ -12,6 +12,10 @@ use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\VehicleMovementController;
+
+
 
 
 /*
@@ -141,6 +145,23 @@ Route::get('/users/export-pdf', [UserController::class, 'exportPdf'])->name('use
     Route::put('/cost_center/{cost_center}/update-info', [CostCenterController::class, 'updateInfo'])->name('cost_center.update.info');
     Route::put('/cost_center/{cost_center}/update-status', [CostCenterController::class, 'updateStatus'])->name('cost_center.update.status');
     Route::put('/cost_center/{cost_center}/update-sectors', [CostCenterController::class, 'updateSectors'])->name('cost_center.update.sectors');
+
+    // Rotas de veículos (CRUD)
+
+
+
+// CRUD de veículos
+Route::resource('vehicles', VehicleController::class);
+
+// Registro de saída
+Route::prefix('vehicles/{vehicle}')->group(function () {
+    Route::get('saida', [VehicleMovementController::class, 'create'])->name('vehicles.movement.create');
+    Route::post('saida', [VehicleMovementController::class, 'store'])->name('vehicles.movement.store');
+});
+
+// Registro de retorno
+Route::get('movements/{movement}/retorno', [VehicleMovementController::class, 'edit'])->name('vehicles.movement.edit');
+Route::put('movements/{movement}/retorno', [VehicleMovementController::class, 'update'])->name('vehicles.movement.update');
 
 
 });
