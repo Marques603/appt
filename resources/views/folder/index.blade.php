@@ -78,9 +78,8 @@
                         <th class="w-[20%] uppercase">Nome</th>
                         <th class="w-[20%] uppercase">Descrição</th>
                         <th class="w-[20%] uppercase">Responsável</th>
-                        @can('edit', App\Models\User::class)
                         <th class="w-[20%] uppercase">Arquivos</th>
-                        @endcan
+                        <th class="w-[10%] uppercase">Setor</th>
                         <th class="w-[10%] uppercase">Status</th>
                         <th class="w-[5%] !text-right uppercase">Ações</th>
                     </tr>
@@ -95,6 +94,15 @@
                             <td>{{ $folder->description ?? 'Sem descrição' }}</td>
                             <td>{{ $folder->responsibleUsers->isNotEmpty() ? $folder->responsibleUsers->pluck('name')->join(', ') : 'não há responsável vinculado' }}</td>
                             <td>{{ $folder->archives_count ?? 0 }}</td>
+                            <td>
+    @if($folder->sectors->count() === 1)
+        {{ $folder->sectors->first()->name }}
+    @elseif($folder->sectors->count() > 1)
+        Todos setores
+    @else
+        <span class="text-slate-400">Nenhum setor vinculado</span>
+    @endif
+</td>      
                             <td>
                                 @if($folder->status)
                                     <div class="badge badge-soft-success">Ativo</div>

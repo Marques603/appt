@@ -145,24 +145,31 @@
                         @endforeach
                     </td>
 
-                    {{-- Setores --}}
-                            <td>
-                            @php
-                                $sectors = $archive->folders->flatMap(function ($folder) {
-                                    return $folder->sectors;
-                                })->unique('id');
-                            @endphp
+                    <td>
+    @php
+        // 1. Coletar todos os nomes dos setores
+        $sectorNames = collect();
+        foreach ($archive->folders as $folder) {
+            foreach ($folder->sectors as $sector) {
+                $sectorNames->push($sector->name);
+            }
+        }
 
-                            @if ($sectors->count() === 1)
-                                <span class="badge badge-soft-secondary">
-                                    {{ $sectors->first()->name }}
-                                </span>
-                            @elseif ($sectors->count() > 1)
-                                <span class="badge badge-soft-secondary">Todos setores</span>
-                            @else
-                                <span class="badge badge-soft-danger">Nenhum setor</span>
-                            @endif
-                        </td>
+        // 2. Remover duplicados
+        $sectorNames = $sectorNames->unique();
+    @endphp
+
+    {{-- 3. Aplicar a lógica final --}}
+    @if ($sectorNames->count() === 1)
+        {{ $sectorNames->first() }}
+    @elseif ($sectorNames->count() > 1)
+        Todos setores
+    @else
+        <span class="text-slate-400">Nenhum setor vinculado</span>
+    @endif
+</td>
+
+
 
                             
                             <td>
