@@ -83,8 +83,10 @@
           <thead>
             <tr>
               <th class="w-[5%]"><input class="checkbox" type="checkbox" data-check-all data-check-all-target=".vehicle-checkbox"/></th>
-              <th class="w-[30%] uppercase">Veículo</th>
-              <th class="w-[15%] uppercase">Marca</th>
+              <th class="w-[10%] uppercase">Veículo</th>
+              <th class="w-[20%] uppercase">Placa</th>
+              <th class="w-[30%] uppercase">Marca</th>
+              <th class="w-[30%] uppercase">Cor</th>
               <th class="w-[15%] uppercase">Km Atual</th>
               <th class="w-[15%] uppercase">Status</th>
               <th class="w-[5%] !text-right uppercase">Ação</th>
@@ -101,12 +103,14 @@
                   </div>
                   <div>
                     <h6 class="whitespace-nowrap text-sm font-medium text-slate-700 dark:text-slate-100">
-                      {{ $vehicle->model }} - {{ $vehicle->plate }}
+                      {{ $vehicle->model }}
                     </h6>
                     <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ $vehicle->brand }}</p>
                   </div>
                 </div>
               </td>
+              <td>{{ $vehicle->plate }}</td>
+              <td>{{ $vehicle->brand }}</td>
               <td>{{ $vehicle->brand }}</td>
               <td>{{ $vehicle->current_km }} km</td>
               <td>
