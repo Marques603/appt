@@ -54,9 +54,10 @@ class FolderController extends Controller
     public function edit(Folder $folder)
     {
         $users = User::all();
+        $sectors = Sector::all(); 
         $folder->load('responsibleUsers');
 
-        return view('folder.edit', compact('folder', 'users'));
+        return view('folder.edit', compact('folder', 'users','sectors'));
     }
 
     public function update(Request $request, Folder $folder)
@@ -113,6 +114,7 @@ class FolderController extends Controller
 {
     $request->validate([
         'sectors' => 'nullable|array',
+        'sectors.*' => 'exists:sector,id',
     ]);
 
     $folder->sectors()->sync($request->sectors ?? []);

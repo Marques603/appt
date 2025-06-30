@@ -79,7 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/folder/{folder}/status', [FolderController::class, 'updateStatus'])->name('folder.update.status');
     Route::get('/folder/{folder}/restore', [FolderController::class, 'restore'])->name('folder.restore');
     Route::put('/folder/{folder}/responsibles', [FolderController::class, 'updateResponsibles'])->name('folder.update.responsibles');
-    Route::put('folders/{folder}/sectors', [FolderController::class, 'updateSectors'])->name('folders.update.sectors');
+    Route::put('/folders/{folder}/update-sectors', [FolderController::class, 'updateSectors'])->name('folders.update.sectors');
 
 
     // Rotas de documentos (CRUD)

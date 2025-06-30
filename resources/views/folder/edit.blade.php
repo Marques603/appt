@@ -152,6 +152,43 @@
             </div>
 
 
+                                    <!-- Formulário 3: Setores Vinculados -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Setores Vinculados</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os setores vinculados a este documento</p>
+
+                    <form method="POST" action="{{ route('folders.update.sectors', $folder->id) }}">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="mb-4">
+                            <span class="block mb-1 text-sm text-slate-600 dark:text-slate-300">Setores</span>
+                            <select name="sectors[]" multiple
+                                class="tom-select w-full min-h-[2.5rem] py-2 @error('sectors') border-red-500 @enderror"
+                                autocomplete="off">
+                                @foreach($sectors as $sector)
+                                        <option value="{{ $sector->id }}" @selected(in_array($sector->id, $folder->sectors->pluck('id')->toArray()))>
+                                            {{ $sector->name }}
+                                        </option>
+                                    @endforeach
+                            </select>
+                            @error('sectors')
+                                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="flex items-center justify-end gap-4 mt-4">
+                            <a href="{{ route('archives.index') }}"
+                               class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
+                               Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">Atualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </section>
     </div>
 </x-app-layout>
