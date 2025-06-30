@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Folder;
 use App\Models\User;
+Use App\Models\Sector;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Gate;
@@ -16,8 +17,10 @@ class FolderController extends Controller
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
     }
 
-    $folders = Folder::with('responsibleUsers')
+    $folders = Folder::with('responsibleUsers','sectors')
+    ->withCount('archives')
     ->paginate(10);
+
 
     return view('folder.index', compact('folders'));
 }
@@ -106,6 +109,17 @@ class FolderController extends Controller
 
     return redirect()->route('folder.edit', $folder)->with('success', 'Responsáveis atualizados com sucesso.');
     }
+        public function updateSectors(Request $request, Folder $folder)
+{
+    $request->validate([
+        'sectors' => 'nullable|array',
+    ]);
+
+    $folder->sectors()->sync($request->sectors ?? []);
+
+    return redirect()->back()->with('success', 'Setores vinculados atualizados com sucesso.');
+}
+
 
 
 

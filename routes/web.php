@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/folder/{folder}/status', [FolderController::class, 'updateStatus'])->name('folder.update.status');
     Route::get('/folder/{folder}/restore', [FolderController::class, 'restore'])->name('folder.restore');
     Route::put('/folder/{folder}/responsibles', [FolderController::class, 'updateResponsibles'])->name('folder.update.responsibles');
+    Route::put('folders/{folder}/sectors', [FolderController::class, 'updateSectors'])->name('folders.update.sectors');
 
 
     // Rotas de documentos (CRUD)
@@ -118,7 +119,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('archives/{archive}/code', [ArchiveController::class, 'updateCode'])->name('archives.update.code');
     Route::put('archives/{archive}/file', [ArchiveController::class, 'updateFile'])->name('archives.update.file');
     Route::put('archives/{archive}/folders', [ArchiveController::class, 'updateFolders'])->name('archives.update.folders');
-    Route::put('archives/{archive}/sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
+    Route::put('archives/folders/{folder}/sectors', [ArchiveController::class, 'updateFolderSectors'])->name('archives.folders.update.sectors');
     Route::put('/archives/{archive}/status', [ArchiveController::class, 'updateStatus'])->name('archives.update.status');
     Route::get('/archives/{archive}/view', [ArchiveController::class, 'logAndShow'])->name('archives.logAndShow');
     Route::get('/documentsapprove', [DocumentController::class, 'documentsapprove'])->name('documentsapprove.index');

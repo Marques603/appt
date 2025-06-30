@@ -59,7 +59,7 @@
                     <span class="hidden sm:inline-block">Exportar</span>
                   </button>
                 </div>
-@can('edit', App\Models\User::class)
+                @can('edit', App\Models\User::class)
                 <a class="btn btn-primary" href="{{ route('folder.create') }}" role="button">
                     <i data-feather="plus" height="1rem" width="1rem"></i>
                     <span class="hidden sm:inline-block">Criar</span>
@@ -94,9 +94,7 @@
                             <td>{{ $folder->name }}</td>
                             <td>{{ $folder->description ?? 'Sem descrição' }}</td>
                             <td>{{ $folder->responsibleUsers->isNotEmpty() ? $folder->responsibleUsers->pluck('name')->join(', ') : 'não há responsável vinculado' }}</td>
-                            @can('edit', App\Models\User::class)<td>
-                                {{ $folder->documents_count ?? 0 }}</td>
-                            @endcan
+                            <td>{{ $folder->archives_count ?? 0 }}</td>
                             <td>
                                 @if($folder->status)
                                     <div class="badge badge-soft-success">Ativo</div>

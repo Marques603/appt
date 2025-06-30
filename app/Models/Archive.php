@@ -16,16 +16,9 @@ class Archive extends Model
     // Relacionamento com Macro
     public function folders()
     {
-        return $this->belongsToMany(Folder::class, 'archive_folder');
+        return $this->belongsToMany(Folder::class, 'archive_folder','archive_id', 'folder_id');
     }
 
-    // Relacionamento com Sector
-    public function sectors()
-    {
-        return $this->belongsToMany(Sector::class, 'archive_sector');
-    }
-
-    
     // Relacionamento com User (quem fez o upload)
     public function user()
     {

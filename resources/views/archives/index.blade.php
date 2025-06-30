@@ -147,18 +147,23 @@
 
                     {{-- Setores --}}
                             <td>
-                                @if($archive->sectors->count() === 1)
-                                    <span class="badge badge-soft-secondary">
-                                        {{ $archive->sectors->first()->name }}
-                                    </span>
-                                @elseif($archive->sectors->count() > 1)
-                                    <span class="badge badge-soft-secondary">
-                                        Todos setores
-                                    </span>
-                                @else
-                                    <span class="badge badge-soft-danger">Nenhum setor</span>
-                                @endif
-                            </td>
+                            @php
+                                $sectors = $archive->folders->flatMap(function ($folder) {
+                                    return $folder->sectors;
+                                })->unique('id');
+                            @endphp
+
+                            @if ($sectors->count() === 1)
+                                <span class="badge badge-soft-secondary">
+                                    {{ $sectors->first()->name }}
+                                </span>
+                            @elseif ($sectors->count() > 1)
+                                <span class="badge badge-soft-secondary">Todos setores</span>
+                            @else
+                                <span class="badge badge-soft-danger">Nenhum setor</span>
+                            @endif
+                        </td>
+
                             
                             <td>
                                 @if($archive->status)

@@ -33,7 +33,7 @@ class ArchiveController extends Controller
         $archives = Archive::query()
             ->when(!$isQuality, function ($query) use ($sectorIds) {
                 $query->where('status', 1)
-                      ->whereHas('sectors', function ($q) use ($sectorIds) {
+                      ->whereHas('folders.sectors', function ($q) use ($sectorIds) {
                           $q->whereIn('sector_id', $sectorIds);
                       });
             })
@@ -44,7 +44,7 @@ class ArchiveController extends Controller
                 $query->where('status', $request->status);
             })
             ->when($request->filled('sector'), function ($query) use ($request) {
-                $query->whereHas('sectors', function ($q) use ($request) {
+                $query->whereHas('folders.sectors', function ($q) use ($request) {
                     $q->where('sector_id', $request->sector);
                 });
             })
@@ -70,7 +70,6 @@ class ArchiveController extends Controller
             'code' => 'required|string',
             'file' => 'required|file',
             'folders' => 'nullable|array',
-            'sectors' => 'nullable|array',
         ]);
 
         $userId = auth()->id();
@@ -87,7 +86,6 @@ class ArchiveController extends Controller
         ]);
 
         $archive->folders()->sync($request->folders ?? []);
-        $archive->sectors()->sync($request->sectors ?? []);
 
         return redirect()->route('archives.index')->with('success', 'Arquivo criado com sucesso.');
     }
@@ -137,7 +135,6 @@ class ArchiveController extends Controller
         ]);
 
         $newArchive->folders()->sync($archive->folders->pluck('id'));
-        $newArchive->sectors()->sync($archive->sectors->pluck('id'));
 
         return redirect()->route('archives.edit', $newArchive->id)
                          ->with('success', 'Arquivo atualizado. Versão anterior arquivada.');
@@ -151,18 +148,7 @@ class ArchiveController extends Controller
 
         $archive->folders()->sync($request->folders ?? []);
 
-        return redirect()->back()->with('success', 'Macros atualizadas com sucesso.');
-    }
-
-    public function updateSectors(Request $request, Archive $archive)
-    {
-        $request->validate([
-            'sectors' => 'nullable|array',
-        ]);
-
-        $archive->sectors()->sync($request->sectors ?? []);
-
-        return redirect()->back()->with('success', 'Setores atualizados com sucesso.');
+        return redirect()->back()->with('success', 'Pastas atualizadas com sucesso.');
     }
 
     public function showApproveForm($archiveId)

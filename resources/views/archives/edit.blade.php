@@ -168,9 +168,9 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Setores Vinculados</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os setores vinculados a este arquivo</p>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os setores vinculados a este documento</p>
 
-                    <form method="POST" action="{{ route('archives.update.sectors', $archive->id) }}">
+                    <form method="POST" action="{{ route('folders.update.sectors', $folder->id) }}">
                         @csrf
                         @method('PUT')
 
@@ -180,7 +180,7 @@
                                 class="tom-select w-full min-h-[2.5rem] py-2 @error('sectors') border-red-500 @enderror"
                                 autocomplete="off">
                                 @foreach($sectors as $sector)
-                                        <option value="{{ $sector->id }}" @selected(in_array($sector->id, $archive->sectors->pluck('id')->toArray()))>
+                                        <option value="{{ $sector->id }}" @selected(in_array($sector->id, $folder->sectors->pluck('id')->toArray()))>
                                             {{ $sector->name }}
                                         </option>
                                     @endforeach
