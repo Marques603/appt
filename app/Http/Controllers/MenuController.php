@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MenuController extends Controller
 {
     // Listar menus
     public function index()
     {
+        if (auth()->id() !== 1) {
+    return redirect()->route('dashboard')->with('status', 'Acesso restrito. Apenas o administrador pode acessar este menu.');
+    }
+
         $menus = Menu::paginate(10);
         return view('menu.index', compact('menus'));
     }

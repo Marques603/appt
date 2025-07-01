@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\MacroController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PositionController;
@@ -67,6 +68,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Rotas de menus (CRUD)
     Route::resource('menus', MenuController::class);
+    // Roles 
+     // Rotas de menus (CRUD)
+    Route::resource('roles', RoleController::class);
+
 
     // Rotas de macro (CRUD)
     Route::resource('macro', MacroController::class);
