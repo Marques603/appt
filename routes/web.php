@@ -132,6 +132,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/archives/{archive}', [ArchiveController::class, 'show'])->name('archives.show');
    // web.php
 Route::get('/archives/{archive}/download', [ArchiveController::class, 'download'])->name('archives.download');
+Route::put('/archives/{archive}/update-sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
+
 
 
 

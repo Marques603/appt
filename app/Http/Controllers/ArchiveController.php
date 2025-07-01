@@ -238,7 +238,17 @@ public function download(Archive $archive)
     }
 
     return response()->download($path);
+}public function updateSectors(Request $request, Archive $archive)
+{
+    $request->validate([
+        'sectors' => 'nullable|array',
+    ]);
+
+    $archive->sectors()->sync($request->sectors ?? []);
+
+    return redirect()->back()->with('success', 'Setores atualizados com sucesso.');
 }
+
 
 
 }

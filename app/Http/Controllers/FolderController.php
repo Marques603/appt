@@ -4,27 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Folder;
 use App\Models\User;
-Use App\Models\Sector;
+use App\Models\Sector;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Gate;
 
 class FolderController extends Controller
 {
-   public function index(Request $request)
-{
-    if (!Gate::allows('view', Menu::find(2))) {
-        return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
+    public function index(Request $request)
+    {
+        if (!Gate::allows('view', Menu::find(2))) {
+            return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
+        }
+
+        $folders = Folder::with('responsibleUsers', 'archives.sectors')
+            ->withCount('archives')
+            ->paginate(10);
+
+        return view('folder.index', compact('folders'));
     }
-
-    $folders = Folder::with('responsibleUsers','sectors','archives.folders.sectors')
-    ->withCount('archives')
-    ->paginate(10);
-
-
-    return view('folder.index', compact('folders'));
-}
-
 
     public function create()
     {
@@ -37,9 +35,6 @@ class FolderController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            //'status' => 'required|boolean',
-            //'responsible_users' => 'array|nullable',
-            //'responsible_users.*' => 'exists:users,id',
         ]);
 
         $folder = Folder::create($request->only(['name', 'description', 'status']));
@@ -54,10 +49,9 @@ class FolderController extends Controller
     public function edit(Folder $folder)
     {
         $users = User::all();
-        $sectors = Sector::all(); 
         $folder->load('responsibleUsers');
 
-        return view('folder.edit', compact('folder', 'users','sectors'));
+        return view('folder.edit', compact('folder', 'users'));
     }
 
     public function update(Request $request, Folder $folder)
@@ -65,7 +59,6 @@ class FolderController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            //'status' => 'required|boolean',
             'responsible_users' => 'array|nullable',
             'responsible_users.*' => 'exists:users,id',
         ]);
@@ -91,62 +84,50 @@ class FolderController extends Controller
         $folder->restore();
         return redirect()->route('folder.index')->with('success', 'Macro restaurada.');
     }
+
     public function updateStatus(Request $request, Folder $folder)
     {
-    $request->validate(['status' => 'required|in:0,1']);
-    $folder->update(['status' => $request->status]);
+        $request->validate(['status' => 'required|in:0,1']);
+        $folder->update(['status' => $request->status]);
 
-    return redirect()->route('folder.edit', $folder)->with('success', 'Status atualizado com sucesso.');
+        return redirect()->route('folder.edit', $folder)->with('success', 'Status atualizado com sucesso.');
     }
 
     public function updateResponsibles(Request $request, Folder $folder)
     {
-    $validated = $request->validate([
-        'responsible_users' => 'nullable|array',
-        'responsible_users.*' => 'exists:users,id',
-    ]);
+        $validated = $request->validate([
+            'responsible_users' => 'nullable|array',
+            'responsible_users.*' => 'exists:users,id',
+        ]);
 
-    $folder->responsibleUsers()->sync($validated['responsible_users'] ?? []);
+        $folder->responsibleUsers()->sync($validated['responsible_users'] ?? []);
 
-    return redirect()->route('folder.edit', $folder)->with('success', 'Responsáveis atualizados com sucesso.');
-    }
-        public function updateSectors(Request $request, Folder $folder)
-{
-    $request->validate([
-        'sectors' => 'nullable|array',
-        'sectors.*' => 'exists:sector,id',
-    ]);
-
-    $folder->sectors()->sync($request->sectors ?? []);
-
-    return redirect()->back()->with('success', 'Setores vinculados atualizados com sucesso.');
-}public function show($id)
-{
-    $folder = Folder::with(['sectors', 'archives.folders.sectors'])
-        ->withCount('archives')
-        ->findOrFail($id);
-
-    return view('folder.show', compact('folder'));
-}public function showSector($folderId, $sectorId)
-{
-    $folder = Folder::with(['sectors', 'archives.folders.sectors'])
-        ->findOrFail($folderId);
-
-    $sector = $folder->sectors->where('id', $sectorId)->first();
-    if (!$sector) {
-        abort(404, 'Setor não encontrado nesta pasta');
+        return redirect()->route('folder.edit', $folder)->with('success', 'Responsáveis atualizados com sucesso.');
     }
 
-    $archives = $folder->archives->filter(function($archive) use ($folder, $sector) {
-        return $archive->folders->contains('id', $folder->id) &&
-               $archive->folders->flatMap->sectors->contains('id', $sector->id);
-    });
+    public function show($id)
+    {
+        $folder = Folder::with(['archives.folders.sectors'])
+            ->withCount('archives')
+            ->findOrFail($id);
 
-    return view('folder.sector.show', compact('folder', 'sector', 'archives'));
-}
+        return view('folder.show', compact('folder'));
+    }
 
+    public function showSector($folderId, $sectorId)
+    {
+        $folder = Folder::with(['archives.folders.sectors'])
+            ->findOrFail($folderId);
 
+        // Agora filtramos os setores pelos arquivos
+        $archives = $folder->archives->filter(function ($archive) use ($folderId, $sectorId) {
+            return $archive->folders->contains('id', $folderId)
+                && $archive->folders->flatMap->sectors->contains('id', $sectorId);
+        });
 
+        // Carregar o setor direto do banco pelo ID
+        $sector = Sector::findOrFail($sectorId);
 
-
+        return view('folder.sector.show', compact('folder', 'sector', 'archives'));
+    }
 }

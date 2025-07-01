@@ -40,14 +40,14 @@ return new class extends Migration
         });
 
         // Tabela pivô para documentos e setores (não cria a tabela 'sector' pois já existe)
-        Schema::create('folder_sector', function (Blueprint $table) {
+        Schema::create('archive_sector', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('folder_id');
+            $table->unsignedBigInteger('archive_id');
             $table->unsignedBigInteger('sector_id');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('folder_id')->references('id')->on('folder')->onDelete('cascade');
+            $table->foreign('archive_id')->references('id')->on('archive')->onDelete('cascade');
             $table->foreign('sector_id')->references('id')->on('sector')->onDelete('cascade');
         });
 

@@ -25,9 +25,6 @@ class Folder extends Model
     {
         return $this->belongsToMany(Archive::class, 'archive_folder');
     }
-    public function sectors()
-    {
-        return $this->belongsToMany(Sector::class, 'folder_sector', 'folder_id', 'sector_id');
-    }
+
 
 }
