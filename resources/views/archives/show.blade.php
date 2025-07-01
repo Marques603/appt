@@ -25,12 +25,11 @@
             @endforeach
         </div>
     </div>
-    <div class="mt-4">
-    <a href="{{ asset('storage/archives/' . $archive->file_name) }}" 
-       target="_blank" 
-       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-        <i data-feather="external-link" class="w-4 h-4 mr-2"></i> Abrir Arquivo
-    </a>
-</div>
 
+    <div class="mt-4">
+        <a href="{{ route('archives.download', $archive->id) }}" 
+           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            <i data-feather="download" class="w-4 h-4 mr-2"></i> Baixar Arquivo
+        </a>
+    </div>
 </x-app-layout>

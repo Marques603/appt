@@ -12,10 +12,11 @@
                         <span class="text-xs text-slate-400 ml-2">{{ $archive->description }}</span>
                     </div>
                 </div>
-                <a href="{{ route('archives.show', $archive->id) }}" class="btn btn-primary btn-sm flex items-center space-x-1">
-                    <i data-feather="eye" class="w-4 h-4"></i>
-                    <span>Ver</span>
-                </a>
+                <a href="{{ route('archives.download', $archive->id) }}" class="btn btn-primary btn-sm flex items-center space-x-1">
+    <i data-feather="download" class="w-4 h-4"></i>
+    <span>Baixar</span>
+</a>
+
             </div>
         @empty
             <div class="text-xs text-slate-400">Nenhum arquivo neste setor.</div>

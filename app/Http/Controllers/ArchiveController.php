@@ -231,13 +231,14 @@ class ArchiveController extends Controller
 }// ArchiveController.php
 public function download(Archive $archive)
 {
-    $path = storage_path('app/public/archives/' . $archive->file_name);
+    $path = storage_path('app/public/' . $archive->file_path);
 
     if (!file_exists($path)) {
         abort(404);
     }
 
-    return response()->download($path, $archive->file_name);
+    return response()->download($path);
 }
+
 
 }
