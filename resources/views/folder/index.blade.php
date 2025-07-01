@@ -10,10 +10,9 @@
     @endif
 
     <div class="space-y-4">
-        {{-- Barra de Ações: Busca, Filtros e Botão de Criar --}}
+        {{-- Barra de ações --}}
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
-            
-            {{-- Formulário de Busca --}}
+            {{-- Busca --}}
             <div class="flex w-full md:w-auto">
                 <form method="GET" action="{{ route('folder.index') }}" class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 dark:bg-slate-800 sm:max-w-xs">
                     <div class="flex h-full items-center px-2">
@@ -21,7 +20,7 @@
                     </div>
                     <input
                         name="search"
-                        class="h-full w-full border-transparent bg-transparent px-0 text-sm placeholder-slate-400 placeholder:text-sm focus:border-transparent focus:outline-none focus:ring-0"
+                        class="h-full w-full border-transparent bg-transparent px-0 text-sm placeholder-slate-400 focus:border-transparent focus:outline-none focus:ring-0"
                         type="text"
                         value="{{ request('search') }}"
                         placeholder="Buscar por nome..."
@@ -29,10 +28,9 @@
                 </form>
             </div>
 
-            {{-- Botões de Ação --}}
+            {{-- Botões --}}
             <div class="flex w-full items-center justify-end gap-x-4 md:w-auto">
-                
-                {{-- Dropdown de Filtros --}}
+                {{-- Filtros --}}
                 <div class="dropdown" data-placement="bottom-end">
                     <div class="dropdown-toggle">
                         <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
@@ -43,14 +41,13 @@
                     </div>
                     <div class="dropdown-content w-72 !overflow-visible">
                         <form method="GET" action="{{ route('folder.index') }}">
-                            {{-- Mantém o parâmetro de busca ao aplicar o filtro --}}
                             @if(request('search'))
                                 <input type="hidden" name="search" value="{{ request('search') }}">
                             @endif
                             <ul class="dropdown-list space-y-4 p-4">
                                 <li class="dropdown-list-item">
                                     <h2 class="my-1 text-sm font-medium">Status</h2>
-                                    <select name="status" class="tom-select w-full" autocomplete="off">
+                                    <select name="status" class="tom-select w-full">
                                         <option value="">Todos</option>
                                         <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ativo</option>
                                         <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Inativo</option>
@@ -64,7 +61,7 @@
                     </div>
                 </div>
 
-                {{-- Botão Criar Pasta --}}
+                {{-- Criar pasta --}}
                 <a href="{{ route('folder.create') }}" class="btn btn-primary flex items-center gap-2">
                     <i data-feather="plus" class="w-4 h-4"></i>
                     <span class="hidden sm:inline-block">Criar Pasta</span>
@@ -72,20 +69,23 @@
             </div>
         </div>
 
-        {{-- Grid de Pastas --}}
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 mt-6">
+        {{-- Grid adaptado no estilo dos cards --}}
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
             @forelse($folders as $folder)
-                <a href="{{ route('folder.show', $folder->id) }}"  class="flex flex-col items-center p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow hover:shadow-lg transition group">
-
-                    <i data-feather="folder" class="w-12 h-12 text-yellow-400 mb-2 group-hover:scale-110 transition"></i>
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200 text-center">
-                        {{ $folder->name }}
-                    </span>
-                    @if (isset($folder->archives_count))
-                        <span class="text-xs mt-1 text-slate-400 dark:text-slate-500">
-                            {{ $folder->archives_count }} {{ Str::plural('arquivo', $folder->archives_count) }}
-                        </span>
-                    @endif
+                <a href="{{ route('folder.show', $folder->id) }}" class="card hover:shadow-lg transition group">
+                    <div class="card-body flex items-center gap-4">
+                        <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-yellow-400 bg-opacity-20 text-yellow-500">
+                            <i data-feather="folder" class="text-2xl"></i>
+                        </div>
+                        <div class="flex flex-1 flex-col gap-1">
+                            <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $folder->name }}</p>
+                            @if (isset($folder->archives_count))
+                                <span class="text-xs text-slate-400 dark:text-slate-500">
+                                    {{ $folder->archives_count }} {{ Str::plural('arquivo', $folder->archives_count) }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                 </a>
             @empty
                 <div class="col-span-full text-center py-12">
