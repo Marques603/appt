@@ -17,7 +17,7 @@ class FolderController extends Controller
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
     }
 
-    $folders = Folder::with('responsibleUsers','sectors')
+    $folders = Folder::with('responsibleUsers','sectors','archives.folders.sectors')
     ->withCount('archives')
     ->paginate(10);
 
@@ -120,7 +120,31 @@ class FolderController extends Controller
     $folder->sectors()->sync($request->sectors ?? []);
 
     return redirect()->back()->with('success', 'Setores vinculados atualizados com sucesso.');
+}public function show($id)
+{
+    $folder = Folder::with(['sectors', 'archives.folders.sectors'])
+        ->withCount('archives')
+        ->findOrFail($id);
+
+    return view('folder.show', compact('folder'));
+}public function showSector($folderId, $sectorId)
+{
+    $folder = Folder::with(['sectors', 'archives.folders.sectors'])
+        ->findOrFail($folderId);
+
+    $sector = $folder->sectors->where('id', $sectorId)->first();
+    if (!$sector) {
+        abort(404, 'Setor não encontrado nesta pasta');
+    }
+
+    $archives = $folder->archives->filter(function($archive) use ($folder, $sector) {
+        return $archive->folders->contains('id', $folder->id) &&
+               $archive->folders->flatMap->sectors->contains('id', $sector->id);
+    });
+
+    return view('folder.sector.show', compact('folder', 'sector', 'archives'));
 }
+
 
 
 

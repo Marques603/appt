@@ -85,7 +85,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/folder/{folder}/restore', [FolderController::class, 'restore'])->name('folder.restore');
     Route::put('/folder/{folder}/responsibles', [FolderController::class, 'updateResponsibles'])->name('folder.update.responsibles');
     Route::put('/folders/{folder}/update-sectors', [FolderController::class, 'updateSectors'])->name('folders.update.sectors');
-
+    Route::get('/folder/{id}', [FolderController::class, 'show'])->name('folder.show');
+    Route::get('/folder/{folder}/sector/{sector}', [FolderController::class, 'showSector'])->name('folder.sector.show');
 
     // Rotas de documentos (CRUD)
     // Documentos - todas rotas exceto update (já que você tem update separado por partes)
@@ -128,6 +129,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/archives/{archive}/status', [ArchiveController::class, 'updateStatus'])->name('archives.update.status');
     Route::get('/archives/{archive}/view', [ArchiveController::class, 'logAndShow'])->name('archives.logAndShow');
     Route::get('/documentsapprove', [DocumentController::class, 'documentsapprove'])->name('documentsapprove.index');
+    Route::get('/archives/{archive}', [ArchiveController::class, 'show'])->name('archives.show');
+   // web.php
+Route::get('/archives/{archive}/download', [ArchiveController::class, 'download'])->name('archives.download');
 
 
 

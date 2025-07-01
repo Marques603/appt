@@ -222,5 +222,22 @@ class ArchiveController extends Controller
         ]);
 
         return redirect()->away(asset('storage/' . $archive->file_path));
+    }public function show($id)
+{
+    $archive = Archive::with(['folders', 'folders.sectors'])
+        ->findOrFail($id);
+
+    return view('archives.show', compact('archive'));
+}// ArchiveController.php
+public function download(Archive $archive)
+{
+    $path = storage_path('app/public/archives/' . $archive->file_name);
+
+    if (!file_exists($path)) {
+        abort(404);
     }
+
+    return response()->download($path, $archive->file_name);
+}
+
 }
