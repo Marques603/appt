@@ -14,9 +14,10 @@ class Archive extends Model
     protected $fillable = ['code', 'description', 'user_upload', 'revision', 'file_path', 'file_type', 'status'];
 
     // Relacionamento com Macro
+  
     public function folders()
     {
-        return $this->belongsToMany(Folder::class, 'archive_folder','archive_id', 'folder_id');
+        return $this->belongsToMany(Folder::class, 'archive_folder');
     }
 
     // Relacionamento com User (quem fez o upload)

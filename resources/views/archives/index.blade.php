@@ -144,30 +144,12 @@
                             <span class="badge badge-soft-primary">{{ $folder->name }}</span>
                         @endforeach
                     </td>
+                            <td>
+                                
+                                    <span class="badge badge-soft-secondary">{{ $sector->name }}</span>
+                               
+                            </td>   
 
-                    <td>
-    @php
-        // 1. Coletar todos os nomes dos setores
-        $sectorNames = collect();
-        foreach ($archive->folders as $folder) {
-            foreach ($folder->sectors as $sector) {
-                $sectorNames->push($sector->name);
-            }
-        }
-
-        // 2. Remover duplicados
-        $sectorNames = $sectorNames->unique();
-    @endphp
-
-    {{-- 3. Aplicar a lógica final --}}
-    @if ($sectorNames->count() === 1)
-        {{ $sectorNames->first() }}
-    @elseif ($sectorNames->count() > 1)
-        Todos setores
-    @else
-        <span class="text-slate-400">Nenhum setor vinculado</span>
-    @endif
-</td>
 
 
 

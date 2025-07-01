@@ -51,6 +51,8 @@
                             </label>
                         </div>
 
+                        
+
                         <!-- Botões -->
                         <div class="flex items-center justify-end gap-4">
                             <a href="{{ route('archives.index') }}"
