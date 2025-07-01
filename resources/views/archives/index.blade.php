@@ -145,15 +145,10 @@
                         @endforeach
                     </td>
                             <td>
-                                
+                                @foreach ($archive->sectors as $sector)
                                     <span class="badge badge-soft-secondary">{{ $sector->name }}</span>
-                               
+                                 @endforeach
                             </td>   
-
-
-
-
-                            
                             <td>
                                 @if($archive->status)
                                     <div class="badge badge-soft-success">Ativo</div>
