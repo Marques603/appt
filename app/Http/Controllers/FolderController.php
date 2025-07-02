@@ -105,29 +105,29 @@ class FolderController extends Controller
         return redirect()->route('folder.edit', $folder)->with('success', 'Responsáveis atualizados com sucesso.');
     }
 
-    public function show($id)
-    {
-        $folder = Folder::with(['archives.folders.sectors'])
-            ->withCount('archives')
-            ->findOrFail($id);
+public function show(Folder $folder)
+{
+    // Carrega arquivos da pasta com setores
+    $archives = $folder->archives()->with('sectors')->paginate(20);
 
-        return view('folder.show', compact('folder'));
-    }
-
-    public function showSector($folderId, $sectorId)
-    {
-        $folder = Folder::with(['archives.folders.sectors'])
-            ->findOrFail($folderId);
-
-        // Agora filtramos os setores pelos arquivos
-        $archives = $folder->archives->filter(function ($archive) use ($folderId, $sectorId) {
-            return $archive->folders->contains('id', $folderId)
-                && $archive->folders->flatMap->sectors->contains('id', $sectorId);
+    // Busca setores que possuem arquivos dentro da pasta
+    $sectors = Sector::whereHas('archives', function($q) use ($folder) {
+        $q->whereHas('folders', function($q2) use ($folder) {
+            $q2->where('folder.id', $folder->id);
         });
+    })->get();
 
-        // Carregar o setor direto do banco pelo ID
-        $sector = Sector::findOrFail($sectorId);
+    return view('folder.show', compact('folder', 'archives', 'sectors'));
+}
 
-        return view('folder.sector.show', compact('folder', 'sector', 'archives'));
-    }
+
+
+    public function showSector(Folder $folder, Sector $sector)
+{
+    $archives = $folder->archivesBySector($sector->id)->get();
+
+    return view('folder.sector_show', compact('folder', 'sector', 'archives'));
+}
+
+
 }

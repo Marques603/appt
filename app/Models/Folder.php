@@ -25,6 +25,14 @@ class Folder extends Model
     {
         return $this->belongsToMany(Archive::class, 'archive_folder');
     }
+    public function archivesBySector($sectorId)
+{
+    return $this->belongsToMany(Archive::class, 'archive_folder', 'folder_id', 'archive_id')
+        ->whereHas('sectors', function($query) use ($sectorId) {
+            $query->where('sector_id', $sectorId);
+        });
+}
+
 
 
 }

@@ -21,7 +21,7 @@ class Archive extends Model
     }
       public function sectors()
     {
-        return $this->belongsToMany(Sector::class, 'archive_sector');
+        return $this->belongsToMany(Sector::class, 'archive_sector', 'archive_id', 'sector_id');
     }
 
     // Relacionamento com User (quem fez o upload)

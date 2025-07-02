@@ -1,6 +1,6 @@
 <x-app-layout>
-    <x-page-title page="Pasta: {{ $folder->name }}" header="Pastas de Setores em {{ $folder->name }}" />
-    @section('title', 'Pasta ' . $folder->name . ' | Inusittá')
+    <x-page-title page="Arquivos em {{ $sector->name }}" header="Arquivos no setor {{ $sector->name }} da pasta {{ $folder->name }}" />
+    @section('title', 'Arquivos em ' . $sector->name . ' | Inusittá')
 
     {{-- Notificação de sucesso (Toast) --}}
     @if(session('success'))
@@ -69,19 +69,32 @@
             </div>
         </div>
 
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
-      @foreach($sectors as $sector)
-    <a href="{{ route('folder.sector.show', ['folder' => $folder->id, 'sector' => $sector->id]) }}" class="card hover:shadow-lg transition group">
-        <div class="card-body flex items-center gap-4">
-            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-500 bg-opacity-20 text-green-600">
-                <i data-feather="folder" class="text-2xl"></i>
-            </div>
-            <div class="flex-1">
-                <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $sector->name }}</p>
-            </div>
+        {{-- Lista de arquivos --}}
+        <div class="space-y-4 mt-6">
+            @forelse($archives as $archive)
+                <div class="card hover:shadow-lg transition group">
+                    <div class="card-body flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-sky-500 bg-opacity-20 text-sky-600">
+                                <i data-feather="file" class="text-2xl"></i>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $archive->code }}</p>
+                                <p class="text-xs text-slate-400">{{ $archive->description }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('archives.download', $archive->id) }}"
+                           class="btn btn-primary btn-sm flex items-center gap-1">
+                            <i data-feather="download" class="w-4 h-4"></i>
+                            <span>Baixar</span>
+                        </a>
+                    </div>
+                </div>
+            @empty
+                <div class="col-span-full text-center py-12">
+                    <p class="text-slate-500 dark:text-slate-400">Nenhum arquivo neste setor.</p>
+                </div>
+            @endforelse
         </div>
-    </a>
-@endforeach
-
     </div>
 </x-app-layout>
