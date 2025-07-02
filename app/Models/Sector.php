@@ -31,8 +31,18 @@ class Sector extends Model
     {
         return $this->belongsToMany(Document::class, 'document_sector');
     }
+    public function subfolders()
+    {
+        // Relacionamento muitos-para-muitos com Subfolder através da tabela pivo 'subfolder_sector'
+        return $this->belongsToMany(Subfolder::class, 'subfolder_sector');
+    }
+
+    /**
+     * Get the archives associated with the sector.
+     */
     public function archives()
     {
+        // Relacionamento muitos-para-muitos com Archive através da tabela pivo 'archive_sector'
         return $this->belongsToMany(Archive::class, 'archive_sector');
     }
 

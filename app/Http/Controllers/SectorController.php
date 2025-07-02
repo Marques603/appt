@@ -123,4 +123,29 @@ class SectorController extends Controller
 
         return redirect()->back()->with('success', 'Responsáveis atualizados com sucesso.');
     }
+    public function showArchives(Sector $sector)
+    {
+        
+        // 1. Verificação de Status do Sector:
+        // Se o Sector estiver inativo, ele não pode ser acessado por NINGUÉM.
+        if (!$sector->status) {
+            return redirect()->route('folders.index')->with('error', 'This sector is currently inactive and cannot be accessed.');
+        }
+
+        // 2. Verificação de Acesso ao Sector por Usuário:
+        // Se o usuário não tiver acesso direto a este Setor, aborta.
+        $canAccessSectorByUser = $user->sectors->contains($sector);
+
+        if (!$canAccessSectorByUser) {
+            abort(403, 'You do not have permission to access this sector.');
+        }
+
+        // Busca Archives dentro deste Sector que estão ativos.
+        $archives = $sector->archives()
+                           ->where('status', true) // Archive deve estar ativo
+                           ->get();
+
+        // Certifique-se que esta view 'sectors.archives' existe e é a que você quer usar
+        return view('sectors.archives', compact('sector', 'archives'));
+    }
 }

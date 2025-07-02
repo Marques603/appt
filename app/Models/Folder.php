@@ -2,37 +2,40 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes; // Importar SoftDeletes
+use Spatie\Sluggable\HasSlug; // Importar HasSlug
+use Spatie\Sluggable\SlugOptions; // Importar SlugOptions
 
 class Folder extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, HasSlug; // Usar SoftDeletes e HasSlug
 
-    protected $table = 'folder';
-
+    // Campos que podem ser preenchidos em massa
     protected $fillable = [
         'name',
+        'slug',
         'description',
-        'status',
+        'status', // Adicionado 'status' conforme sua migração
     ];
 
-    public function responsibleUsers()
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
     {
-    return $this->belongsToMany(User::class, 'folder_responsible_user', 'folder_id', 'user_id');
+        return SlugOptions::create()
+            ->generateSlugsFrom('name') // Gerar slug a partir do campo 'name'
+            ->saveSlugsTo('slug');     // Salvar o slug no campo 'slug'
     }
-    public function archives()
+
+    /**
+     * Get the subfolders for the folder.
+     */
+    public function subfolders()
     {
-        return $this->belongsToMany(Archive::class, 'archive_folder');
+        // Relacionamento muitos-para-muitos com Subfolder através da tabela pivo 'folder_subfolder'
+        return $this->belongsToMany(Subfolder::class, 'folder_subfolder');
     }
-    public function archivesBySector($sectorId)
-{
-    return $this->belongsToMany(Archive::class, 'archive_folder', 'folder_id', 'archive_id')
-        ->whereHas('sectors', function($query) use ($sectorId) {
-            $query->where('sector_id', $sectorId);
-        });
-}
-
-
-
 }

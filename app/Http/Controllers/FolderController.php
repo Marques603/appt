@@ -3,131 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\Folder;
-use App\Models\User;
-use App\Models\Sector;
 use Illuminate\Http\Request;
-use App\Models\Menu;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Menu; // Importar Menu para o Gate
+use Illuminate\Support\Facades\Gate; // Importar Gate
 
 class FolderController extends Controller
 {
-    public function index(Request $request)
+    public function __construct()
     {
-        if (!Gate::allows('view', Menu::find(2))) {
-            return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
+        $this->middleware('auth'); // Adicionado middleware auth
+    }
+
+    /**
+     * Display a listing of the Folders accessible to the user.
+     */
+    public function index()
+    {
+        // Exemplo de Gate para acesso ao menu (adapte o ID do menu se necessário)
+        if (!Gate::allows('view', Menu::find(1))) { // Substitua XXX pelo ID do menu "Pastas" ou similar
+            return redirect()->route('dashboard')->with('status', 'This menu is not released for your profile.');
         }
 
-        $folders = Folder::with('responsibleUsers', 'archives.sectors')
-            ->withCount('archives')
-            ->paginate(10);
+        $user = Auth::user();
+        $userSectorIds = $user->sectors->pluck('id');
 
-        return view('folder.index', compact('folders'));
+        // Buscamos apenas os Folders que estão ativos E que contenham subfolders acessíveis
+        // (ou seja, subfolders que estão relacionados a pelo menos um dos setores do usuário)
+        $folders = Folder::where('status', true) // Apenas folders ativos
+                         ->whereHas('subfolders.sectors', function ($query) use ($userSectorIds) {
+                             $query->whereIn('sector.id', $userSectorIds); // Filtra por setores do usuário
+                         })
+                         ->get();
+
+        return view('folders.index', compact('folders'));
     }
 
-    public function create()
+    /**
+     * Display the specified Folder and its accessible Subfolders.
+     */
+    public function show(Folder $folder)
     {
-        $users = User::all();
-        return view('folder.create', compact('users'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-
-        $folder = Folder::create($request->only(['name', 'description', 'status']));
-
-        if ($request->has('responsible_users')) {
-            $folder->responsibleUsers()->sync($request->responsible_users);
+        // Se o Folder não estiver ativo e o usuário não for admin, redireciona ou aborta.
+        if (!$folder->status && !Auth::user()->isAdmin()) {
+            return redirect()->route('folders.index')->with('error', 'This folder is currently inactive and cannot be accessed.');
         }
 
-        return redirect()->route('folder.index')->with('success', 'Macro criada com sucesso.');
-    }
+        $user = Auth::user();
+        $userSectorIds = $user->sectors->pluck('id');
 
-    public function edit(Folder $folder)
-    {
-        $users = User::all();
-        $folder->load('responsibleUsers');
+        // Verifica se o usuário tem acesso a algum conteúdo dentro deste folder
+        // (se o folder não tiver subfolders acessíveis, mesmo que o folder esteja ativo, o usuário não deve vê-lo)
+        $hasAccessibleContent = $folder->subfolders()
+                                       ->where('status', true)
+                                       ->whereHas('sectors', function ($query) use ($userSectorIds) {
+                                           $query->whereIn('sector.id', $userSectorIds);
+                                       })
+                                       ->exists();
 
-        return view('folder.edit', compact('folder', 'users'));
-    }
-
-    public function update(Request $request, Folder $folder)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'responsible_users' => 'array|nullable',
-            'responsible_users.*' => 'exists:users,id',
-        ]);
-
-        $folder->update($request->only(['name', 'description', 'status']));
-
-        if ($request->has('responsible_users')) {
-            $folder->responsibleUsers()->sync($request->responsible_users);
+        if (!$hasAccessibleContent && !$user->isAdmin()) {
+             return redirect()->route('folders.index')->with('error', 'You do not have access to any active content within this folder based on your sectors.');
         }
 
-        return redirect()->route('folder.index')->with('success', 'Macro atualizada com sucesso.');
+        // Carrega os Subfolders relacionados a este Folder que estão ativos
+        // E que são acessíveis pelos setores do usuário.
+        $subfolders = $folder->subfolders()
+                             ->where('status', true) // Apenas subfolders ativos
+                             ->whereHas('sectors', function ($query) use ($userSectorIds) {
+                                 $query->whereIn('sector.id', $userSectorIds);
+                             })
+                             ->get();
+
+        return view('folders.show', compact('folder', 'subfolders'));
     }
-
-    public function destroy(Folder $folder)
-    {
-        $folder->delete();
-        return redirect()->route('folder.index')->with('success', 'Macro removida com sucesso.');
-    }
-
-    public function restore($id)
-    {
-        $folder = Folder::withTrashed()->findOrFail($id);
-        $folder->restore();
-        return redirect()->route('folder.index')->with('success', 'Macro restaurada.');
-    }
-
-    public function updateStatus(Request $request, Folder $folder)
-    {
-        $request->validate(['status' => 'required|in:0,1']);
-        $folder->update(['status' => $request->status]);
-
-        return redirect()->route('folder.edit', $folder)->with('success', 'Status atualizado com sucesso.');
-    }
-
-    public function updateResponsibles(Request $request, Folder $folder)
-    {
-        $validated = $request->validate([
-            'responsible_users' => 'nullable|array',
-            'responsible_users.*' => 'exists:users,id',
-        ]);
-
-        $folder->responsibleUsers()->sync($validated['responsible_users'] ?? []);
-
-        return redirect()->route('folder.edit', $folder)->with('success', 'Responsáveis atualizados com sucesso.');
-    }
-
-public function show(Folder $folder)
-{
-    // Carrega arquivos da pasta com setores
-    $archives = $folder->archives()->with('sectors')->paginate(20);
-
-    // Busca setores que possuem arquivos dentro da pasta
-    $sectors = Sector::whereHas('archives', function($q) use ($folder) {
-        $q->whereHas('folders', function($q2) use ($folder) {
-            $q2->where('folder.id', $folder->id);
-        });
-    })->get();
-
-    return view('folder.show', compact('folder', 'archives', 'sectors'));
-}
-
-
-
-    public function showSector(Folder $folder, Sector $sector)
-{
-    $archives = $folder->archivesBySector($sector->id)->get();
-
-    return view('folder.sector_show', compact('folder', 'sector', 'archives'));
-}
-
-
 }

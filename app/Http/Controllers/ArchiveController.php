@@ -3,252 +3,132 @@
 namespace App\Http\Controllers;
 
 use App\Models\Archive;
-use App\Models\Folder;
-use App\Models\ArchiveApproval;
 use App\Models\Sector;
-use App\Models\Menu;
-use App\Models\ArchiveLog;
+use App\Models\Subfolder;
+use App\Models\Folder; // Importar Folder para o método upload
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ArchiveController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth'); // Garante que apenas usuários autenticados acessem
     }
 
-    public function index(Request $request)
+    /**
+     * Display a specific Archive.
+     */
+    public function view(Archive $archive)
     {
-        if (!Gate::allows('view', Menu::find(2))) {
-            return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
+        $user = Auth::user();
+
+        // 1. Verificação de Status do Archive:
+        // Se o Archive estiver inativo, ele não pode ser acessado por NINGUÉM.
+        if (!$archive->status) {
+            abort(403, 'This archive is inactive or not accessible.');
         }
 
-        $user = auth()->user();
-        $sectorIds = $user->sectors->pluck('id');
-        $isQuality = $sectorIds->contains(function ($id) {
-            return in_array($id, [1, 3]);
-        });
+        // 2. Verificação de Acesso ao Archive por Setor:
+        // Se o usuário não tiver acesso ao Archive através de pelo menos um de seus setores, aborta.
+        $userSectorIds = $user->sectors->pluck('id');
+        $hasAccessBySector = $archive->sectors()->whereIn('sector.id', $userSectorIds)->exists();
 
-        $archives = Archive::query()
-            ->when(!$isQuality, function ($query) use ($sectorIds) {
-                $query->where('status', 1)
-                      ->whereHas('folders.sectors', function ($q) use ($sectorIds) {
-                          $q->whereIn('sector_id', $sectorIds);
-                      });
-            })
-            ->when($request->search, function ($query, $search) {
-                return $query->where('code', 'like', "%{$search}%");
-            })
-            ->when($request->filled('status'), function ($query) use ($request) {
-                $query->where('status', $request->status);
-            })
-            ->when($request->filled('sector'), function ($query) use ($request) {
-                $query->whereHas('folders.sectors', function ($q) use ($request) {
-                    $q->where('sector_id', $request->sector);
-                });
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10)
-            ->withQueryString();
+        if (!$hasAccessBySector) {
+            abort(403, 'You do not have permission to view this archive.');
+        }
 
-        $sectors = Sector::all();
-
-        return view('archives.index', compact('archives', 'sectors'));
+        // Retorna o arquivo para visualização no navegador.
+        return response()->file(Storage::path($archive->path));
     }
 
-    public function create()
+    /**
+     * Download a specific Archive.
+     */
+    public function download(Archive $archive)
     {
-        $folders = Folder::all();
-        $sectors = Sector::all();
-        return view('archives.create', compact('folders', 'sectors'));
+        $user = Auth::user();
+
+        // 1. Verificação de Status do Archive:
+        // Se o Archive estiver inativo, ele não pode ser acessado por NINGUÉM.
+        if (!$archive->status) {
+            abort(403, 'This archive is inactive or not accessible.');
+        }
+
+        // 2. Verificação de Acesso ao Archive por Setor:
+        // Se o usuário não tiver acesso ao Archive através de pelo menos um de seus setores, aborta.
+        $userSectorIds = $user->sectors->pluck('id');
+        $hasAccessBySector = $archive->sectors()->whereIn('sector.id', $userSectorIds)->exists();
+
+        if (!$hasAccessBySector) {
+            abort(403, 'You do not have permission to download this archive.');
+        }
+
+        // Retorna o arquivo para download.
+        return Storage::download($archive->path, $archive->name);
     }
 
-    public function store(Request $request)
+    /**
+     * Handle the upload of a new Archive.
+     */
+    public function upload(Request $request, Folder $folder, Subfolder $subfolder)
     {
+        $user = Auth::user();
+
         $request->validate([
-            'code' => 'required|string',
-            'file' => 'required|file',
-            'folders' => 'nullable|array',
+            'code' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'archive_file' => 'required|file|max:20480', // 20MB max
+            'sector_upload_id' => 'required|exists:sector,id', // Valida que o ID do setor existe na tabela 'sector'
+            'description' => 'nullable|string|max:255',
+            'revision' => 'nullable|string|max:255',
         ]);
 
-        $userId = auth()->id();
-        $filePath = $request->file('file')->store('archives', 'public');
+        $sector = Sector::find($request->input('sector_upload_id'));
 
+        // 1. Validação de Pertença à Hierarquia da URL (segurança):
+        // Verifica se o folder e subfolder são consistentes com a URL.
+        if (!$folder->subfolders->contains($subfolder)) {
+            abort(404, 'Invalid folder/subfolder path for upload.');
+        }
+
+        // 2. Verificação de Status do Sector:
+        // Se o Sector selecionado estiver inativo, não permite upload.
+        if (!$sector->status) {
+            return back()->with('error', 'The selected sector is inactive and cannot be uploaded to.');
+        }
+
+        // 3. Verificação de Permissão de Upload por Setor:
+        // O usuário pode fazer upload SE:
+        //    O usuário tem acesso ao setor selecionado E o subfolder está relacionado a este setor.
+        $canUploadBySector = $user->sectors->contains($sector) && $subfolder->sectors->contains($sector);
+
+        if (!$canUploadBySector) {
+            abort(403, 'You do not have permission to upload to this location based on your sector access.');
+        }
+
+        $file = $request->file('archive_file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('archives', $fileName, 'public');
+
+        // Cria o novo registro de Archive no banco de dados
         $archive = Archive::create([
-            'code' => $request->code,
-            'description' => $request->description,
-            'user_upload' => $userId,
-            'revision' => $request->revision ?? 1,
-            'file_path' => $filePath,
-            'file_type' => $request->file('file')->getClientOriginalExtension(),
-            'status' => 0,
+            'code' => $request->input('code'),
+            'name' => $request->input('name'),
+            'path' => $path,
+            'extension' => $file->getClientOriginalExtension(),
+            'revision' => $request->input('revision'),
+            'user_upload' => $user->id, // Associa o ID do usuário que fez o upload
+            'size' => $file->getSize(),
+            'description' => $request->input('description'),
+            'status' => true, // Novo archive é ativo por padrão
         ]);
 
-        $archive->folders()->sync($request->folders ?? []);
+        // Anexa o archive aos relacionamentos corretos
+        $archive->subfolders()->attach($subfolder->id);
+        $archive->sectors()->attach($sector->id);
 
-        return redirect()->route('archives.index')->with('success', 'Arquivo criado com sucesso.');
+        return back()->with('success', 'Archive uploaded successfully to ' . $sector->name . ' in ' . $subfolder->name . '!');
     }
-
-    public function edit(Archive $archive)
-    {
-        $folders = Folder::all();
-        $sectors = Sector::all();
-
-        return view('archives.edit', compact('archive', 'folders', 'sectors'));
-    }
-
-    public function updateCode(Request $request, Archive $archive)
-    {
-        $request->validate([
-            'code' => 'required|string',
-            'description' => 'nullable|string',
-            'revision' => 'nullable|string',
-        ]);
-
-        $archive->code = $request->code;
-        $archive->description = $request->description;
-        $archive->revision = $request->revision;
-        $archive->save();
-
-        return redirect()->back()->with('success', 'Código atualizado com sucesso.');
-    }
-
-    public function updateFile(Request $request, Archive $archive)
-    {
-        $request->validate([
-            'file' => 'required|file',
-        ]);
-
-        $archive->delete();
-
-        $filePath = $request->file('file')->store('archives', 'public');
-
-        $newArchive = Archive::create([
-            'code' => $archive->code,
-            'description' => $archive->description,
-            'user_upload' => auth()->id(),
-            'revision' => $archive->revision + 1,
-            'file_path' => $filePath,
-            'file_type' => $request->file('file')->getClientOriginalExtension(),
-            'status' => 0,
-        ]);
-
-        $newArchive->folders()->sync($archive->folders->pluck('id'));
-
-        return redirect()->route('archives.edit', $newArchive->id)
-                         ->with('success', 'Arquivo atualizado. Versão anterior arquivada.');
-    }
-
-    public function updateFolders(Request $request, Archive $archive)
-    {
-        $request->validate([
-            'folders' => 'nullable|array',
-        ]);
-
-        $archive->folders()->sync($request->folders ?? []);
-
-        return redirect()->back()->with('success', 'Pastas atualizadas com sucesso.');
-    }
-
-    public function showApproveForm($archiveId)
-    {
-        $archive = Archive::with('approvals.user')->findOrFail($archiveId);
-        return view('archives.approve', compact('archive'));
-    }
-
-    public function approve($archiveId)
-    {
-        $archive = Archive::findOrFail($archiveId);
-
-        if ($archive->approvals()->where('user_id', auth()->id())->exists()) {
-            return redirect()->route('archives.index')->with('info', 'Você já aprovou este arquivo.');
-        }
-
-        ArchiveApproval::create([
-            'archive_id' => $archive->id,
-            'user_id' => auth()->id(),
-            'approved_at' => now(),
-        ]);
-
-        return redirect()->route('archives.index')->with('success', 'Arquivo aprovado com sucesso.');
-    }
-
-    public function updateApprovalStatus(Request $request, $archiveId)
-    {
-        $archive = Archive::findOrFail($archiveId);
-
-        $approval = ArchiveApproval::where('archive_id', $archiveId)
-                                    ->where('user_id', auth()->id())
-                                    ->first();
-
-        if (!$approval) {
-            $approval = new ArchiveApproval();
-            $approval->archive_id = $archiveId;
-            $approval->user_id = auth()->id();
-        }
-
-        $approval->status = $request->status ?? 0;
-        $approval->approved_at = now();
-        $approval->comments = $request->comments ?? null;
-        $approval->save();
-
-        return redirect()->route('archives.index')->with('success', 'Status de aprovação atualizado com sucesso.');
-    }
-
-    public function updateStatus(Request $request, Archive $archive)
-    {
-        $archive->status = $request->input('status', 0);
-        $archive->save();
-
-        return redirect()->back()->with('success', 'Status atualizado com sucesso.');
-    }
-
-    public function destroy(Archive $archive)
-    {
-        $archive->delete();
-        return redirect()->route('archives.index')->with('success', 'Arquivo deletado com sucesso.');
-    }
-
-    public function logAndShow(Archive $archive)
-    {
-        $user = auth()->user();
-
-        ArchiveLog::create([
-            'archive_id' => $archive->id,
-            'user_id' => $user->id,
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-        ]);
-
-        return redirect()->away(asset('storage/' . $archive->file_path));
-    }public function show($id)
-{
-    $archive = Archive::with(['folders', 'folders.sectors'])
-        ->findOrFail($id);
-
-    return view('archives.show', compact('archive'));
-}// ArchiveController.php
-public function download(Archive $archive)
-{
-    $path = storage_path('app/public/' . $archive->file_path);
-
-    if (!file_exists($path)) {
-        abort(404);
-    }
-
-    return response()->download($path);
-}public function updateSectors(Request $request, Archive $archive)
-{
-    $request->validate([
-        'sectors' => 'nullable|array',
-    ]);
-
-    $archive->sectors()->sync($request->sectors ?? []);
-
-    return redirect()->back()->with('success', 'Setores atualizados com sucesso.');
-}
-
-
-
 }

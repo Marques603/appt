@@ -159,12 +159,12 @@
             </a>
             <ul class="sidebar-submenu ">
                 <li>
-                    <a href="{{ route('folder.index') }}"
+                    <a href="#"
                         class="sidebar-submenu-item {{ request()->routeIs('folder.index') ? 'active' : '' }}">
                         Pasta</a>
                 </li>
                 <li>
-                    <a href="{{ route('archives.index') }}"
+                    <a href="#"
                         class="sidebar-submenu-item {{ request()->routeIs('archives.index') ? 'active' : '' }}">
                         Arquivos</a>
                 </li>
