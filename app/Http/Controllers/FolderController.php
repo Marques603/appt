@@ -97,13 +97,7 @@ class FolderController extends Controller
 
     return view('folders.sector-files', compact('folder', 'sector', 'archives'));
     }
-    public function fullPath()
-    {
-    if ($this->parent) {
-        return $this->parent->fullPath() . ' / ' . $this->name;
-    }
-    return $this->name;
-    }
+    
 
 
 }
