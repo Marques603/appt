@@ -35,14 +35,24 @@ class Folder extends Model
         return $this->belongsTo(Folder::class, 'parent_id');
     }
     public function sectors()
-{
+    {
     return $this->belongsToMany(Sector::class, 'folder_sector');
-}public function fullPath()
+    }
+    public function fullPath()
     {
         if ($this->parent) {
             return $this->parent->fullPath() . ' / ' . $this->name;
         }
         return $this->name;
     }
-
+    public function fullPathArray()
+    {
+    $path = collect();
+    $folder = $this;
+    while ($folder) {
+        $path->prepend($folder);
+        $folder = $folder->parent;
+    }
+    return $path;
+    }
 }

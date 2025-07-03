@@ -14,7 +14,8 @@ class FolderController extends Controller
         $parentId = $request->query('parent_id');
 
         $folders = Folder::where('parent_id', $parentId)->paginate(10);
-        $parentFolder = $parentId ? Folder::find($parentId) : null;
+        $parentFolder = $parentId ? Folder::with('parent')->findOrFail($parentId) : null;
+
 
         if ($folders->isEmpty() && $parentFolder) {
             // chegamos no último nível: mostrar setores da pasta
@@ -95,13 +96,14 @@ class FolderController extends Controller
         ->paginate(10);
 
     return view('folders.sector-files', compact('folder', 'sector', 'archives'));
-}public function fullPath()
-{
+    }
+    public function fullPath()
+    {
     if ($this->parent) {
         return $this->parent->fullPath() . ' / ' . $this->name;
     }
     return $this->name;
-}
+    }
 
 
 }
