@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArchiveLog extends Model
 {
-    protected $fillable = ['archive_id', 'user_id', 'ip_address', 'user_agent'];
-
-    public $timestamps = true; // padrão, pode omitir
+    protected $fillable = [
+        'archive_id',
+        'user_id',
+        'ip_address',
+        'user_agent',
+    ];
 
     public function archive()
     {

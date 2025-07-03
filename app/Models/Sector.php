@@ -31,10 +31,9 @@ class Sector extends Model
     {
         return $this->belongsToMany(Document::class, 'document_sector');
     }
-    public function subfolders()
+    public function folders()
     {
-        // Relacionamento muitos-para-muitos com Subfolder através da tabela pivo 'subfolder_sector'
-        return $this->belongsToMany(Subfolder::class, 'subfolder_sector');
+    return $this->belongsToMany(Folder::class, 'folder_sector');
     }
 
     /**

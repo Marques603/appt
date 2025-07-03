@@ -4,50 +4,43 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes; // Importar SoftDeletes
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Archive extends Model
 {
-    use HasFactory, SoftDeletes; // Usar SoftDeletes
+    use HasFactory, SoftDeletes;
 
-    // Campos que podem ser preenchidos em massa
     protected $fillable = [
-        'code',         // Conforme sua migração
-        'name',
-        'path',
-        'extension',    // Conforme sua migração
-        'revision',     // Conforme sua migração
-        'user_upload',  // Conforme sua migração
-        'size',         // Conforme sua migração
+        'code',
         'description',
-        'status',       // Conforme sua migração
+        'user_upload',
+        'revision',
+        'file_path',
+        'file_type',
+        'status',
     ];
 
-    /**
-     * Get the sectors associated with the archive.
-     */
+    // Usuário que fez o upload
+    public function uploader()
+    {
+        return $this->belongsTo(User::class, 'user_upload');
+    }
+
+    // Muitos para muitos com setores
     public function sectors()
     {
-        // Relacionamento muitos-para-muitos com Sector através da tabela pivo 'archive_sector'
         return $this->belongsToMany(Sector::class, 'archive_sector');
     }
 
-    /**
-     * Get the subfolders associated with the archive.
-     */
-    public function subfolders()
+    // Muitos para muitos com pastas
+    public function folders()
     {
-        // Relacionamento muitos-para-muitos com Subfolder através da tabela pivo 'archive_subfolder'
-        return $this->belongsToMany(Subfolder::class, 'archive_subfolder');
+        return $this->belongsToMany(Folder::class, 'archive_folder');
     }
 
-    /**
-     * Get the user who uploaded the archive.
-     */
-    public function uploader()
+    // Logs de acesso
+    public function logs()
     {
-        // Relacionamento um-para-muitos (inverso) com User
-        // A chave estrangeira 'user_upload' está na tabela 'archives'
-        return $this->belongsTo(User::class, 'user_upload');
+        return $this->hasMany(ArchiveLog::class);
     }
 }

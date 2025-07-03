@@ -75,19 +75,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/macro/{macro}/responsibles', [MacroController::class, 'updateResponsibles'])->name('macro.update.responsibles'); 
 
     // Rotas de folder 
-    Route::resource('folder', FolderController::class)->except(['show']);
-
-    // As outras rotas de folder que você tinha para CRUD - MANTIDAS
-    Route::put('/folder/{folder}/status', [FolderController::class, 'updateStatus'])->name('folder.update.status'); 
-    Route::get('/folder/{folder}/restore', [FolderController::class, 'restore'])->name('folder.restore'); 
-    Route::put('/folder/{folder}/responsibles', [FolderController::class, 'updateResponsibles'])->name('folder.update.responsibles');
-    Route::put('/folders/{folder}/update-sectors', [FolderController::class, 'updateSectors'])->name('folders.update.sectors'); 
+    Route::resource('folders', FolderController::class);// Rotas de documentos 
+    Route::get('folders/{folder}/sector/{sector}', [FolderController::class, 'sectorFiles'])
+    ->name('folders.sectorFiles');
 
 
-    Route::get('/folders', [FolderController::class, 'index'])->name('folders.index'); 
-    Route::get('/folders/{folder:slug}', [FolderController::class, 'show'])->name('folders.show'); 
-    Route::get('/folders/{folder:slug}/subfolders/{subfolder:slug}', [SubfolderController::class, 'show'])->name('subfolders.show'); 
-    // Rotas de documentos 
+    // Rotas de documentos (CRUD) - MANTIDAS
     Route::resource('documents', DocumentController::class)->except(['update']);
     Route::get('/documents/approval-index', [DocumentController::class, 'approvalIndex'])->name('documents.approval.index'); 
     Route::get('/documents/{document}/approve', [DocumentController::class, 'showApproveForm'])->name('documents.approve.form'); 
@@ -120,6 +113,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/archives/{archive}/download', [ArchiveController::class, 'download'])->name('archives.download'); 
     Route::post('/folders/{folder:slug}/subfolders/{subfolder:slug}/upload-archive', [ArchiveController::class, 'upload'])->name('archives.upload'); 
     Route::put('/archives/{archive}/update-sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors'); 
+    // Rota exemplo no web.php
+Route::get('folders/{folder}/sector/{sector}/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
+Route::post('folders/{folder}/sector/{sector}/archives', [ArchiveController::class, 'store'])->name('archives.store');
+
 
     // Rotas de empresas (CRUD) - MANTIDAS
     Route::resource('company', CompanyController::class);
