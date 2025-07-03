@@ -75,37 +75,41 @@
             </div>
         </div>
 
+
+        
+
         {{-- Grid de pastas em cards estilo "explorador de arquivos" --}}
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
-            @forelse($folders as $folder)
-                <a href="{{ route('folders.index', ['parent_id' => $folder->id]) }}" class="card hover:shadow-lg transition group">
-                    <div class="card-body flex items-center gap-4">
-                        <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-yellow-400 bg-opacity-20 text-yellow-500">
-                            <i data-feather="folder" class="text-2xl"></i>
-                        </div>
-                        <div class="flex flex-1 flex-col gap-1">
-                            <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ $folder->name }}</p>
-                            @if (isset($folder->archives_count))
-                                <span class="text-xs text-slate-400 dark:text-slate-500">
-                                    {{ $folder->archives_count }} {{ Str::plural('arquivo', $folder->archives_count) }}
-                                </span>
-                            @endif
-                            <div>
-                                @if ($folder->status)
-                                    <span class="badge badge-soft-success">Ativa</span>
-                                @else
-                                    <span class="badge badge-soft-danger">Inativa</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            @empty
-                <div class="col-span-full text-center py-12">
-                    <p class="text-slate-500 dark:text-slate-400">Nenhuma pasta encontrada.</p>
+     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
+    @forelse($folders as $folder)
+        <a href="{{ route('folders.index', ['parent_id' => $folder->id]) }}" class="card hover:shadow-lg transition group">
+            <div class="card-body flex items-center gap-4">
+                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-yellow-400 bg-opacity-20 text-yellow-500">
+                    <i class="ti ti-folder text-3xl"></i>
                 </div>
-            @endforelse
+                <div class="flex flex-1 flex-col gap-1">
+                    <h4>{{ $folder->name }}</h4>
+                    <div class="flex flex-wrap items-baseline justify-between gap-2">
+                        <p class="text-sm tracking-wide text-slate-500">
+                            {{ $folder->archives_count ?? 0 }}
+                            {{ Str::plural('arquivo', $folder->archives_count ?? 0) }}
+                       </p>
+                        <span class="flex items-center text-xs font-medium {{ $folder->status ? 'text-success-500' : 'text-danger-500' }}">
+                            <i class="ti {{ $folder->status ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
+                            {{ $folder->status ? 'Ativa' : 'Inativa' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </a>
+    @empty
+        <div class="col-span-full text-center py-12">
+            <p class="text-slate-500 dark:text-slate-400">Nenhuma pasta encontrada.</p>
         </div>
+    @endforelse
+</div>
+
+
+
 
         {{-- Paginação --}}
         @if ($folders->hasPages())
