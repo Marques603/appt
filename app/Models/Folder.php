@@ -37,6 +37,12 @@ class Folder extends Model
     public function sectors()
 {
     return $this->belongsToMany(Sector::class, 'folder_sector');
-}
+}public function fullPath()
+    {
+        if ($this->parent) {
+            return $this->parent->fullPath() . ' / ' . $this->name;
+        }
+        return $this->name;
+    }
 
 }

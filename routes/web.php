@@ -96,9 +96,11 @@ Route::middleware(['auth'])->group(function () {
 
     
     // Rotas de veículos (CRUD) 
-    Route::resource('archives', ArchiveController::class)->except(['show', 'index']);
+    
 
     // As outras rotas específicas de archives (aprovação, update de detalhes) - MANTIDAS
+    Route::resource('archives', ArchiveController::class);
+
     Route::get('/archives/{archive}/approve', [ArchiveController::class, 'showApproveForm'])->name('archives.approve.form'); 
     Route::post('/archives/{archive}/approve', [ArchiveController::class, 'approve'])->name('archives.approve');
     Route::post('/archives/{archive}/approve/status', [ArchiveController::class, 'updateApprovalStatus'])->name('archives.updateApprovalStatus'); 
