@@ -85,6 +85,21 @@ public function download(Archive $archive)
         // log removido pois não usa Spatie
         return Storage::download($archive->file_path);
     }
+    public function destroy($id)
+    {
+        $archive = Archive::findOrFail($id);
+
+        // Captura folder e sector para redirecionar depois
+        $folder = $archive->folders()->first();  // supondo relação belongsToMany
+        $sector = $archive->sector;              // supondo relação belongsTo
+
+        $archive->delete();
+
+        return redirect()->route('folders.index')
+    ->with('success', 'Arquivo excluído com sucesso.');
+
+    }
+
 
 
 }

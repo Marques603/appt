@@ -74,50 +74,107 @@
             </div>
         </div>
 
+
+        
+
         {{-- Grid de arquivos em cards --}}
-<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
-    @forelse ($archives as $archive)
-        <a href="{{ route('archives.download', $archive->id) }}" 
-           class="card hover:shadow-lg transition group">
-            <div class="card-body flex items-center gap-4">
-                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
-                    bg-primary-500 bg-opacity-20 text-primary-500">
-                    @switch($archive->type)
-                        @case('pdf')
-                            <i class="ti ti-file-type-pdf text-3xl"></i>
-                            @break
-                        @case('doc')
-                            <i class="ti ti-file-type-doc text-3xl"></i>
-                            @break
-                        @case('xls')
-                            <i class="ti ti-file-type-xls text-3xl"></i>
-                            @break
-                        @default
-                            <i class="ti ti-file-text text-3xl"></i>
-                    @endswitch
-                </div>
-                <div class="flex flex-1 flex-col gap-1">
-                    <h4 class="text-base font-semibold text-slate-700 dark:text-slate-200">{{ $archive->code }}</h4>
-                    <div class="flex flex-wrap items-baseline justify-between gap-2">
-                        <p class="text-sm tracking-wide text-slate-500">
-                            {{ Str::limit($archive->description, 40) }}
-                        </p>
-                        <span class="flex items-center text-xs font-medium {{ ($archive->status ?? false) ? 'text-success-500' : 'text-danger-500' }}">
-                            <i class="ti {{ ($archive->status ?? false) ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
-                            {{ ($archive->status ?? false) ? 'Ativo' : 'Inativo' }}
-                        </span>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
+            @forelse ($archives as $archive)
+                <div class="relative group card p-4 hover:shadow-lg transition">
+    {{-- restante do conteúdo --}}
+
+                    {{-- Dropdown de ações dentro do card --}}
+                    <div class="absolute top-4 right-4">
+                        <div class="dropdown" data-placement="bottom-end">
+                            <div class="dropdown-toggle cursor-pointer">
+                                <i class="w-6 text-slate-400" data-feather="more-horizontal"></i>
+                            </div>
+                            <div class="dropdown-content">
+                                <ul class="dropdown-list">
+                                     {{--<li class="dropdown-list-item">
+                                        <a href="{{ route('archives.edit', $archive->id) }}" class="dropdown-link">
+                                            <i class="h-5 text-slate-400" data-feather="edit"></i>
+                                            <span>Editar</span>
+                                        </a>
+                                    </li>--}}
+                                    <li class="dropdown-list-item">
+                                        <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $archive->id }}">
+                                            <i class="h-5 text-slate-400" data-feather="trash"></i>
+                                            <span>Excluir</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
+                    <a href="{{ route('archives.download', $archive->id) }}" class="block p-4">
+                        <div class="flex items-center gap-4">
+                            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
+                                bg-primary-500 bg-opacity-20 text-primary-500">
+                                @switch($archive->type)
+                                    @case('pdf')
+                                        <i class="ti ti-file-type-pdf text-3xl"></i>
+                                        @break
+                                    @case('doc')
+                                        <i class="ti ti-file-type-doc text-3xl"></i>
+                                        @break
+                                    @case('xls')
+                                        <i class="ti ti-file-type-xls text-3xl"></i>
+                                        @break
+                                    @default
+                                        <i class="ti ti-file-text text-3xl"></i>
+                                @endswitch
+                            </div>
+                            <div class="flex flex-1 flex-col gap-1">
+                                <h4 class="text-base font-semibold text-slate-700 dark:text-slate-200">{{ $archive->code }}</h4>
+                                <div class="flex flex-wrap items-baseline justify-between gap-2">
+                                    <p class="text-sm tracking-wide text-slate-500">
+                                        {{ Str::limit($archive->description, 40) }}
+                                    </p>
+                                    <span class="flex items-center text-xs font-medium {{ ($archive->status ?? false) ? 'text-success-500' : 'text-danger-500' }}">
+                                        <i class="ti {{ ($archive->status ?? false) ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
+                                        {{ ($archive->status ?? false) ? 'Ativo' : 'Inativo' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    {{-- Modal de exclusão --}}
+                    <div class="modal modal-centered" id="deleteModal-{{ $archive->id }}">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h6>Confirmação</h6>
+                                    <button type="button" class="btn btn-plain-secondary" data-dismiss="modal">
+                                        <i data-feather="x" width="1.5rem" height="1.5rem"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-sm text-slate-500 dark:text-slate-300">
+                                        Tem certeza que deseja excluir <strong>{{ $archive->code }}</strong>?
+                                    </p>
+                                </div>
+                                <div class="modal-footer flex justify-center">
+                                    <form method="POST" action="{{ route('archives.destroy', $archive->id) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Sim, excluir</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-        </a>
-    @empty
-        <div class="col-span-full text-center py-12">
-            <p class="text-slate-500 dark:text-slate-400">Nenhum arquivo encontrado para este setor.</p>
+            @empty
+                <div class="col-span-full text-center py-12">
+                    <p class="text-slate-500 dark:text-slate-400">Nenhum arquivo encontrado para este setor.</p>
+                </div>
+            @endforelse
         </div>
-    @endforelse
-</div>
-
-
 
         {{-- Paginação --}}
         @if ($archives->hasPages())
