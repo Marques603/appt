@@ -2,6 +2,12 @@
     <x-page-title page="Arquivos do Setor" header="Arquivos do setor {{ $sector->name }} na pasta {{ $folder->name }}" />
     @section('title', 'Arquivos | ' . $sector->name . ' | Inusittá')
 
+    @if(session('success'))
+        <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
+
     <div class="space-y-4">
         {{-- Barra de ações --}}
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">

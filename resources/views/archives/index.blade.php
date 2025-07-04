@@ -25,25 +25,7 @@
             </form>
 
             <div class="flex items-center gap-x-4">
-                <form method="GET" action="{{ route('archives.index') }}">
-                    <select name="sector" class="tom-select w-48" autocomplete="off" onchange="this.form.submit()">
-                        <option value="">Todos os setores</option>
-                        @foreach($sectors as $sector)
-                            <option value="{{ $sector->id }}" {{ request('sector') == $sector->id ? 'selected' : '' }}>
-                                {{ $sector->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </form>
-
-                <form method="GET" action="{{ route('archives.index') }}">
-                    <select name="status" class="tom-select w-32" autocomplete="off" onchange="this.form.submit()">
-                        <option value="">Todos os status</option>
-                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Ativo</option>
-                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inativo</option>
-                    </select>
-                </form>
-
+        
         
             </div>
         </div>

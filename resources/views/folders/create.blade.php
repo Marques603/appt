@@ -1,61 +1,94 @@
 <x-app-layout>
-    <x-page-title page="Nova Pasta" header="Criar nova pasta" />
+    <x-page-title page="Nova Pasta" pageUrl="{{ route('folders.index') }}" header="Criar nova pasta" />
+    @section('title', 'Criar pasta | Inusittá')
 
-    <form action="{{ route('folders.store') }}" method="POST" class="space-y-6 max-w-lg mx-auto">
-        @csrf
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        <!-- Preview -->
+        <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">
+            <div class="card">
+                <div class="card-body flex flex-col items-center">
+                    <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-yellow-100 dark:bg-yellow-700 p-4">
+                        <i class="ti ti-folder text-4xl text-yellow-500 dark:text-yellow-300"></i>
+                    </div>
+                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Pasta</h2>
+                </div>
+            </div>
+        </section>
 
-        <div>
-            <label for="name" class="block font-medium text-gray-700">Nome</label>
-            <input type="text" name="name" id="name" value="{{ old('name') }}"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-            @error('name') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+        <!-- Formulário -->
+        <section class="col-span-1 flex w-full flex-1 flex-col gap-6 lg:col-span-3 lg:w-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes da Pasta</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Preencha as informações da pasta</p>
 
-        <div>
-            <label for="description" class="block font-medium text-gray-700">Descrição</label>
-            <textarea name="description" id="description" rows="3"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ old('description') }}</textarea>
-            @error('description') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+                    <form action="{{ route('folders.store') }}" method="POST" class="flex flex-col gap-6">
+                        @csrf
 
-        <div>
-            <label for="parent_id" class="block font-medium text-gray-700">Pasta Pai (opcional)</label>
-            <select name="parent_id" id="parent_id"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <option value="">-- Nenhuma (pasta raiz) --</option>
-                @foreach ($folders as $folder)
-                    <option value="{{ $folder->id }}" @selected(old('parent_id') == $folder->id)>{{ $folder->name }}</option>
-                @endforeach
-            </select>
-            @error('parent_id') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <label class="label">
+                                <span class="block mb-1">Nome</span>
+                                <input type="text" name="name"
+                                       class="input @error('name') border-red-500 @enderror"
+                                       value="{{ old('name') }}" required>
+                                @error('name')
+                                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </label>
 
-        <div>
-            <label for="sectors" class="block font-medium text-gray-700">Setores com acesso</label>
-            <select name="sectors[]" id="sectors" multiple
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                @foreach ($sectors as $sector)
-                    <option value="{{ $sector->id }}" @selected(collect(old('sectors'))->contains($sector->id))>
-                        {{ $sector->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('sectors') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+                            <label class="label">
+                                <span class="block mb-1">Status</span>
+                                <select name="status"
+                                        class="input @error('status') border-red-500 @enderror"
+                                        required>
+                                    <option value="1" @selected(old('status') == '1')>Ativa</option>
+                                    <option value="0" @selected(old('status') == '0')>Inativa</option>
+                                </select>
+                                @error('status')
+                                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </label>
+                        </div>
 
-        <div>
-            <label for="status" class="block font-medium text-gray-700">Status</label>
-            <select name="status" id="status"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
-                <option value="1" @selected(old('status') == '1')>Ativa</option>
-                <option value="0" @selected(old('status') == '0')>Inativa</option>
-            </select>
-            @error('status') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+                        <label class="label">
+                            <span class="block mb-1">Descrição</span>
+                            <textarea name="description" rows="3"
+                                      class="input @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                            @error('description')
+                                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </label>
 
-        <div class="flex justify-end space-x-2">
-            <a href="{{ route('folders.index') }}" class="btn-secondary">Cancelar</a>
-            <button type="submit" class="btn-primary">Salvar</button>
-        </div>
-    </form>
+                        @if(isset($parentId))
+                            <input type="hidden" name="parent_id" value="{{ $parentId }}">
+                        @endif
+
+                        <label class="label">
+                            <span class="block mb-1">Setores com acesso</span>
+                            <select name="sectors[]" multiple class="tom-select w-full @error('sectors') border-red-500 @enderror">
+                                @foreach ($sectors as $sector)
+                                    <option value="{{ $sector->id }}" @selected(collect(old('sectors'))->contains($sector->id))>
+                                        {{ $sector->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('sectors')
+                                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </label>
+
+                        <div class="flex items-center justify-end gap-4">
+                            <a href="{{ route('folders.index') }}"
+                               class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-folder-plus"></i> Salvar Pasta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
 </x-app-layout>

@@ -13,7 +13,7 @@ class FolderController extends Controller
     {
         $parentId = $request->query('parent_id');
 
-        $folders = Folder::where('parent_id', $parentId)->paginate(20);
+        $folders = Folder::where('parent_id', $parentId)->paginate(24);
         $parentFolder = $parentId ? Folder::with('parent')->findOrFail($parentId) : null;
 
 
@@ -83,9 +83,18 @@ class FolderController extends Controller
 
     public function destroy(Folder $folder)
     {
+        if ($folder->archives()->count() > 0) {
+            return redirect()->route('folders.index')
+                ->with('success', 'Não é possível excluir esta pasta, pois ela contém arquivos vinculados.');
+        }
+
         $folder->delete();
-        return redirect()->route('folders.index')->with('success', 'Pasta removida com sucesso!');
+
+        return redirect()->route('folders.index')
+            ->with('success', 'Pasta excluída com sucesso.');
     }
+
+
 
     public function sectorFiles(Folder $folder, Sector $sector)
 {

@@ -66,8 +66,9 @@
         @forelse ($sectors as $sector)
             <a href="{{ route('folders.sectorFiles', [$parentFolder->id, $sector->id]) }}" class="card hover:shadow-lg transition group">
                 <div class="card-body flex items-center gap-4">
-                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-500 bg-opacity-20 text-primary-500">
-                    <i class="ti ti-folder text-3xl"></i>
+                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
+                                bg-primary-500 bg-opacity-20 text-primary-500">
+                                <i class="ti ti-folder text-3xl"></i>
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
                         <h4>{{ $sector->name }}</h4>

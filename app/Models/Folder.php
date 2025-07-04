@@ -54,5 +54,9 @@ class Folder extends Model
         $folder = $folder->parent;
     }
     return $path;
-    }
+    }public function archives()
+{
+    return $this->belongsToMany(Archive::class, 'archive_folder', 'folder_id', 'archive_id');
+}
+
 }

@@ -1,38 +1,91 @@
 <x-app-layout>
-    <x-page-title page="Novo Arquivo" header="Adicionar arquivo na pasta {{ $folder->name }} e setor {{ $sector->name }}" />
+    <x-page-title 
+        page="Novo Arquivo" 
+        header="Adicionar arquivo na pasta {{ $folder->name }} e setor {{ $sector->name }}" 
+    />
+    @section('title', 'Novo arquivo | Inusittá')
 
-    <form action="{{ route('archives.store', ['folder' => $folder->id, 'sector' => $sector->id]) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-        @csrf
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        <!-- Preview -->
+        <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">
+            <div class="card">
+                <div class="card-body flex flex-col items-center">
+                    <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-700 p-4">
+                        <i data-feather="file-plus" class="w-10 h-10 text-slate-600 dark:text-slate-200"></i>
+                    </div>
+                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Novo Arquivo</h2>
+                </div>
+            </div>
+        </section>
 
-        <div>
-            <label for="code" class="block font-medium">Código</label>
-            <input type="text" name="code" id="code" class="input" required value="{{ old('code') }}">
-            @error('code') <p class="text-red-600">{{ $message }}</p> @enderror
-        </div>
+        <!-- Formulário -->
+        <section class="col-span-1 flex w-full flex-1 flex-col gap-6 lg:col-span-3 lg:w-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">
+                        Detalhes do Arquivo
+                    </h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">
+                        Preencha as informações para adicionar o arquivo
+                    </p>
 
-        <div>
-            <label for="description" class="block font-medium">Descrição</label>
-            <textarea name="description" id="description" class="input">{{ old('description') }}</textarea>
-        </div>
+                    <form 
+                        method="POST" 
+                        action="{{ route('archives.store', ['folder' => $folder->id, 'sector' => $sector->id]) }}" 
+                        enctype="multipart/form-data" 
+                        class="flex flex-col gap-6"
+                    >
+                        @csrf
 
-        <div>
-            <label for="file" class="block font-medium">Arquivo</label>
-            <input type="file" name="file" id="file" required>
-            @error('file') <p class="text-red-600">{{ $message }}</p> @enderror
-        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <label class="label">
+                                <span class="block mb-1">Código</span>
+                                <input type="text" name="code" value="{{ old('code') }}" class="input @error('code') border-red-500 @enderror" required>
+                                @error('code')
+                                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </label>
 
-        <div>
-            <label for="revision" class="block font-medium">Revisão</label>
-            <input type="text" name="revision" id="revision" class="input" value="{{ old('revision') }}">
-        </div>
+                            <label class="label">
+                                <span class="block mb-1">Arquivo</span>
+                                <input type="file" name="file" class="input @error('file') border-red-500 @enderror" required>
+                                @error('file')
+                                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </label>
+                        </div>
 
-        <div>
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="status" value="1" checked class="form-checkbox">
-                <span class="ml-2">Ativo</span>
-            </label>
-        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <label class="label">
+                                <span class="block mb-1">Descrição</span>
+                                <input type="text" name="description" value="{{ old('description') }}" class="input">
+                            </label>
 
-        <button type="submit" class="btn-primary">Salvar Arquivo</button>
-    </form>
+                            <label class="label">
+                                <span class="block mb-1">Revisão</span>
+                                <input type="text" name="revision" value="{{ old('revision') }}" class="input">
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="status" value="1" checked class="form-checkbox rounded text-primary-600">
+                                <span class="text-slate-600 dark:text-slate-300">Ativo</span>
+                            </label>
+                        </div>
+
+                        <div class="flex justify-end gap-4">
+                            <a href="{{ url()->previous() }}"
+                               class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-check mr-1"></i> Salvar Arquivo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
 </x-app-layout>
