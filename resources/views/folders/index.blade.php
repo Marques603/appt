@@ -83,7 +83,7 @@
     @forelse($folders as $folder)
         <a href="{{ route('folders.index', ['parent_id' => $folder->id]) }}" class="card hover:shadow-lg transition group">
             <div class="card-body flex items-center gap-4">
-                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-yellow-400 bg-opacity-20 text-yellow-500">
+                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-500 bg-opacity-20 text-primary-500">
                     <i class="ti ti-folder text-3xl"></i>
                 </div>
                 <div class="flex flex-1 flex-col gap-1">
