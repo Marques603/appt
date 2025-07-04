@@ -119,11 +119,11 @@
                                 <i class="ti ti-folder text-3xl"></i>
                             </div>
                             <div class="flex flex-1 flex-col gap-1">
-                                <h4>{{ Str::limit($folder->name, 5, '') }}</h4>
+                                <h4>{{ $folder->name }}</h4>
 
                                 <div class="flex flex-wrap items-baseline justify-between gap-2">
                                     <p class="text-sm tracking-wide text-slate-500">
-                                      {{ substr($folder->name, 6) }}
+                                      {{ $folder->description }}
                                     </p>
                                     <span class="flex items-center text-xs font-medium {{ $folder->status ? 'text-success-500' : 'text-danger-500' }}">
                                         <i class="ti {{ $folder->status ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
