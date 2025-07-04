@@ -8,6 +8,8 @@
         </div>
     @endif
 
+    @section('title', 'Lista de pastas/setor  | Inusittá')
+
     <div class="space-y-4">
         {{-- Barra de ações --}}
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">

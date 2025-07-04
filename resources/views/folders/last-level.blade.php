@@ -76,9 +76,11 @@
                             <p class="text-sm tracking-wide text-slate-500">
                                 Ver arquivos do setor
                             </p>
-                            <span class="flex items-center text-xs font-medium text-info-500">
-                                <i class="ti ti-eye mr-1"></i> Acessar
+                            <span class="flex items-center text-xs font-medium text-success-500">
+                                <i class="ti {{ $sector->name ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i> Ativa
                             </span>
+
+                           
                         </div>
                     </div>
                 </div>

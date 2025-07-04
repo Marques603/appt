@@ -1,4 +1,5 @@
 <x-app-layout>
+      
     @push('title')
         Pastas{{ $parentFolder ? ' | ' . $parentFolder->fullPath() : '' }} | Inusittá
     @endpush
@@ -7,6 +8,8 @@
         page="Pastas" 
         header="Lista de Pastas {{ $parentFolder ? ' em ' . $parentFolder->fullPath() : '' }}"
     />
+
+    @section('title', 'Lista de pastas | Inusittá')
 
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -116,10 +119,11 @@
                                 <i class="ti ti-folder text-3xl"></i>
                             </div>
                             <div class="flex flex-1 flex-col gap-1">
-                                <h4>{{ $folder->name }}</h4>
+                                <h4>{{ Str::limit($folder->name, 5, '') }}</h4>
+
                                 <div class="flex flex-wrap items-baseline justify-between gap-2">
                                     <p class="text-sm tracking-wide text-slate-500">
-                                        {{ $folder->archives_count ?? 0 }} {{ Str::plural('arquivo', $folder->archives_count ?? 0) }}
+                                      {{ substr($folder->name, 6) }}
                                     </p>
                                     <span class="flex items-center text-xs font-medium {{ $folder->status ? 'text-success-500' : 'text-danger-500' }}">
                                         <i class="ti {{ $folder->status ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
