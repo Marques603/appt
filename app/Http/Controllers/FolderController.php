@@ -13,7 +13,7 @@ class FolderController extends Controller
     {
         $parentId = $request->query('parent_id');
 
-        $folders = Folder::where('parent_id', $parentId)->paginate(10);
+        $folders = Folder::where('parent_id', $parentId)->paginate(20);
         $parentFolder = $parentId ? Folder::with('parent')->findOrFail($parentId) : null;
 
 
