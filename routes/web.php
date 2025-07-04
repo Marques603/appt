@@ -118,6 +118,8 @@ Route::middleware(['auth'])->group(function () {
     // Rota exemplo no web.php
 Route::get('folders/{folder}/sector/{sector}/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
 Route::post('folders/{folder}/sector/{sector}/archives', [ArchiveController::class, 'store'])->name('archives.store');
+Route::get('/archives/{archive}', [ArchiveController::class, 'show'])->name('archives.show');
+Route::get('archives/{archive}/download', [ArchiveController::class, 'download'])->name('archives.download');
 
 
     // Rotas de empresas (CRUD) - MANTIDAS

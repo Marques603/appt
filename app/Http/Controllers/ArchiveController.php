@@ -6,6 +6,7 @@ use App\Models\Archive;
 use App\Models\Folder;
 use App\Models\Sector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArchiveController extends Controller
 {
@@ -74,6 +75,16 @@ class ArchiveController extends Controller
     $sectors = Sector::all(); // Para dropdown filtro
 
     return view('archives.index', compact('archives', 'sectors'));
+}public function show(Archive $archive)
+{
+    return view('archives.show', compact('archive'));
 }
+
+public function download(Archive $archive)
+    {
+        // log removido pois não usa Spatie
+        return Storage::download($archive->file_path);
+    }
+
 
 }
