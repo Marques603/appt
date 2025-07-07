@@ -57,8 +57,8 @@
                             <td>{{ $archive->revision ?? '-' }}</td>
                             <td>
                                 @foreach($archive->folders as $folder)
-    <span class="badge badge-soft-primary">{{ $folder->fullPath() }}</span>
-@endforeach
+                            <span class="badge badge-soft-primary">{{ $folder->fullPath() }}</span>
+                        @endforeach
 
                             </td>
                             <td>
