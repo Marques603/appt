@@ -1,12 +1,16 @@
 <x-app-layout>
     <x-page-title 
-        page="Arquivos do Plano"
-        header="{!! 
-            'Lista de pastas' .
-            ($folder ? ' > ' . ucfirst(mb_strtolower($folder->fullPath(), 'UTF-8')) : '') .
-            ' > ' . ucfirst(mb_strtolower($plan->name, 'UTF-8'))
-        !!}"
-    />
+    page="Arquivos do Plano"
+    header="{!!
+        'Lista de pastas' .
+        ($folder ? ' > ' . collect(explode('/', $folder->fullPath()))
+            ->map(fn($s) => ucfirst(trim($s)))
+            ->implode(' > ')
+        : '') .
+        ' > ' . ucfirst($plan->name)
+    !!}"
+/>
+
 
     @section('title', 'Arquivos | ' . $plan->name . ' | Inusittá')
 

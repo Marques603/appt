@@ -6,8 +6,14 @@
 
     <x-page-title 
     page="Pastas" 
-    header="{!! 'Lista de pastas' . ($parentFolder ? ' > ' . ucfirst(mb_strtolower($parentFolder->fullPath(), 'UTF-8')) : '') !!}"
+    header="{!! 'Lista de pastas' . ($parentFolder 
+        ? ' > ' . collect(explode('/', $parentFolder->fullPath()))
+            ->map(fn($s) => trim($s))
+            ->implode(' > ')
+        : ''
+    ) !!}"
 />
+
 
 
     @section('title', 'Lista de pastas | Inusittá')

@@ -1,9 +1,19 @@
 <x-app-layout>
-    <x-page-title 
-        page="Pastas" 
-        header="{!! 'Lista de pastas' . ($parentFolder ? ' > ' . ucfirst(mb_strtolower(str_replace('/', ' >', $parentFolder->fullPath()), 'UTF-8')) : '') !!}"
-    />
+    
 
+
+<x-page-title 
+    page="Pastas" 
+    header="{!! 
+        'Lista de pastas' 
+        . ($parentFolder 
+            ? ' > ' . collect(explode('/', $parentFolder->fullPath()))
+                ->map(fn($s) => ucfirst(trim($s)))
+                ->implode(' > ')
+            : ''
+        )
+    !!}"
+/>
     <div class="space-y-4">
         {{-- Barra de ações --}}
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
