@@ -1,15 +1,14 @@
 <x-app-layout>
-    
     <x-page-title 
-    page="Arquivos do Setor"
-    header="{!! 
-        'Lista de pastas' .
-        ($folder ? ' > ' . ucfirst(mb_strtolower($folder->fullPath(), 'UTF-8')) : '') .
-        ' > ' . ucfirst(mb_strtolower($sector->name, 'UTF-8'))
-    !!}"
-/>
+        page="Arquivos do Plano"
+        header="{!! 
+            'Lista de pastas' .
+            ($folder ? ' > ' . ucfirst(mb_strtolower($folder->fullPath(), 'UTF-8')) : '') .
+            ' > ' . ucfirst(mb_strtolower($plan->name, 'UTF-8'))
+        !!}"
+    />
 
-    @section('title', 'Arquivos | ' . $sector->name . ' | Inusittá')
+    @section('title', 'Arquivos | ' . $plan->name . ' | Inusittá')
 
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -18,11 +17,9 @@
     @endif
 
     <div class="space-y-4">
-        {{-- Barra de ações --}}
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
-            {{-- Busca --}}
             <div class="flex w-full md:w-auto">
-                <form method="GET" action="{{ route('folders.sectorFiles', [$folder->id, $sector->id]) }}" 
+                <form method="GET" action="{{ route('folders.planFiles', [$folder->id, $plan->id]) }}" 
                     class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm 
                         focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 
                         dark:bg-slate-800 sm:max-w-xs">
@@ -40,9 +37,7 @@
                 </form>
             </div>
 
-            {{-- Botões --}}
             <div class="flex w-full items-center justify-end gap-x-4 md:w-auto">
-                {{-- Filtros --}}
                 <div class="dropdown" data-placement="bottom-end">
                     <div class="dropdown-toggle">
                         <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
@@ -52,7 +47,7 @@
                         </button>
                     </div>
                     <div class="dropdown-content w-72 !overflow-visible">
-                        <form method="GET" action="{{ route('folders.sectorFiles', [$folder->id, $sector->id]) }}">
+                        <form method="GET" action="{{ route('folders.planFiles', [$folder->id, $plan->id]) }}">
                             @if(request('search'))
                                 <input type="hidden" name="search" value="{{ request('search') }}">
                             @endif
@@ -74,8 +69,7 @@
                     </div>
                 </div>
 
-                {{-- Botão adicionar arquivo --}}
-                <a href="{{ route('archives.create', ['folder' => $folder->id, 'sector' => $sector->id]) }}"
+                <a href="{{ route('archives.create', ['folder' => $folder->id, 'plan' => $plan->id]) }}"
                     class="btn btn-primary flex items-center gap-2">
                     <i class="ti ti-plus w-4 h-4"></i>
                     <span class="hidden sm:inline-block">Adicionar arquivo</span>
@@ -83,11 +77,9 @@
             </div>
         </div>
 
-        {{-- Grid --}}
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
             @forelse ($archives as $archive)
                 <div class="relative group card p-4 hover:shadow-lg transition">
-                    {{-- Dropdown de ações --}}
                     <div class="absolute top-4 right-4">
                         <div class="dropdown" data-placement="bottom-end">
                             <div class="dropdown-toggle cursor-pointer">
@@ -106,7 +98,6 @@
                         </div>
                     </div>
 
-                    {{-- Conteúdo --}}
                     <a href="{{ route('archives.download', $archive->id) }}" class="block">
                         <div class="flex items-center gap-4">
                             <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
@@ -140,7 +131,6 @@
                         </div>
                     </a>
 
-                    {{-- Modal de exclusão --}}
                     <div class="modal modal-centered" id="deleteModal-{{ $archive->id }}">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -169,12 +159,11 @@
                 </div>
             @empty
                 <div class="col-span-full text-center py-12">
-                    <p class="text-slate-500 dark:text-slate-400">Nenhum arquivo encontrado para este setor.</p>
+                    <p class="text-slate-500 dark:text-slate-400">Nenhum arquivo encontrado para este plano.</p>
                 </div>
             @endforelse
         </div>
 
-        {{-- Paginação --}}
         @if ($archives->hasPages())
             <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row mt-8">
                 <p class="text-xs font-normal text-slate-400">

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Folder;
-use App\Models\Sector;
+use App\Models\Plan;
 use App\Models\Archive;
 use Illuminate\Http\Request;
 
@@ -16,11 +16,10 @@ class FolderController extends Controller
         $folders = Folder::where('parent_id', $parentId)->paginate(24);
         $parentFolder = $parentId ? Folder::with('parent')->findOrFail($parentId) : null;
 
-
         if ($folders->isEmpty() && $parentFolder) {
-            // chegamos no último nível: mostrar setores da pasta
-            $sectors = $parentFolder->sectors;
-            return view('folders.last-level', compact('parentFolder', 'sectors'));
+            // chegamos no último nível: mostrar planos vinculados
+            $plans = $parentFolder->plans;
+            return view('folders.last-level', compact('parentFolder', 'plans'));
         }
 
         return view('folders.index', compact('folders', 'parentFolder'));
@@ -30,9 +29,9 @@ class FolderController extends Controller
     {
         $parentId = $request->query('parent_id');
         $folders = Folder::all(); // para escolher pasta pai, se quiser
-        $sectors = Sector::all(); // popular select setores
+        $plans = Plan::all(); // popular select planos
 
-        return view('folders.create', compact('folders', 'parentId', 'sectors'));
+        return view('folders.create', compact('folders', 'parentId', 'plans'));
     }
 
     public function store(Request $request)
@@ -42,14 +41,14 @@ class FolderController extends Controller
             'description' => 'nullable',
             'status' => 'required|boolean',
             'parent_id' => 'nullable|exists:folders,id',
-            'sectors' => 'nullable|array',
-            'sectors.*' => 'exists:sector,id',
+            'plans' => 'nullable|array',
+            'plans.*' => 'exists:plans,id',
         ]);
 
         $folder = Folder::create($validated);
 
-        // sincronizar setores
-        $folder->sectors()->sync($request->sectors ?? []);
+        // sincronizar planos
+        $folder->plans()->sync($request->plans ?? []);
 
         return redirect()->route('folders.index')->with('success', 'Pasta criada com sucesso!');
     }
@@ -57,9 +56,9 @@ class FolderController extends Controller
     public function edit(Folder $folder)
     {
         $folders = Folder::where('id', '!=', $folder->id)->get();
-        $sectors = Sector::all();
+        $plans = Plan::all();
 
-        return view('folders.edit', compact('folder', 'folders', 'sectors'));
+        return view('folders.edit', compact('folder', 'folders', 'plans'));
     }
 
     public function update(Request $request, Folder $folder)
@@ -69,14 +68,14 @@ class FolderController extends Controller
             'description' => 'nullable',
             'status' => 'required|boolean',
             'parent_id' => 'nullable|exists:folders,id',
-            'sectors' => 'nullable|array',
-            'sectors.*' => 'exists:sector,id',
+            'plans' => 'nullable|array',
+            'plans.*' => 'exists:plans,id',
         ]);
 
         $folder->update($validated);
 
-        // atualizar setores
-        $folder->sectors()->sync($request->sectors ?? []);
+        // atualizar planos
+        $folder->plans()->sync($request->plans ?? []);
 
         return redirect()->route('folders.index')->with('success', 'Pasta atualizada com sucesso!');
     }
@@ -94,19 +93,14 @@ class FolderController extends Controller
             ->with('success', 'Pasta excluída com sucesso.');
     }
 
+    public function planFiles(Folder $folder, Plan $plan)
+    {
+        $archives = $plan->archives()
+            ->whereHas('folders', function ($query) use ($folder) {
+                $query->where('folders.id', $folder->id);
+            })
+            ->paginate(10);
 
-
-    public function sectorFiles(Folder $folder, Sector $sector)
-{
-    $archives = $sector->archives()
-        ->whereHas('folders', function ($query) use ($folder) {
-            $query->where('folders.id', $folder->id);
-        })
-        ->paginate(10);
-
-    return view('folders.sector-files', compact('folder', 'sector', 'archives'));
+        return view('folders.plan-files', compact('folder', 'plan', 'archives'));
     }
-    
-
-
 }

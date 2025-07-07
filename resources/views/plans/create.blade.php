@@ -1,7 +1,9 @@
 <x-app-layout>
     <!-- Título da Página -->
    
-    @section('title', 'Criar Plano | Inusittá')
+     <x-page-title page="Criar plano" pageUrl="{{ route('plans.index') }}" header="Criar plano" />
+
+    @section('title', 'Criar plano | Inusittá')
 
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -12,7 +14,7 @@
                     <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-700 p-4">
                         <i data-feather="briefcase" class="w-10 h-10 text-slate-600 dark:text-slate-200"></i>
                     </div>
-                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Plan</h2>
+                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Plano</h2>
                 </div>
             </div>
         </section>
@@ -21,8 +23,8 @@
         <section class="col-span-1 flex w-full flex-1 flex-col gap-6 lg:col-span-3 lg:w-auto">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes do Plan</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Preencha as informações do plan</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes do Plano</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Preencha as informações do plano</p>
 
                     <form method="POST" action="{{ isset($plan) ? route('plans.update', $plan) : route('plans.store') }}" class="flex flex-col gap-6">
                         @csrf
@@ -31,7 +33,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <!-- Nome do Plan -->
                             <label class="label">
-                                <span class="block mb-1">Nome do Plan</span>
+                                <span class="block mb-1">Nome do Plano</span>
                                 <input type="text" name="name" class="input @error('name') border-red-500 @enderror"
                                     value="{{ old('name', $plan->name ?? '') }}" />
                                 @error('name')

@@ -80,19 +80,19 @@
                         </label>
 
                         <label class="label">
-                            <span class="block mb-1">Setores com acesso</span>
-                            <select name="sectors[]" multiple
-                                    class="tom-select w-full @error('sectors') border-red-500 @enderror">
-                                @foreach ($sectors as $sector)
-                                    <option value="{{ $sector->id }}" 
+                            <span class="block mb-1">Planos com acesso</span>
+                            <select name="plans[]" multiple
+                                    class="tom-select w-full @error('plans') border-red-500 @enderror">
+                                @foreach ($plans as $plan)
+                                    <option value="{{ $plan->id }}" 
                                         @selected(
-                                            in_array($sector->id, old('sectors', $folder->sectors->pluck('id')->toArray()))
+                                            in_array($plan->id, old('plans', $folder->plans->pluck('id')->toArray()))
                                         )>
-                                        {{ $sector->name }}
+                                        {{ $plan->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('sectors')
+                            @error('plans')
                                 <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                             @enderror
                         </label>

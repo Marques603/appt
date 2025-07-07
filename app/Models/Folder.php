@@ -34,9 +34,11 @@ class Folder extends Model
     {
         return $this->belongsTo(Folder::class, 'parent_id');
     }
-    public function sectors()
+    public function plans()
     {
-    return $this->belongsToMany(Sector::class, 'folder_sector');
+    return $this->belongsToMany(Plan::class, 'folder_plan');
+
+
     }
     public function fullPath()
     {

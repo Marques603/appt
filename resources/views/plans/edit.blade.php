@@ -1,7 +1,7 @@
 <x-app-layout>
-    <x-page-title page="Editar Plan" pageUrl="{{ route('plans.index') }}" header="Editar Plan" />
+    <x-page-title page="Editar Plano" pageUrl="{{ route('plans.index') }}" header="Editar Plano" />
 
-    @section('title', 'Editar plan | Inusittá')
+    @section('title', 'Editar plano | Inusittá')
 
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -17,7 +17,7 @@
                     <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-700 p-4">
                         <i data-feather="briefcase" class="w-10 h-10 text-slate-600 dark:text-slate-200"></i>
                     </div>
-                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Plan</h2>
+                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Plano</h2>
                 </div>
             </div>
         </section>
@@ -28,8 +28,8 @@
             <!-- Formulário 1: Detalhes do Plan -->
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes do Plan</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Edite as informações do plan</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes do Plano</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Edite as informações do plano</p>
 
                     <form method="POST" action="{{ route('plans.update.details', $plan) }}" class="flex flex-col gap-6">
                         @csrf
@@ -38,7 +38,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <!-- Nome do Plan -->
                             <label class="label">
-                                <span class="block mb-1">Nome do Plan</span>
+                                <span class="block mb-1">Nome do Plano</span>
                                 <input type="text" name="name" class="input @error('name') border-red-500 @enderror"
                                     value="{{ old('name', $plan->name) }}" />
                                 @error('name')
@@ -73,8 +73,8 @@
             <!-- Formulário 2: Status -->
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Status do Plan</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Ative ou inative este plan</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Status do Plano</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Ative ou inative este plano</p>
 
                     <form method="POST" action="{{ route('plans.update.status', $plan) }}">
                         @csrf
@@ -82,7 +82,7 @@
 
                         <label for="status" class="toggle my-2 flex items-center justify-between">
                             <div class="label">
-                                <p class="text-sm font-normal text-slate-400">Ativar Plan</p>
+                                <p class="text-sm font-normal text-slate-400">Ativar Plano</p>
                             </div>
                             <div class="relative">
                                 <input
@@ -114,8 +114,8 @@
             <!-- Formulário 3: Responsáveis -->
             <div class="card">
                 <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Responsável do Plan</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina qual usuário é responsável por este plan</p>
+                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Responsável do Plano</h2>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina qual usuário é responsável por este plano</p>
 
                     <form method="POST" action="{{ route('plans.update.responsibles', $plan) }}">
                         @csrf
@@ -153,7 +153,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Usuários Vinculados</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os usuários vinculados a este plan</p>
+                    <p class="mb-4 text-sm font-normal text-slate-400">Defina os usuários vinculados a este plano</p>
 
                     <form method="POST" action="{{ route('plans.update.users', $plan) }}">
                         @csrf

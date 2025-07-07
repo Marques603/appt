@@ -121,6 +121,11 @@ Route::get('folders/{folder}/sector/{sector}/archives/create', [ArchiveControlle
 Route::post('folders/{folder}/sector/{sector}/archives', [ArchiveController::class, 'store'])->name('archives.store');
 Route::get('/archives/{archive}', [ArchiveController::class, 'show'])->name('archives.show');
 Route::get('archives/{archive}/download', [ArchiveController::class, 'download'])->name('archives.download');
+Route::get('folders/{folder}/plan/{plan}', [FolderController::class, 'planFiles'])->name('folders.planFiles');
+Route::get('folders/{folder}/plan/{plan}/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
+Route::post('folders/{folder}/plan/{plan}/archives', [ArchiveController::class, 'store'])->name('archives.store');
+Route::get('folders/{folder}/plan/{plan}/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
+
 
 
     // Rotas de planos (crud) - MANTIDAS

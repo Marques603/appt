@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-page-title 
         page="Novo Arquivo" 
-        header="Adicionar arquivo na pasta {{ $folder->name }} e setor {{ $sector->name }}" 
+        header="Adicionar arquivo na pasta {{ $folder->name }} e plano {{ $plan->name }}" 
     />
     @section('title', 'Novo arquivo | Inusittá')
 
@@ -31,7 +31,7 @@
 
                     <form 
                         method="POST" 
-                        action="{{ route('archives.store', ['folder' => $folder->id, 'sector' => $sector->id]) }}" 
+                        action="{{ route('archives.store', ['folder' => $folder->id, 'plan' => $plan->id]) }}" 
                         enctype="multipart/form-data" 
                         class="flex flex-col gap-6"
                     >

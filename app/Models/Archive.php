@@ -27,11 +27,10 @@ class Archive extends Model
     }
 
     // Muitos para muitos com setores
-    public function sectors()
+    public function plans()
     {
-        return $this->belongsToMany(Sector::class, 'archive_sector');
-    }
-
+    return $this->belongsToMany(Plan::class, 'archive_plan', 'archive_id', 'plan_id');
+    }    
     // Muitos para muitos com pastas
     public function folders()
     {

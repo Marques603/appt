@@ -22,4 +22,9 @@ class Plan extends Model
     {
         return $this->belongsToMany(User::class, 'plan_responsible_user', 'plan_id', 'user_id')->withTimestamps()->withPivot('deleted_at');
     }
+    public function archives()
+    {   
+    return $this->belongsToMany(Archive::class, 'archive_plan', 'plan_id', 'archive_id');
+    }
+
 }
