@@ -62,8 +62,8 @@
 
                             </td>
                             <td>
-                                @foreach ($archive->sectors as $sector)
-                                    <span class="badge badge-soft-secondary">{{ $sector->name }}</span>
+                                @foreach ($archive->plans as $plan)
+                                    <span class="badge badge-soft-secondary">{{ $plan->name }}</span>
                                 @endforeach
                             </td>   
                             <td>

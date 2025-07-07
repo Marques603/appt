@@ -147,7 +147,7 @@
                  <li>
             @can('view', App\Models\Menu::find(4))    
             <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['folder.index','archives.index']) ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs(['folder.index','archives.index','plans.index']) ? 'active' : '' }}">
 
                 <span class="sidebar-menu-icon">
                     <i data-feather="folder"></i>
@@ -167,6 +167,11 @@
                     <a href="{{ route('archives.index') }}"
                         class="sidebar-submenu-item {{ request()->routeIs('archives.index') ? 'active' : '' }}">
                         Arquivos</a>
+                </li>
+                <li>
+                    <a href="{{ route('plans.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('plans.index') ? 'active' : '' }}">
+                        Planos</a>
                 </li>
            </ul>
               @endcan

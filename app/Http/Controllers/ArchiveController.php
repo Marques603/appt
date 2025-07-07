@@ -72,11 +72,11 @@ public function store(Request $request, Folder $folder, Plan $plan)
     }
 
     // Eager load para evitar N+1
-    $archives = $query->with(['folders', 'sectors'])->paginate(10);
+    $archives = $query->with(['folders', 'plans'])->paginate(10);
 
-    $sectors = Sector::all(); // Para dropdown filtro
+    $plans = Plan::all(); // Para dropdown filtro
 
-    return view('archives.index', compact('archives', 'sectors'));
+    return view('archives.index', compact('archives', 'plans'));
 }public function show(Archive $archive)
 {
     return view('archives.show', compact('archive'));
