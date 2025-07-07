@@ -5,9 +5,10 @@
     @endpush
 
     <x-page-title 
-        page="Pastas" 
-        header="Lista de Pastas {{ $parentFolder ? ' em ' . $parentFolder->fullPath() : '' }}"
-    />
+    page="Pastas" 
+    header="{!! 'Lista de pastas' . ($parentFolder ? ' > ' . ucfirst(mb_strtolower($parentFolder->fullPath(), 'UTF-8')) : '') !!}"
+/>
+
 
     @section('title', 'Lista de pastas | Inusittá')
 
@@ -122,7 +123,7 @@
                                 <h4>{{ $folder->name }}</h4>
 
                                 <div class="flex flex-wrap items-baseline justify-between gap-2">
-                                    <p class="text-sm tracking-wide text-slate-500">
+                                    <p class="text-xs tracking-wide text-slate-500">
                                       {{ $folder->description }}
                                     </p>
                                     <span class="flex items-center text-xs font-medium {{ $folder->status ? 'text-success-500' : 'text-danger-500' }}">

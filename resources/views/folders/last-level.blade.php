@@ -1,8 +1,16 @@
 <x-app-layout>
-    <x-page-title page="Setores em {{ $parentFolder->name }}" header="Setores na pasta {{ $parentFolder->name }}" />
 
-    {{-- Barra de ações --}}
-    <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0 mb-6">
+
+     <x-page-title 
+    page="Pastas" 
+    header="{!! 'Lista de pastas' . ($parentFolder ? ' > ' . ucfirst(mb_strtolower(str_replace('/', ' >', $parentFolder->fullPath()), 'UTF-8')) : '') !!}"
+/>
+
+
+
+    <div class="space-y-4">
+        {{-- Barra de ações --}}
+        <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
         {{-- Busca --}}
         <div class="flex w-full md:w-auto">
             <form method="GET" action="" class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 dark:bg-slate-800 sm:max-w-xs">
@@ -18,10 +26,8 @@
                 />
             </form>
         </div>
-
-        
-
-        {{-- Criar pasta --}}
+         
+        {{-- Criar pasta --}}      
         <div class="flex w-full items-center justify-end gap-x-4 md:w-auto">
 
                             <div class="dropdown" data-placement="bottom-end">
@@ -61,34 +67,39 @@
     </div>
  
 
-    {{-- Grid dos setores (estilo pasta) --}}
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        @forelse ($sectors as $sector)
-            <a href="{{ route('folders.sectorFiles', [$parentFolder->id, $sector->id]) }}" class="card hover:shadow-lg transition group">
-                <div class="card-body flex items-center gap-4">
+
+{{-- Grid dos setores (estilo pasta) --}}
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    @forelse ($sectors as $sector)
+        <div class="relative group card p-4 hover:shadow-lg transition">
+            <a href="{{ route('folders.sectorFiles', [$parentFolder->id, $sector->id]) }}" class="block">
+                <div class="flex items-center gap-4">
                     <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
                                 bg-primary-500 bg-opacity-20 text-primary-500">
-                                <i class="ti ti-folder text-3xl"></i>
+                        <i class="ti ti-folder text-3xl"></i>
                     </div>
                     <div class="flex flex-1 flex-col gap-1">
                         <h4>{{ $sector->name }}</h4>
                         <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <p class="text-sm tracking-wide text-slate-500">
+                            <p class="text-xs tracking-wide text-slate-500">
                                 Ver arquivos do setor
                             </p>
                             <span class="flex items-center text-xs font-medium text-success-500">
-                                <i class="ti {{ $sector->name ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i> Ativa
+                                <i class="ti ti-circle-check-filled mr-1"></i> Ativa
                             </span>
-
-                           
                         </div>
                     </div>
                 </div>
             </a>
-        @empty
-            <div class="col-span-full text-center py-12">
-                <p class="text-slate-500 dark:text-slate-400">Nenhum setor vinculado a esta pasta.</p>
-            </div>
-        @endforelse
-    </div>
+        </div>
+    @empty
+        <div class="col-span-full text-center py-12">
+            <p class="text-slate-500 dark:text-slate-400">Nenhum setor vinculado a esta pasta.</p>
+        </div>
+    @endforelse
+</div>
+
+
+
+
 </x-app-layout>

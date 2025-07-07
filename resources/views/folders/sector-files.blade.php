@@ -1,5 +1,14 @@
 <x-app-layout>
-    <x-page-title page="Arquivos do Setor" header="Arquivos do setor {{ $sector->name }} na pasta {{ $folder->name }}" />
+    
+    <x-page-title 
+    page="Arquivos do Setor"
+    header="{!! 
+        'Lista de pastas' .
+        ($folder ? ' > ' . ucfirst(mb_strtolower($folder->fullPath(), 'UTF-8')) : '') .
+        ' > ' . ucfirst(mb_strtolower($sector->name, 'UTF-8'))
+    !!}"
+/>
+
     @section('title', 'Arquivos | ' . $sector->name . ' | Inusittá')
 
     @if(session('success'))
@@ -7,8 +16,6 @@
             <p>{{ session('success') }}</p>
         </div>
     @endif
-
-    @section('title', 'Lista de pastas/setor  | Inusittá')
 
     <div class="space-y-4">
         {{-- Barra de ações --}}
@@ -76,16 +83,11 @@
             </div>
         </div>
 
-
-        
-
-        {{-- Grid de arquivos em cards --}}
+        {{-- Grid --}}
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
             @forelse ($archives as $archive)
                 <div class="relative group card p-4 hover:shadow-lg transition">
-    {{-- restante do conteúdo --}}
-
-                    {{-- Dropdown de ações dentro do card --}}
+                    {{-- Dropdown de ações --}}
                     <div class="absolute top-4 right-4">
                         <div class="dropdown" data-placement="bottom-end">
                             <div class="dropdown-toggle cursor-pointer">
@@ -93,12 +95,6 @@
                             </div>
                             <div class="dropdown-content">
                                 <ul class="dropdown-list">
-                                     {{--<li class="dropdown-list-item">
-                                        <a href="{{ route('archives.edit', $archive->id) }}" class="dropdown-link">
-                                            <i class="h-5 text-slate-400" data-feather="edit"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                    </li>--}}
                                     <li class="dropdown-list-item">
                                         <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $archive->id }}">
                                             <i class="h-5 text-slate-400" data-feather="trash"></i>
@@ -110,7 +106,8 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('archives.download', $archive->id) }}" class="block p-4">
+                    {{-- Conteúdo --}}
+                    <a href="{{ route('archives.download', $archive->id) }}" class="block">
                         <div class="flex items-center gap-4">
                             <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
                                 bg-primary-500 bg-opacity-20 text-primary-500">
@@ -129,9 +126,9 @@
                                 @endswitch
                             </div>
                             <div class="flex flex-1 flex-col gap-1">
-                                <h4 class="text-base font-semibold text-slate-700 dark:text-slate-200">{{ $archive->code }}</h4>
+                                <h4>{{ $archive->code }}</h4>
                                 <div class="flex flex-wrap items-baseline justify-between gap-2">
-                                    <p class="text-sm tracking-wide text-slate-500">
+                                    <p class="text-xs tracking-wide text-slate-500">
                                         {{ Str::limit($archive->description, 40) }}
                                     </p>
                                     <span class="flex items-center text-xs font-medium {{ ($archive->status ?? false) ? 'text-success-500' : 'text-danger-500' }}">
@@ -169,7 +166,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             @empty
                 <div class="col-span-full text-center py-12">
@@ -180,7 +176,10 @@
 
         {{-- Paginação --}}
         @if ($archives->hasPages())
-            <div class="mt-8">
+            <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row mt-8">
+                <p class="text-xs font-normal text-slate-400">
+                    Mostrando {{ $archives->firstItem() }} a {{ $archives->lastItem() }} de {{ $archives->total() }} resultados
+                </p>
                 {{ $archives->appends(request()->query())->links('vendor.pagination.custom') }}
             </div>
         @endif

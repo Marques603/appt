@@ -41,7 +41,7 @@ class Folder extends Model
     public function fullPath()
     {
         if ($this->parent) {
-            return $this->parent->fullPath() . ' / ' . $this->name;
+            return $this->parent->fullPath() . ' > ' . $this->name;
         }
         return $this->name;
     }
