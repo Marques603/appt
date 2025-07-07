@@ -6,7 +6,7 @@
 
     <x-page-title 
     page="Pastas" 
-    header="{!! 'Lista de pastas' . ($parentFolder 
+    header="{!! 'Lista de Pastas' . ($parentFolder 
         ? ' > ' . collect(explode('/', $parentFolder->fullPath()))
             ->map(fn($s) => trim($s))
             ->implode(' > ')
@@ -84,7 +84,7 @@
                 <a href="{{ route('folders.create', ['parent_id' => $parentFolder?->id]) }}" 
                     class="btn btn-primary flex items-center gap-2">
                     <i data-feather="plus" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline-block">Criar Pasta</span>
+                    <span class="hidden sm:inline-block">Criar</span>
                 </a>
             </div>
         </div>
@@ -129,9 +129,10 @@
                                 <h4>{{ $folder->name }}</h4>
 
                                 <div class="flex flex-wrap items-baseline justify-between gap-2">
-                                    <p class="text-xs tracking-wide text-slate-500">
-                                      {{ $folder->description }}
-                                    </p>
+                                    <p class="text-xs tracking-wide text-slate-500 flex items-center gap-1">
+                                    <i data-feather="eye" class="w-4 h-4"></i>
+                                    Ver arquivos da pasta
+                                </p>
                                     <span class="flex items-center text-xs font-medium {{ $folder->status ? 'text-success-500' : 'text-danger-500' }}">
                                         <i class="ti {{ $folder->status ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
                                         {{ $folder->status ? 'Ativa' : 'Inativa' }}

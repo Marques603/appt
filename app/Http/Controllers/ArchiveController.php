@@ -22,7 +22,7 @@ public function store(Request $request, Folder $folder, Plan $plan)
         'description' => 'nullable|string',
         'file' => 'required|file',
         'revision' => 'nullable|string',
-        'status' => 'required|boolean',
+        'status' => 'nullable|boolean',
     ]);
 
     // Salvar arquivo no storage
@@ -32,10 +32,10 @@ public function store(Request $request, Folder $folder, Plan $plan)
         'code' => $validated['code'],
         'description' => $validated['description'] ?? null,
         'user_upload' => auth()->id(),
-        'revision' => $validated['revision'] ?? null,
+        'revision' => $validated['revision'] ?? '1',
         'file_path' => $path,
         'file_type' => $request->file('file')->getClientOriginalExtension(),
-        'status' => $validated['status'],
+        'status' => $validated['status'] ?? 1,
     ]);
 
     // Vincular archive à pasta e plano

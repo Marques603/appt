@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-page-title 
-        page="Novo Arquivo" 
-        header="Adicionar arquivo na pasta {{ $folder->name }} e plano {{ $plan->name }}" 
-    />
+    page="Novo Arquivo" 
+    header="{{ ucwords(mb_strtolower($folder->name, 'UTF-8')) }} > {{ ucwords(mb_strtolower($plan->name, 'UTF-8')) }} > Adicionar" 
+/>
     @section('title', 'Novo arquivo | Inusittá')
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -61,18 +61,9 @@
                                 <input type="text" name="description" value="{{ old('description') }}" class="input">
                             </label>
 
-                            <label class="label">
-                                <span class="block mb-1">Revisão</span>
-                                <input type="text" name="revision" value="{{ old('revision') }}" class="input">
-                            </label>
+
                         </div>
 
-                        <div>
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="status" value="1" checked class="form-checkbox rounded text-primary-600">
-                                <span class="text-slate-600 dark:text-slate-300">Ativo</span>
-                            </label>
-                        </div>
 
                         <div class="flex justify-end gap-4">
                             <a href="{{ url()->previous() }}"

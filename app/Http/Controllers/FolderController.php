@@ -81,17 +81,22 @@ class FolderController extends Controller
     }
 
     public function destroy(Folder $folder)
-    {
-        if ($folder->archives()->count() > 0) {
-            return redirect()->route('folders.index')
-                ->with('success', 'Não é possível excluir esta pasta, pois ela contém arquivos vinculados.');
-        }
-
-        $folder->delete();
-
+{
+    if ($folder->archives()->count() > 0) {
         return redirect()->route('folders.index')
-            ->with('success', 'Pasta excluída com sucesso.');
+            ->with('success', 'Não é possível excluir esta pasta, pois ela contém arquivos vinculados.');
     }
+
+    if ($folder->children()->count() > 0) {
+        return redirect()->route('folders.index')
+            ->with('success', 'Não é possível excluir esta pasta, pois ela possui subpastas vinculadas.');
+    }
+
+    $folder->delete();
+
+    return redirect()->route('folders.index')
+        ->with('success', 'Pasta excluída com sucesso.');
+}
 
     public function planFiles(Folder $folder, Plan $plan)
     {

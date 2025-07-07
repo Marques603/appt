@@ -12,6 +12,7 @@
 />
 
 
+
     @section('title', 'Arquivos | ' . $plan->name . ' | Inusittá')
 
     @if(session('success'))
@@ -76,7 +77,7 @@
                 <a href="{{ route('archives.create', ['folder' => $folder->id, 'plan' => $plan->id]) }}"
                     class="btn btn-primary flex items-center gap-2">
                     <i class="ti ti-plus w-4 h-4"></i>
-                    <span class="hidden sm:inline-block">Adicionar arquivo</span>
+                    <span class="hidden sm:inline-block">Adicionar</span>
                 </a>
             </div>
         </div>

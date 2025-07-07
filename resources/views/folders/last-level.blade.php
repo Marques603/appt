@@ -66,7 +66,7 @@
                 </div>
                 <a href="{{ route('folders.create', ['parent_id' => $parentFolder->id]) }}" class="btn btn-primary flex items-center gap-2">
                     <i data-feather="plus" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline-block">Criar Pasta</span>
+                    <span class="hidden sm:inline-block">Criar</span>
                 </a>
             </div>
         </div>
@@ -84,9 +84,10 @@
                             <div class="flex flex-1 flex-col gap-1">
                                 <h4>{{ $plan->name }}</h4>
                                 <div class="flex flex-wrap items-baseline justify-between gap-2">
-                                    <p class="text-xs tracking-wide text-slate-500">
-                                        Ver arquivos do plano
-                                    </p>
+                                    <p class="text-xs tracking-wide text-slate-500 flex items-center gap-1">
+                                    <i data-feather="eye" class="w-4 h-4"></i>
+                                    Ver arquivos da pasta
+                                </p>
                                     <span class="flex items-center text-xs font-medium text-success-500">
                                         <i class="ti ti-circle-check-filled mr-1"></i> {{ $plan->status ? 'Ativo' : 'Inativo' }}
                                     </span>
