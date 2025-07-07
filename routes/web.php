@@ -22,6 +22,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\VehicleMovementController;
+use App\Http\Controllers\PlanController;
 
 
 /*
@@ -120,6 +121,15 @@ Route::get('folders/{folder}/sector/{sector}/archives/create', [ArchiveControlle
 Route::post('folders/{folder}/sector/{sector}/archives', [ArchiveController::class, 'store'])->name('archives.store');
 Route::get('/archives/{archive}', [ArchiveController::class, 'show'])->name('archives.show');
 Route::get('archives/{archive}/download', [ArchiveController::class, 'download'])->name('archives.download');
+
+
+    // Rotas de planos (crud) - MANTIDAS
+    Route::resource('plans', PlanController::class);
+    Route::put('/plans/{plan}/update-details', [PlanController::class, 'updateDetails'])->name('plans.update.details'); 
+    Route::put('/plans/{plan}/update-status', [PlanController::class, 'updateStatus'])->name('plans.update.status'); 
+    Route::put('/plans/{plan}/update-users', [PlanController::class, 'updateUsers'])->name('plans.update.users'); 
+    Route::put('/plans/{plan}/update-responsibles', [PlanController::class, 'updateResponsibles'])->name('plans.update.responsibles'); 
+
 
 
     // Rotas de empresas (CRUD) - MANTIDAS

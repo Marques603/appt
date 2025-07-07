@@ -103,7 +103,17 @@ class User extends Authenticatable
         return $this->belongsToMany(\App\Models\Macro::class, 'macro_responsible_user');
     }
     public function loginLogs()
-{
+    {
     return $this->hasMany(UserLog::class);
+    }
+    public function plans()
+{
+    return $this->belongsToMany(Plan::class, 'plan_user', 'user_id', 'plan_id')->withTimestamps()->withPivot('deleted_at');
 }
+
+public function responsiblePlans()
+{
+    return $this->belongsToMany(Plan::class, 'plan_responsible_user', 'user_id', 'plan_id')->withTimestamps()->withPivot('deleted_at');
+}
+
 }
