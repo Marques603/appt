@@ -1,20 +1,17 @@
 <x-app-layout>
-      
     @push('title')
         Pastas{{ $parentFolder ? ' | ' . $parentFolder->fullPath() : '' }} | Inusittá
     @endpush
 
     <x-page-title 
-    page="Pastas" 
-    header="{!! 'Lista de Pastas' . ($parentFolder 
-        ? ' > ' . collect(explode('/', $parentFolder->fullPath()))
-            ->map(fn($s) => trim($s))
-            ->implode(' > ')
-        : ''
-    ) !!}"
-/>
-
-
+        page="Pastas" 
+        header="{!! 'Lista de Pastas' . ($parentFolder 
+            ? ' > ' . collect(explode('/', $parentFolder->fullPath()))
+                ->map(fn($s) => trim($s))
+                ->implode(' > ')
+            : ''
+        ) !!}"
+    />
 
     @section('title', 'Lista de pastas | Inusittá')
 
@@ -42,7 +39,7 @@
                             focus:border-transparent focus:outline-none focus:ring-0"
                         type="text"
                         value="{{ request('search') }}"
-                        placeholder="Buscar por nome..."
+                        placeholder="Buscar por nome ou código..."
                     />
                 </form>
             </div>
@@ -93,101 +90,173 @@
 
         {{-- Grid --}}
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
-            @forelse($folders as $folder)
-                <div class="relative group card p-4 hover:shadow-lg transition">
-                    {{-- Dropdown de ações dentro do card --}}
-                    <div class="absolute top-4 right-4">
-                        <div class="dropdown" data-placement="bottom-end">
-                            <div class="dropdown-toggle cursor-pointer">
-                                <i class="w-6 text-slate-400" data-feather="more-horizontal"></i>
+            @if($folders->count())
+                @foreach($folders as $folder)
+                    <div class="relative group card p-4 hover:shadow-lg transition">
+                        {{-- Dropdown de ações --}}
+                        <div class="absolute top-4 right-4">
+                            <div class="dropdown" data-placement="bottom-end">
+                                <div class="dropdown-toggle cursor-pointer">
+                                    <i class="w-6 text-slate-400" data-feather="more-horizontal"></i>
+                                </div>
+                                <div class="dropdown-content">
+                                    <ul class="dropdown-list">
+                                        @can('edit', App\Models\Archive::class)
+                                        <li class="dropdown-list-item">
+                                            <a href="{{ route('folders.edit', $folder->id) }}" class="dropdown-link">
+                                                <i class="h-5 text-slate-400" data-feather="edit"></i>
+                                                <span>Editar</span>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-list-item">
+                                            <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $folder->id }}">
+                                                <i class="h-5 text-slate-400" data-feather="trash"></i>
+                                                <span>Excluir</span>
+                                            </a>
+                                        </li>
+                                        @endcan
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="dropdown-content">
-                                <ul class="dropdown-list">
-                                    @can('edit', App\Models\Archive::class)
-                                    <li class="dropdown-list-item">
-                                        <a href="{{ route('folders.edit', $folder->id) }}" class="dropdown-link">
-                                            <i class="h-5 text-slate-400" data-feather="edit"></i>
-                                            <span>Editar</span>
-                                        </a>
-                                    </li>
-                                    <li class="dropdown-list-item">
-                                        <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $folder->id }}">
-                                            <i class="h-5 text-slate-400" data-feather="trash"></i>
-                                            <span>Excluir</span>
-                                        </a>
-                                    </li>
-                                    @endcan
-                                </ul>
+                        </div>
+
+                        <a href="{{ route('folders.index', ['parent_id' => $folder->id]) }}" class="block">
+                            <div class="flex items-center gap-4">
+                                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
+                                    bg-primary-500 bg-opacity-20 text-primary-500">
+                                    <i class="ti ti-folder text-3xl"></i>
+                                </div>
+                                <div class="flex flex-1 flex-col gap-1">
+                                    <h4>{{ $folder->name }}</h4>
+                                    <div class="flex flex-wrap items-baseline justify-between gap-2">
+                                        <p class="text-xs tracking-wide text-slate-500 flex items-center gap-1">
+                                            <i data-feather="eye" class="w-4 h-4"></i>
+                                            Ver arquivos da pasta
+                                        </p>
+                                        <span class="flex items-center text-xs font-medium {{ $folder->status ? 'text-success-500' : 'text-danger-500' }}">
+                                            <i class="ti {{ $folder->status ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
+                                            {{ $folder->status ? 'Ativa' : 'Inativa' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        {{-- Modal exclusão --}}
+                        <div class="modal modal-centered" id="deleteModal-{{ $folder->id }}">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h6>Confirmação</h6>
+                                        <button type="button" class="btn btn-plain-secondary" data-dismiss="modal">
+                                            <i data-feather="x" width="1.5rem" height="1.5rem"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-sm text-slate-500 dark:text-slate-300">
+                                            Tem certeza que deseja excluir <strong>{{ $folder->name }}</strong>?
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer flex justify-center">
+                                        <form method="POST" action="{{ route('folders.destroy', $folder->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-danger">Sim, excluir</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    {{-- Conteúdo do card --}}
-                    <a href="{{ route('folders.index', ['parent_id' => $folder->id]) }}" class="block">
-                        <div class="flex items-center gap-4">
-                            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
-                                bg-primary-500 bg-opacity-20 text-primary-500">
-                                <i class="ti ti-folder text-3xl"></i>
-                            </div>
-                            <div class="flex flex-1 flex-col gap-1">
-                                <h4>{{ $folder->name }}</h4>
-
-                                <div class="flex flex-wrap items-baseline justify-between gap-2">
-                                    <p class="text-xs tracking-wide text-slate-500 flex items-center gap-1">
-                                    <i data-feather="eye" class="w-4 h-4"></i>
-                                    Ver arquivos da pasta
-                                </p>
-                                    <span class="flex items-center text-xs font-medium {{ $folder->status ? 'text-success-500' : 'text-danger-500' }}">
-                                        <i class="ti {{ $folder->status ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
-                                        {{ $folder->status ? 'Ativa' : 'Inativa' }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    {{-- Modal de exclusão --}}
-                    <div class="modal modal-centered" id="deleteModal-{{ $folder->id }}">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h6>Confirmação</h6>
-                                    <button type="button" class="btn btn-plain-secondary" data-dismiss="modal">
-                                        <i data-feather="x" width="1.5rem" height="1.5rem"></i>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p class="text-sm text-slate-500 dark:text-slate-300">
-                                        Tem certeza que deseja excluir <strong>{{ $folder->name }}</strong>?
-                                    </p>
-                                </div>
-                                <div class="modal-footer flex justify-center">
-                                    <form method="POST" action="{{ route('folders.destroy', $folder->id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                        <button type="submit" class="btn btn-danger">Sim, excluir</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                @endforeach
+            @elseif(!$search)
+                <div class="col-span-full text-center py-12">
+                    Nenhuma pasta encontrada.
                 </div>
-            @empty
-                <div class="col-span-full text-center py-12">                  
-                </div>
-            @endforelse
+            @endif
         </div>
 
-        {{-- Paginação --}}
+        {{-- Paginação pastas --}}
         @if ($folders->hasPages())
-    <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row mt-8">
-        <p class="text-xs font-normal text-slate-400">
-            Mostrando {{ $folders->firstItem() }} a {{ $folders->lastItem() }} de {{ $folders->total() }} resultados
-        </p>
-        {{ $folders->appends(request()->query())->links('vendor.pagination.custom') }}
-    </div>
-    @endif
+            <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row mt-8">
+                <p class="text-xs font-normal text-slate-400">
+                    Mostrando {{ $folders->firstItem() }} a {{ $folders->lastItem() }} de {{ $folders->total() }} resultados
+                </p>
+                {{ $folders->appends(request()->query())->links('vendor.pagination.custom') }}
+            </div>
+        @endif
 
+        {{-- Resultado arquivos --}}
+        @if($search)
+            <div class="mt-12">
+                <h3 class="text-lg font-bold mb-4">Arquivos encontrados para "{{ $search }}"</h3>
+                @if($archives->count())
+                    <div class="overflow-x-auto rounded-primary border bg-white dark:bg-slate-800">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descrição</th>
+                                    <th>Plano(s)</th>
+                                    <th>Pastas</th>
+                                    <th>Status</th>
+                                    <th>Visualizar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($archives as $archive)
+                                    <tr>
+                                        <td>{{ $archive->code }}</td>
+                                        <td>{{ $archive->description }}</td>
+                                        <td>
+                                            @foreach($archive->plans as $plan)
+                                                <span class="inline-block px-2 py-0.5 text-xs rounded bg-primary-500 bg-opacity-10 text-primary-500">
+                                                    {{ $plan->name }}
+                                                </span>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            @foreach($archive->folders as $folder)
+                                                <a href="{{ route('folders.index', ['parent_id' => $folder->id]) }}"
+                                                    class="underline hover:text-primary-500">
+                                                    {{ $folder->name }}
+                                                </a>@if(!$loop->last), @endif
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <span class="flex items-center text-xs font-medium 
+                                                {{ $archive->status ? 'text-success-500' : 'text-danger-500' }}">
+                                                <i class="ti {{ $archive->status ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
+                                                {{ $archive->status ? 'Ativo' : 'Inativo' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if($archive->file_path)
+                                                <a href="{{ route('archives.download', $archive) }}"
+                                                   class="text-primary-500 hover:underline"
+                                                   target="_blank" rel="noopener noreferrer">
+                                                    Ver 
+                                                </a>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row mt-8">
+                        <p class="text-xs font-normal text-slate-400">
+                            Mostrando {{ $archives->firstItem() }} a {{ $archives->lastItem() }} de {{ $archives->total() }} arquivos
+                        </p>
+                        {{ $archives->appends(request()->query())->links('vendor.pagination.custom') }}
+                    </div>
+                @else
+                    <p class="text-slate-500 mt-4">Nenhum arquivo encontrado.</p>
+                @endif
+            </div>
+        @endif
     </div>
 </x-app-layout>

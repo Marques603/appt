@@ -19,26 +19,37 @@ class FolderController extends Controller
     $search = $request->query('search');
     $parentId = $request->query('parent_id');
 
+    $archives = collect(); // inicializa vazio
+    $folders = collect();  // inicializa vazio
+    $parentFolder = null;
+
     if ($search) {
-        // Busca por nome em qualquer nível
-        $folders = Folder::where('name', 'like', '%' . $search . '%')->paginate(24);
-        $parentFolder = null; // não tem contexto pai
+        // BUSCA GLOBAL
+        $folders = Folder::where('name', 'like', '%' . $search . '%')
+            ->paginate(24, ['*'], 'folders_page');
+
+        $archives = Archive::where('code', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')
+            ->with('folders')
+            ->paginate(24, ['*'], 'archives_page');
     } else {
-        // Hierarquia normal
+        // FUNCIONAMENTO NORMAL: pasta por pasta
         $folders = Folder::where('parent_id', $parentId)->paginate(24);
         $parentFolder = $parentId ? Folder::with('parent')->findOrFail($parentId) : null;
+
+        // Se não encontrou subpastas mas está num nível final, mostra planos
+        if ($folders->isEmpty() && $parentFolder) {
+            $user = auth()->user();
+            $folderPlanIds = $parentFolder->plans->pluck('id')->toArray();
+            $plans = $user->plans()->whereIn('plans.id', $folderPlanIds)->where('status', 1)->get();
+            return view('folders.last-level', compact('parentFolder', 'plans'));
+        }
     }
 
-    // Se não encontrou subpastas mas está num nível final, mostra tela dos planos
-    if (!$search && $folders->isEmpty() && $parentFolder) {
-        $user = auth()->user();
-        $folderPlanIds = $parentFolder->plans->pluck('id')->toArray();
-        $plans = $user->plans()->whereIn('plans.id', $folderPlanIds)->where('status', 1)->get();
-        return view('folders.last-level', compact('parentFolder', 'plans'));
-    }
-
-    return view('folders.index', compact('folders', 'parentFolder', 'search'));
+    return view('folders.index', compact('folders', 'parentFolder', 'archives', 'search'));
 }
+
+
 
 
     public function create(Request $request)
