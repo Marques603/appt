@@ -28,6 +28,46 @@
 
             <div class="flex w-full items-center justify-between gap-x-4 md:w-auto">
                 <div class="flex items-center gap-x-4">
+
+                        <!-- Botão de Arquivos Exemplo -->                    
+            <div class="dropdown" data-placement="bottom-end">
+                <div class="dropdown-toggle">
+                    <button type="button" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+                        <i class="w-4 h-4" data-feather="download"></i>
+                        <span class="hidden sm:inline-block">Exemplo</span>
+                        <i class="w-4 h-4" data-feather="chevron-down"></i>
+                    </button>
+                </div>
+                <div class="dropdown-content w-72 !overflow-visible">
+                    <ul class="dropdown-list space-y-4 p-4">
+                        <li class="dropdown-list-item">
+                            <h2 class="my-1 text-sm font-medium">Exemplo Padrão</h2>
+                            <ul class="list-disc pl-5 text-sm space-y-1">
+                                <li>
+                                    <a href="{{ asset('downloads/instrucao_producao.pdf') }}" class="text-blue-600 hover:underline" download>
+                                        Instrução de trabalho Produção
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ asset('downloads/exemplo_producao.pdf') }}" class="text-blue-600 hover:underline" download>
+                                        Procedimento Setores Produção
+                                    </a>
+                                </li>
+                                 <li>
+                                    <a href="{{ asset('downloads/instrucao_administrativo.pdf') }}" class="text-blue-600 hover:underline" download>
+                                        Instrução de trabalho Administrativo
+                                    </a>
+                                </li>
+                                 <li>
+                                    <a href="{{ asset('downloads/exemplo_administrativo.pdf') }}" class="text-blue-600 hover:underline" download>
+                                        Procedimento Administrativo
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
     <!-- Botão de Arquivos Padrão -->                    
 <div class="dropdown" data-placement="bottom-end">
     <div class="dropdown-toggle">
