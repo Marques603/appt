@@ -81,11 +81,13 @@
                 </div>
 
                 {{-- Criar pasta --}}
+                @can('edit', App\Models\Archive::class)
                 <a href="{{ route('folders.create', ['parent_id' => $parentFolder?->id]) }}" 
                     class="btn btn-primary flex items-center gap-2">
                     <i data-feather="plus" class="w-4 h-4"></i>
                     <span class="hidden sm:inline-block">Criar</span>
                 </a>
+                @endcan
             </div>
         </div>
 
@@ -101,6 +103,7 @@
                             </div>
                             <div class="dropdown-content">
                                 <ul class="dropdown-list">
+                                    @can('edit', App\Models\Archive::class)
                                     <li class="dropdown-list-item">
                                         <a href="{{ route('folders.edit', $folder->id) }}" class="dropdown-link">
                                             <i class="h-5 text-slate-400" data-feather="edit"></i>
@@ -113,6 +116,7 @@
                                             <span>Excluir</span>
                                         </a>
                                     </li>
+                                    @endcan
                                 </ul>
                             </div>
                         </div>

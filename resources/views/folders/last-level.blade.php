@@ -64,10 +64,12 @@
                         </form>
                     </div>
                 </div>
+                @can('edit', App\Models\Archive::class)
                 <a href="{{ route('folders.create', ['parent_id' => $parentFolder->id]) }}" class="btn btn-primary flex items-center gap-2">
                     <i data-feather="plus" class="w-4 h-4"></i>
                     <span class="hidden sm:inline-block">Criar</span>
                 </a>
+                @endcan
             </div>
         </div>
 

@@ -58,7 +58,7 @@
                             <td>
                                 @foreach($archive->folders as $folder)
                             <span class="badge badge-soft-primary">{{ $folder->fullPath() }}</span>
-                        @endforeach
+                            @endforeach
 
                             </td>
                             <td>
@@ -87,20 +87,6 @@
                                                         <span>Ver</span>
                                                     </a>
                                                 </li>
-                                                @can('edit', App\Models\User::class)
-                                                <li class="dropdown-list-item">
-                                                    <a href="{{ route('archives.edit', $archive->id) }}" class="dropdown-link">
-                                                        <i class="h-5 text-slate-400" data-feather="edit"></i>
-                                                        <span>Editar</span>
-                                                    </a>
-                                                </li>
-                                                <li class="dropdown-list-item">
-                                                    <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $archive->id }}">
-                                                        <i class="h-5 text-slate-400" data-feather="trash"></i>
-                                                        <span>Excluir</span>
-                                                    </a>
-                                                </li>
-                                                @endcan
                                             </ul>
                                         </div>
                                     </div>

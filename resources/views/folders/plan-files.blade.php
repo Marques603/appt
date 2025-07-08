@@ -71,12 +71,13 @@
                         </form>
                     </div>
                 </div>
-
+                @can('edit', App\Models\Archive::class)
                 <a href="{{ route('archives.create', ['folder' => $folder->id, 'plan' => $plan->id]) }}"
                     class="btn btn-primary flex items-center gap-2">
                     <i class="ti ti-plus w-4 h-4"></i>
                     <span class="hidden sm:inline-block">Adicionar</span>
                 </a>
+                @endcan
             </div>
         </div>
 

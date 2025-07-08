@@ -57,7 +57,7 @@
                   <i class="h-4" data-feather="upload"></i>
                   <span class="hidden sm:inline-block">Exportar</span>
                 </button>
-                @can('edit', App\Models\User::class)
+                @can('edit', App\Models\Archive::class)
                 <a class="btn btn-primary" href="{{ route('plans.create') }}" role="button">
                     <i data-feather="plus" height="1rem" width="1rem"></i>
                     <span class="hidden sm:inline-block">Criar</span>
@@ -78,7 +78,7 @@
                         <th class="w-[25%] uppercase">Nome</th>
                         <th class="w-[40%] uppercase">Descrição</th>
                         <th class="w-[10%] uppercase">Status</th>
-                        @can('edit', App\Models\User::class)
+                        @can('edit', App\Models\Archive::class)
                         <th class="w-[10%] !text-right uppercase">Ações</th>
                         @endcan
                     </tr>
@@ -96,7 +96,7 @@
                                     <div class="badge badge-soft-danger">Inativo</div>
                                 @endif
                             </td>
-                            @can('edit', App\Models\User::class)
+                            @can('edit', App\Models\Archive::class)
                             <td class="text-right">
                                 <div class="flex justify-end">
                                     <div class="dropdown" data-placement="bottom-start">

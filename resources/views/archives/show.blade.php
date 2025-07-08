@@ -19,7 +19,7 @@
                     <i data-feather="folder" class="inline w-4 h-4 mr-1 text-yellow-400"></i>
                     {{ $folder->name }} 
                     <span class="ml-2 text-xs text-slate-400">
-                        ({{ $folder->sectors->pluck('name')->join(', ') }})
+                        ({{ $folder->plans->pluck('name')->join(', ') }})
                     </span>
                 </div>
             @endforeach
