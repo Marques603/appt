@@ -35,6 +35,8 @@ class MacroController extends Controller
 
     public function create()
     {
+
+        
         $users = User::all();
         return view('macro.create', compact('users'));
     }
@@ -60,6 +62,7 @@ class MacroController extends Controller
 
     public function edit(Macro $macro)
     {
+        
         $users = User::all();
         $macro->load('responsibleUsers');
 

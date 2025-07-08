@@ -122,6 +122,8 @@ if ($request->filled('sector_ids')) {
 
     public function edit(Document $document)
     {
+        Gate::authorize('edit', $document);
+
         $macros = Macro::all();
         $sectors = Sector::all();
 
