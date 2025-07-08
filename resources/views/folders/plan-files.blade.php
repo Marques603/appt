@@ -103,7 +103,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('archives.download', $archive->id) }}" class="block">
+                    <a href="{{ route('archives.logAndShow', $archive->id) }}" target="_blank" class="block">
                         <div class="flex items-center gap-4">
                             <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full 
                                 bg-primary-500 bg-opacity-20 text-primary-500">

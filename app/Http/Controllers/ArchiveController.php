@@ -76,13 +76,38 @@ public function store(Request $request, Folder $folder, Plan $plan)
 
     $plans = Plan::all(); // Para dropdown filtro
 
-    return view('archives.index', compact('archives', 'plans'));
-}public function show(Archive $archive)
-{
+    return view('archives.index', compact('archives', 'plans'));    
+    }
+    public function show(Archive $archive)
+    {
+    \DB::table('archive_logs')->insert([
+        'archive_id' => $archive->id,
+        'user_id' => auth()->id(),
+        'ip_address' => request()->ip(),
+        'user_agent' => request()->header('User-Agent'),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
     return view('archives.show', compact('archive'));
+    }
+    public function logAndShow(Archive $archive)
+{
+    \App\Models\ArchiveLog::create([
+        'archive_id' => $archive->id,
+        'user_id' => auth()->id(),
+        'ip_address' => request()->ip(),
+        'user_agent' => request()->userAgent(),
+    ]);
+
+    return Storage::download($archive->file_path);
 }
 
-public function download(Archive $archive)
+
+
+
+
+    public function download(Archive $archive)
     {
         // log removido pois não usa Spatie
         return Storage::download($archive->file_path);

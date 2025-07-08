@@ -13,6 +13,9 @@ class ArchiveLog extends Model
         'user_agent',
     ];
 
+    public $timestamps = true; // padrão, pode omitir
+
+
     public function archive()
     {
         return $this->belongsTo(Archive::class);

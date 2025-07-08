@@ -108,6 +108,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/archives/{archive}/download', [ArchiveController::class, 'download'])->name('archives.download');
     Route::post('/folders/{folder:slug}/subfolders/{subfolder:slug}/upload-archive', [ArchiveController::class, 'upload'])->name('archives.upload');
     Route::put('/archives/{archive}/update-sectors', [ArchiveController::class, 'updateSectors'])->name('archives.update.sectors');
+    Route::get('/archives/{archive}/view', [ArchiveController::class, 'logAndShow'])->name('archives.logAndShow');
+
+
 
     // Rotas para criação e armazenamento de archives vinculados a folder + sector
     Route::get('folders/{folder}/sector/{sector}/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
