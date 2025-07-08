@@ -50,7 +50,7 @@ public function index(Request $request)
             });
         })
         ->orderBy('created_at', 'desc')
-        ->paginate(10)
+        ->paginate(12)
         ->withQueryString(); // mantém os filtros na paginação
 
         $sectors = \App\Models\Sector::all();
