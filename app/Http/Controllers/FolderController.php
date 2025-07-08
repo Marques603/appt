@@ -11,29 +11,35 @@ use Illuminate\Support\Facades\Gate;
 class FolderController extends Controller
 {
     public function index(Request $request)
-    {
-
-        if (!\Gate::allows('view', \App\Models\Menu::find(4))) {
+{
+    if (!\Gate::allows('view', \App\Models\Menu::find(4))) {
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
-        }
-        $parentId = $request->query('parent_id');
+    }
 
+    $search = $request->query('search');
+    $parentId = $request->query('parent_id');
+
+    if ($search) {
+        // Busca por nome em qualquer nível
+        $folders = Folder::where('name', 'like', '%' . $search . '%')->paginate(24);
+        $parentFolder = null; // não tem contexto pai
+    } else {
+        // Hierarquia normal
         $folders = Folder::where('parent_id', $parentId)->paginate(24);
         $parentFolder = $parentId ? Folder::with('parent')->findOrFail($parentId) : null;
+    }
 
-        if ($folders->isEmpty() && $parentFolder) {
-    $user = auth()->user();
-    // Pega IDs dos planos da pasta
-    $folderPlanIds = $parentFolder->plans->pluck('id')->toArray();
+    // Se não encontrou subpastas mas está num nível final, mostra tela dos planos
+    if (!$search && $folders->isEmpty() && $parentFolder) {
+        $user = auth()->user();
+        $folderPlanIds = $parentFolder->plans->pluck('id')->toArray();
+        $plans = $user->plans()->whereIn('plans.id', $folderPlanIds)->where('status', 1)->get();
+        return view('folders.last-level', compact('parentFolder', 'plans'));
+    }
 
-    // Pega planos do usuário que estão entre os planos da pasta
-    $plans = $user->plans()->whereIn('plans.id', $folderPlanIds)->where('status', 1)->get();
-
-    return view('folders.last-level', compact('parentFolder', 'plans'));
+    return view('folders.index', compact('folders', 'parentFolder', 'search'));
 }
 
-        return view('folders.index', compact('folders', 'parentFolder'));
-    }
 
     public function create(Request $request)
     {
