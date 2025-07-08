@@ -17,10 +17,15 @@ class FolderController extends Controller
         $parentFolder = $parentId ? Folder::with('parent')->findOrFail($parentId) : null;
 
         if ($folders->isEmpty() && $parentFolder) {
-            // chegamos no último nível: mostrar planos vinculados
-            $plans = $parentFolder->plans;
-            return view('folders.last-level', compact('parentFolder', 'plans'));
-        }
+    $user = auth()->user();
+    // Pega IDs dos planos da pasta
+    $folderPlanIds = $parentFolder->plans->pluck('id')->toArray();
+
+    // Pega planos do usuário que estão entre os planos da pasta
+    $plans = $user->plans()->whereIn('plans.id', $folderPlanIds)->where('status', 1)->get();
+
+    return view('folders.last-level', compact('parentFolder', 'plans'));
+}
 
         return view('folders.index', compact('folders', 'parentFolder'));
     }
