@@ -61,7 +61,7 @@
                     <span class="hidden sm:inline-block">Exportar</span>
                   </button>
                 </div>
-@can('edit', App\Models\User::class)
+                @can('edit', App\Models\Document::class)
                 <a class="btn btn-primary" href="{{ route('macro.create') }}" role="button">
                     <i data-feather="plus" height="1rem" width="1rem"></i>
                     <span class="hidden sm:inline-block">Criar</span>
@@ -80,11 +80,11 @@
                         <th class="w-[20%] uppercase">Nome</th>
                         <th class="w-[20%] uppercase">Descrição</th>
                         <th class="w-[20%] uppercase">Responsável</th>
-                        @can('edit', App\Models\User::class)
                         <th class="w-[20%] uppercase">Documentos</th>
-                        @endcan
                         <th class="w-[10%] uppercase">Status</th>
+                        @can('edit', App\Models\Document::class)
                         <th class="w-[5%] !text-right uppercase">Ações</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -96,9 +96,8 @@
                             <td>{{ $macro->name }}</td>
                             <td>{{ $macro->description ?? 'Sem descrição' }}</td>
                             <td>{{ $macro->responsibleUsers->isNotEmpty() ? $macro->responsibleUsers->pluck('name')->join(', ') : 'não há responsável vinculado' }}</td>
-                            @can('edit', App\Models\User::class)<td>
+                            <td>
                                 {{ $macro->documents_count ?? 0 }}</td>
-                            @endcan
                             <td>
                                 @if($macro->status)
                                     <div class="badge badge-soft-success">Ativo</div>
@@ -106,7 +105,7 @@
                                     <div class="badge badge-soft-danger">Inativo</div>
                                 @endif
                             </td>
-                            
+                            @can('edit', App\Models\Document::class)
                             <td class="text-right">
                                 <div class="flex justify-end">
                                     <div class="dropdown" data-placement="bottom-start">
@@ -117,7 +116,7 @@
                                         <div class="dropdown-content">
                                             <ul class="dropdown-list">
                                                 <li class="dropdown-list-item">
-                                                    @can('edit', App\Models\User::class)
+                                                    
                                                     <a href="{{ route('macro.edit', $macro->id) }}" class="dropdown-link">
                                                         <i class="h-5 text-slate-400" data-feather="edit"></i>
                                                         <span>Editar</span>

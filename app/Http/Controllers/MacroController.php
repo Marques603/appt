@@ -36,7 +36,8 @@ class MacroController extends Controller
     public function create()
     {
 
-        
+        Gate::authorize('edit', \App\Models\Document::class);
+
         $users = User::all();
         return view('macro.create', compact('users'));
     }
@@ -62,7 +63,8 @@ class MacroController extends Controller
 
     public function edit(Macro $macro)
     {
-        
+        Gate::authorize('edit', \App\Models\Document::class);
+
         $users = User::all();
         $macro->load('responsibleUsers');
 

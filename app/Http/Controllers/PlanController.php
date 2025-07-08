@@ -37,6 +37,8 @@ class PlanController extends Controller
 
     public function create()
     {
+        Gate::authorize('create', \App\Models\Archive::class);
+
         $users = User::all();
         return view('plans.create', compact('users'));
     }
@@ -59,6 +61,9 @@ class PlanController extends Controller
 
     public function edit(Plan $plan)
     {
+
+        Gate::authorize('edit', \App\Models\Archive::class);
+
         $users = User::all();
         $plan->load(['users', 'responsibleUsers']);
         return view('plans.edit', compact('plan', 'users'));

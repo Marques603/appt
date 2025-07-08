@@ -6,6 +6,7 @@ use App\Models\Folder;
 use App\Models\Plan;
 use App\Models\Archive;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class FolderController extends Controller
 {
@@ -36,6 +37,8 @@ class FolderController extends Controller
 
     public function create(Request $request)
     {
+        \Gate::authorize('create', \App\Models\Archive::class);
+
         $parentId = $request->query('parent_id');
         $folders = Folder::all(); // para escolher pasta pai, se quiser
         $plans = Plan::all(); // popular select planos
@@ -64,6 +67,8 @@ class FolderController extends Controller
 
     public function edit(Folder $folder)
     {
+        \Gate::authorize('edit', \App\Models\Archive::class);
+
         $folders = Folder::where('id', '!=', $folder->id)->get();
         $plans = Plan::all();
 
@@ -109,6 +114,9 @@ class FolderController extends Controller
 
     public function planFiles(Folder $folder, Plan $plan)
     {
+
+        Gate::authorize('edit', \App\Models\Archive::class);
+         
         if (!\Gate::allows('view', \App\Models\Menu::find(4))) {
         return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
     }

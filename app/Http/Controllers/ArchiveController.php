@@ -47,11 +47,16 @@ class ArchiveController extends Controller
 
     public function create(Folder $folder, Plan $plan)
     {
+        \Gate::authorize('create', Archive::class);
+        
         return view('archives.create', compact('folder', 'plan'));
     }
 
     public function store(Request $request, Folder $folder, Plan $plan)
     {
+
+        
+
         $validated = $request->validate([
             'code' => 'required|unique:archives,code',
             'description' => 'nullable|string',
