@@ -77,6 +77,7 @@
                         </th>
                         <th class="w-[25%] uppercase">Nome</th>
                         <th class="w-[40%] uppercase">Descrição</th>
+                        <th class="w-[20%] uppercase">Usuarios</th>
                         <th class="w-[10%] uppercase">Status</th>
                         @can('edit', App\Models\Archive::class)
                         <th class="w-[10%] !text-right uppercase">Ações</th>
@@ -89,6 +90,31 @@
                             <td><input class="checkbox plan-checkbox" type="checkbox" /></td>
                             <td>{{ $plan->name }}</td>
                             <td>{{ $plan->description ?? '-' }}</td>
+                            <td>@php
+                                $users = $plan->users;
+                                $count = $users->count();
+                                $userNames = $users->pluck('name')->toArray();
+                                $tooltipContent = implode(', ', $userNames);
+                            @endphp
+
+                            
+                                @if($count === 0)
+                                    <span class="badge badge-soft-danger">Não há funcionários</span>
+                                @elseif($count === 1)
+                                    <span class="badge badge-soft-secondary" data-tooltip="tippy" data-tippy-content="{{ $tooltipContent }}">
+                                        1 Funcionário
+                                    </span>
+                                @else
+                                    <button
+                                        type="button"
+                                        class="badge badge-soft-secondary"
+                                        data-tooltip="tippy"
+                                        data-tippy-content="{{ $tooltipContent }}"
+                                    >
+                                        {{ $count }} funcionários
+                                    </button>
+                                @endif
+                            </td>
                             <td>
                                 @if($plan->status)
                                     <div class="badge badge-soft-success">Ativo</div>

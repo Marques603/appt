@@ -193,7 +193,7 @@
                                             </a>
 
                                                 </li>
-                                                @can('view', App\Models\Document::class)
+                                                @can('edit', App\Models\Document::class)
                                                 <li class="dropdown-list-item">
                                                     <a href="{{ route('documents.edit', $document->id) }}" class="dropdown-link">
                                                         <i class="h-5 text-slate-400" data-feather="edit"></i>
