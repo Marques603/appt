@@ -123,8 +123,9 @@
                             <div class="flex flex-1 flex-col gap-1">
                                 <h4>{{ $archive->code }}</h4>
                                 <div class="flex flex-wrap items-baseline justify-between gap-2">
-                                    <p class="text-xs tracking-wide text-slate-500">
-                                        {{ Str::limit($archive->description, 40) }}
+                                    <p class="text-xs tracking-wide text-slate-500 group flex items-center gap-1">
+                                        <i data-feather="download" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition"></i>
+                                        <span>{{ Str::limit($archive->description, 40) }}</span>
                                     </p>
                                     <span class="flex items-center text-xs font-medium {{ ($archive->status ?? false) ? 'text-success-500' : 'text-danger-500' }}">
                                         <i class="ti {{ ($archive->status ?? false) ? 'ti-circle-check-filled' : 'ti-alert-triangle' }} mr-1"></i>
