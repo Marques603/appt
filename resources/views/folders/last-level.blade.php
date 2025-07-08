@@ -1,6 +1,6 @@
 <x-app-layout>
     
-
+@section('title', 'Lista de pastas | Inusittá')
 
 <x-page-title 
     page="Pastas" 

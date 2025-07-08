@@ -12,7 +12,7 @@ class PlanController extends Controller
 {
     public function index(Request $request)
     {
-        if (!Gate::allows('view', Menu::find(1))) {
+        if (!Gate::allows('view', Menu::find(4))) {
             return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
         }
 

@@ -11,6 +11,10 @@ class FolderController extends Controller
 {
     public function index(Request $request)
     {
+
+        if (!\Gate::allows('view', \App\Models\Menu::find(4))) {
+        return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
+        }
         $parentId = $request->query('parent_id');
 
         $folders = Folder::where('parent_id', $parentId)->paginate(24);
@@ -105,6 +109,9 @@ class FolderController extends Controller
 
     public function planFiles(Folder $folder, Plan $plan)
     {
+        if (!\Gate::allows('view', \App\Models\Menu::find(4))) {
+        return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
+    }
         $archives = $plan->archives()
             ->whereHas('folders', function ($query) use ($folder) {
                 $query->where('folders.id', $folder->id);
