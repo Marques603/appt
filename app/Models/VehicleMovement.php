@@ -20,6 +20,11 @@ class VehicleMovement extends Model
         'observations',
     ];
 
+    protected $casts = [
+        'departure_time' => 'datetime',
+        'return_time' => 'datetime',
+    ];
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class);
