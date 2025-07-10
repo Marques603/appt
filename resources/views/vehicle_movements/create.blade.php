@@ -39,7 +39,7 @@
 
                         <label class="label">
                             <span>Observações</span>
-                            <textarea name="observations" rows="4" class="input">{{ old('observations') }}</textarea>
+                            <textarea name="observations" rows="4" class="input">{{ old('observations') }}required</textarea>
                         </label>
 
                         <div class="flex justify-end gap-4">

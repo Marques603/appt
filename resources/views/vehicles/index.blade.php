@@ -117,7 +117,7 @@
                       </div>
                     <div>
                       <h6 class="whitespace-nowrap text-sm font-medium">{{ $vehicle->brand }} - {{ $vehicle->model }}</h6>
-                      <p class="truncate text-xs text-black badge bg-white border border-black">
+                      <p class="truncate text-xs text-black badge bg-white border border-black bg-blue-100">
                       {{ $vehicle->plate }}
                       </p>
                   </div>
@@ -130,12 +130,18 @@
                   @endif
                 </td>
                 <td>
-                  @if($vehicle->status === 1)
+                @if($vehicle->status === 1)
                     <span class="text-xs text-slate-500">---</span>
-                  @else
-                    <span>{{ $lastMovement?->destination ?? '---' }}</span>
-                  @endif
-                </td>
+                @else
+                    <span
+                        class="inline-block px-2 py-1 text-xs  bg-blue-100 text-blue-800 rounded-md truncate cursor-pointer"
+                        data-tooltip="tippy"
+                        data-tippy-content="{{ $lastMovement?->observations ?: 'Sem observações' }}"
+                    >
+                        {{ $lastMovement?->destination ?? '---' }}
+                    </span>
+                @endif
+              </td>
                 <td>
                   @if($vehicle->status === 1)
                     <span class="text-xs text-slate-500">---</span>
