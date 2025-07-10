@@ -8,15 +8,31 @@
     </div>
     @endif
 
-    <div class="space-y-4">
-      <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
-        <!-- Search -->
-        <form method="GET" action="{{ route('vehicles.index') }}" class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 dark:bg-slate-800 md:w-72">
-          <div class="flex h-full items-center px-2">
-            <i class="h-4 text-slate-400 group-focus-within:text-primary-500" data-feather="search"></i>
-          </div>
-          <input name="search" value="{{ request('search') }}" class="h-full w-full border-transparent bg-transparent px-0 text-sm placeholder-slate-400 focus:outline-none" type="text" placeholder="Buscar por placa ou modelo"/>
-        </form>
+
+        <div class="space-y-4">
+        {{-- Barra de ações --}}
+        <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
+            {{-- Busca --}}
+            <div class="flex w-full md:w-auto">
+                <form method="GET" action="{{ route('vehicles.index') }}" 
+                    class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm 
+                        focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 
+                        dark:bg-slate-800 sm:max-w-xs">
+                    <div class="flex h-full items-center px-2">
+                        <i class="h-4 text-slate-400 group-focus-within:text-primary-500" data-feather="search"></i>
+                    </div>
+                    <input
+                        name="search"
+                        class="h-full w-full border-transparent bg-transparent px-0 text-sm placeholder-slate-400 
+                            focus:border-transparent focus:outline-none focus:ring-0"
+                        type="text"
+                        value="{{ request('search') }}"
+                        placeholder="Buscar por nome ou código..."
+                    />
+                </form>
+            </div>
+
+
 
         <!-- Actions -->
         <div class="flex w-full items-center justify-between gap-x-4 md:w-auto">
@@ -96,41 +112,42 @@
                 <td><input class="checkbox vehicle-checkbox" type="checkbox" value="{{ $vehicle->id }} " /></td>
                 <td>
                   <div class="flex items-center gap-3">
-                    <div class="avatar avatar-circle">
-                      <img class="avatar-img" src="{{ $vehicle->photo ? asset('storage/' . $vehicle->photo) : asset('images/vehicle-placeholder.png') }}" alt="{{ $vehicle->model }}" />
-                    </div>
+                     <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-500 bg-opacity-20">
+                      <i class="ti ti-car text-2xl"></i>
+                      </div>
                     <div>
-                      <h6 class="whitespace-nowrap text-sm font-medium">{{ $vehicle->model }} {{ $vehicle->brand }}</h6>
-                      <p class="truncate text-xs text-slate-500">{{ $vehicle->plate }}</p>
-                    </div>
+                      <h6 class="whitespace-nowrap text-sm font-medium">{{ $vehicle->brand }} - {{ $vehicle->model }}</h6>
+                      <p class="truncate text-xs text-black badge bg-white border border-black">
+                      {{ $vehicle->plate }}
+                      </p>
                   </div>
                 </td>
                 <td>
                   @if($vehicle->status === 1)
-                    <span class="text-xs text-slate-500">-</span>
+                    <span class="text-xs text-slate-500">---</span>
                   @else
-                    <span>{{ $lastMovement?->user?->name ?? '-' }}</span>
+                    <span>{{ $lastMovement?->user?->name ?? '---' }}</span>
                   @endif
                 </td>
                 <td>
                   @if($vehicle->status === 1)
-                    <span class="text-xs text-slate-500">-</span>
+                    <span class="text-xs text-slate-500">---</span>
                   @else
-                    <span>{{ $lastMovement?->destination ?? '-' }}</span>
+                    <span>{{ $lastMovement?->destination ?? '---' }}</span>
                   @endif
                 </td>
                 <td>
                   @if($vehicle->status === 1)
-                    <span class="text-xs text-slate-500">Na empresa</span>
+                    <span class="text-xs text-slate-500">---</span>
                   @else
                     <span>{{ $lastMovement?->departure_time ? \Carbon\Carbon::parse($lastMovement->departure_time)->format('d/m/Y H:i') : '---' }}</span>
                   @endif
                 </td>
                 <td>
                   @if($vehicle->status === 1)
-                    <span class="text-xs text-slate-500">Na empresa</span>
+                    <span class="text-xs text-slate-500">---</span>
                   @else
-                    <span>{{ $lastMovement?->return_time ? \Carbon\Carbon::parse($lastMovement->return_time)->format('d/m/Y H:i') : 'Aguardando' }}</span>
+                    <span>{{ $lastMovement?->return_time ? \Carbon\Carbon::parse($lastMovement->return_time)->format('d/m/Y H:i') : '---' }}</span>
                   @endif
                 </td>
                 <td>{{ $vehicle->current_km }} km</td>
