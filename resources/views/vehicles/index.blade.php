@@ -116,11 +116,25 @@
                       <i class="ti ti-car text-2xl"></i>
                       </div>
                     <div>
-                      <h6 class="whitespace-nowrap text-sm font-medium">{{ $vehicle->brand }} - {{ $vehicle->model }}</h6>
-                      <p class="truncate text-xs text-black badge bg-white border border-black bg-blue-100">
-                      {{ $vehicle->plate }}
-                      </p>
-                  </div>
+                <h6 class="whitespace-nowrap text-sm font-medium">
+                  {{ $vehicle->brand }} - {{ $vehicle->model }}
+                </h6>
+                
+                <div class="relative w-32 h-9 rounded-md overflow-hidden border border-black">
+  <img 
+    src="{{ asset('images/placa.png') }}" 
+    alt="Placa" 
+    class="w-full h-full object-cover">
+  
+  <div class="absolute inset-0 flex items-end justify-center mb-1">
+    <span class="text-[20px] font-bold text-black leading-none mb-1">
+      {{ $vehicle->plate }}
+    </span>
+  </div>
+</div>
+
+                </div>
+              </div>
                 </td>
                 <td>
                   @if($vehicle->status === 1)
