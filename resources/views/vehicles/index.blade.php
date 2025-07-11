@@ -1,6 +1,6 @@
 <x-app-layout>
-    <x-page-title page="Veículos" header="Lista de Veículos" />
-    @section('title', 'Veículos | Inusittá')
+    <x-page-title page="Portaria" header="Controle da Portaria" />
+    @section('title', 'Controle da Portaria | Inusittá')
 
     @if(session('success'))
     <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -93,14 +93,14 @@
           <thead>
             <tr>
               <th><input class="checkbox" type="checkbox" data-check-all data-check-all-target=".vehicle-checkbox"/></th>
-              <th>Veículo</th>
-              <th>Motorista</th>
-              <th>Destino</th>
-              <th>Saída</th>
-              <th>Retorno</th>
-              <th>Km Atual</th>
-              <th>Status</th>
-              <th class="!text-right">Ação</th>
+              <th>VEÍCULO</th>
+              <th>MOTORISTA</th>
+              <th>DESTINO</th>
+              <th>HR SAÍDA</th>
+              <th>HR RETORNO</th>
+              <th>KM ATUAL</th>
+              <th>STATUS</th>
+              <th class="!text-right">AÇÃO</th>
             </tr>
           </thead>
           <tbody>
@@ -118,21 +118,19 @@
                     <div>
                 <h6 class="whitespace-nowrap text-sm font-medium">
                   {{ $vehicle->brand }} - {{ $vehicle->model }}
-                </h6>
-                
-                <div class="relative w-32 h-9 rounded-md overflow-hidden border border-black">
-  <img 
-    src="{{ asset('images/placa.png') }}" 
-    alt="Placa" 
-    class="w-full h-full object-cover">
-  
-  <div class="absolute inset-0 flex items-end justify-center mb-1">
-    <span class="text-[20px] font-bold text-black leading-none mb-1">
-      {{ $vehicle->plate }}
-    </span>
-  </div>
-</div>
-
+                </h6>             
+                <div class="relative w-20 h-9 rounded-md overflow-hidden border border-black">
+              <img 
+                src="{{ asset('images/placa.png') }}" 
+                alt="Placa" 
+                class="w-full h-full object-cover">
+              
+              <div class="absolute inset-0 flex items-end justify-center mb-0.5">
+                <span class="text-[11px] font-bold text-black leading-none">
+                  {{ $vehicle->plate }}
+                </span>
+              </div>
+            </div>
                 </div>
               </div>
                 </td>
@@ -164,12 +162,12 @@
                   @endif
                 </td>
                 <td>
-                  @if($vehicle->status === 1)
-                    <span class="text-xs text-slate-500">---</span>
-                  @else
-                    <span>{{ $lastMovement?->return_time ? \Carbon\Carbon::parse($lastMovement->return_time)->format('d/m/Y H:i') : '---' }}</span>
-                  @endif
-                </td>
+                <span>
+                  {{ $lastMovement && $lastMovement->return_time 
+                      ? \Carbon\Carbon::parse($lastMovement->return_time)->format('d/m/Y H:i') 
+                      : '-' }}
+                </span>
+              </td>
                 <td>{{ $vehicle->current_km }} km</td>
                 <td>
                   @if($vehicle->status === 1)
