@@ -14,7 +14,7 @@
         <div class="flex flex-col items-center justify-between gap-y-4 md:flex-row md:gap-y-0">
             {{-- Busca --}}
             <div class="flex w-full md:w-auto">
-                <form method="GET" action="{{ route('vehicles.index') }}" 
+                <form method="GET" action="{{ route('vehicle_movements.index') }}" 
                     class="group flex h-10 w-full items-center rounded-primary border border-transparent bg-white shadow-sm 
                         focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary-500 
                         dark:bg-slate-800 sm:max-w-xs">

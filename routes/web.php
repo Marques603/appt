@@ -22,6 +22,7 @@ use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\VehicleMovementController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\VisitorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -166,5 +167,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('movements/{movement}/retorno', [VehicleMovementController::class, 'edit'])->name('vehicles.movement.edit');
     Route::put('movements/{movement}/retorno', [VehicleMovementController::class, 'update'])->name('vehicles.movement.update');
     Route::get('vehicle_movements', [VehicleMovementController::class, 'index'])->name('vehicle_movements.index');
+
+    
+
+     // Rotas de Visitantes
+    Route::resource('visitors', VisitorController::class);
+    Route::get('/visitors', [VisitorController::class, 'index'])->name('visitors.index');
+    Route::get('/visitors/create', [VisitorController::class, 'create'])->name('visitors.create');
+    Route::post('/visitors', [VisitorController::class, 'store'])->name('visitors.store');
+    Route::get('/visitors/{visitor}/edit', [VisitorController::class, 'edit'])->name('visitors.edit');
+    Route::put('/visitors/{visitor}', [VisitorController::class, 'update'])->name('visitors.update');
+    Route::delete('/visitors/{visitor}', [VisitorController::class, 'destroy'])->name('visitors.destroy');
+    Route::get('/visitors/{visitor}/show', [VisitorController::class, 'show'])->name('visitors.show');
+    Route::get('/visitors2', [VisitorController::class, 'index2'])->name('visitors.index2');
+    Route::get('/visitors/{visitor}/restore', [VisitorController::class, 'restore'])->name('visitors.restore');
+    Route::put('/visitors/{visitor}/update-vehicles', [VisitorController::class, 'updateVehicles'])->name('visitors.update.vehicles');
+    Route::put('/visitors/{visitor}/registrar-saida', [VisitorController::class, 'updatesaidastatus'])->name('visitors.updatesaidastatus');
+
 
 });

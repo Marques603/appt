@@ -180,7 +180,7 @@
                  <li>
             @can('view', App\Models\Menu::find(5))    
             <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['vehicles.index']) ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs(['vehicles.index','visitors.index']) ? 'active' : '' }}">
 
                 <span class="sidebar-menu-icon">
                     <i data-feather="shield"></i>
@@ -195,6 +195,11 @@
                     <a href="{{ route('vehicles.index') }}"
                         class="sidebar-submenu-item {{ request()->routeIs('vehicles.index') ? 'active' : '' }}">
                         Frota</a>
+                </li>
+                <li>
+                    <a href="{{ route('visitors.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('visitors.index') ? 'active' : '' }}">
+                        Visitantes</a>
                 </li>
             </ul>
               @endcan
