@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="./images/logo-small.svg" type="image/svg+xml" />
-    <title>Document</title>
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon" />
+    <title>Criar uma conta | Inusittá</title>
     <meta
       name="description"
       content="Admin Toolkit is a modern admin dashboard template based on Tailwindcss. It comes with a variety of useful ui components and pre-built pages"
