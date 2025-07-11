@@ -82,7 +82,7 @@
 
           <a class="btn btn-primary" href="{{ route('vehicles.create') }}" role="button">
             <i data-feather="plus" height="1rem" width="1rem"></i>
-            <span class="hidden sm:inline-block">Cadastrar</span>
+            <span class="hidden sm:inline-block">Criar</span>
           </a>
         </div>
       </div>
@@ -124,15 +124,11 @@
                 src="{{ asset('images/placa.png') }}" 
                 alt="Placa" 
                 class="w-full h-full object-cover">
-              <div class="absolute inset-0 flex items-end justify-center bg-black/20 pb-2">
-  <span class="text-[14px] font-bold text tracking-wider">
-    {{ $vehicle->plate }}
-  </span>
-</div>
-
-
-
-
+              <div class="absolute inset-0 flex items-end justify-center pb-2">
+                  <span class="text-[16px] font-bold text tracking-wider">
+                    {{ $vehicle->plate }}
+                  </span>
+                </div>
                 </div>
               </div>
                 </td>
@@ -175,7 +171,7 @@
                   @if($vehicle->status === 1)
                     <div class="badge badge-soft-success">Disponível</div>
                   @else
-                    <div class="badge badge-soft-warning">Em Trânsito</div>
+                    <div class="badge badge-soft-danger">Na Estrada</div>
                   @endif
                 </td>
                 <td>

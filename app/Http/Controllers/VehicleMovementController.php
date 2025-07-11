@@ -44,24 +44,29 @@ class VehicleMovementController extends Controller
     }
 
     public function update(Request $request, VehicleMovement $movement)
-    {
-        $validated = $request->validate([
-            'return_km' => 'required|integer|min:' . $movement->departure_km,
-            'observations' => 'nullable|string',
-        ]);
+{
+    $validated = $request->validate([
+        'return_km' => ['required', 'integer', function ($attribute, $value, $fail) use ($movement) {
+            if ($value <= $movement->departure_km) {
+                $fail('O KM de retorno deve ser maior que o KM de saída (' . $movement->departure_km . ').');
+            }
+        }],
+        'observations' => 'nullable|string',
+    ]);
 
-        $movement->update([
-            'return_km' => $validated['return_km'],
-            'return_time' => now(),
-            'observations' => $validated['observations'] ?? $movement->observations,
-        ]);
+    $movement->update([
+        'return_km' => $validated['return_km'],
+        'return_time' => now(),
+        'observations' => $validated['observations'] ?? $movement->observations,
+    ]);
 
-        // Atualiza o veículo com o novo KM
-        $movement->vehicle->update([
-            'current_km' => $validated['return_km'],
-            'status' => Vehicle::STATUS_DISPONIVEL,
-        ]);
+    // Atualiza o veículo com o novo KM
+    $movement->vehicle->update([
+        'current_km' => $validated['return_km'],
+        'status' => Vehicle::STATUS_DISPONIVEL,
+    ]);
 
-        return redirect()->route('vehicles.index')->with('success', 'Retorno registrado com sucesso.');
-    }
+    return redirect()->route('vehicles.index')->with('success', 'Retorno registrado com sucesso.');
+}
+
 }

@@ -11,7 +11,7 @@ export const themeColors = {
     secondary: colors.gray,
     success: colors.emerald,
     warning: colors.amber,
-    danger: colors.rose,
+    danger: colors.red,
     info: colors.indigo,
     dark: colors.purple,
   };
