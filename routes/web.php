@@ -165,4 +165,6 @@ Route::middleware(['auth'])->group(function () {
     // Registro de retorno de veículos - MANTIDAS
     Route::get('movements/{movement}/retorno', [VehicleMovementController::class, 'edit'])->name('vehicles.movement.edit');
     Route::put('movements/{movement}/retorno', [VehicleMovementController::class, 'update'])->name('vehicles.movement.update');
+    Route::get('vehicle_movements', [VehicleMovementController::class, 'index'])->name('vehicle_movements.index');
+
 });

@@ -9,6 +9,29 @@ use Illuminate\Support\Facades\Auth;
 
 class VehicleMovementController extends Controller
 {
+
+    public function index(Request $request)
+{
+    $movements = VehicleMovement::with(['vehicle', 'user'])
+        ->when($request->search, function ($query, $search) {
+            $query->whereHas('vehicle', function ($q) use ($search) {
+                $q->where('plate', 'like', "%$search%")
+                  ->orWhere('model', 'like', "%$search%")
+                  ->orWhere('brand', 'like', "%$search%");
+            })->orWhereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%");
+            })->orWhere('destination', 'like', "%$search%");
+        })
+        // Adicione aqui filtros de status e marca, se precisar
+        ->paginate(10)
+        ->appends($request->query());
+
+    // Pega lista única de marcas para filtro
+    $brands = Vehicle::select('brand')->distinct()->pluck('brand');
+
+    return view('vehicle_movements.index', compact('movements', 'brands'));
+}
+
     public function create(Vehicle $vehicle)
     {
         return view('vehicle_movements.create', compact('vehicle'));

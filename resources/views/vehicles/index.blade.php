@@ -80,7 +80,12 @@
             </a>
           </div>
 
-          <a class="btn btn-primary" href="{{ route('vehicles.create') }}" role="button">
+          {{-- Botão para criar nova movimentação --}}
+            <a href="{{ route('vehicle_movements.index') }}" class="btn bg-white font-medium shadow-sm dark:bg-slate-800">
+                <i class="h-4" data-feather="search"></i>
+                <span class="hidden sm:inline-block">Historico Veículos</span>
+            </a>
+             <a class="btn btn-primary" href="{{ route('vehicles.create') }}" role="button">
             <i data-feather="plus" height="1rem" width="1rem"></i>
             <span class="hidden sm:inline-block">Criar</span>
           </a>
@@ -246,4 +251,5 @@
         {{ $vehicles->appends(request()->query())->links('vendor.pagination.custom') }}
       </div>
     </div>
+    
 </x-app-layout>
