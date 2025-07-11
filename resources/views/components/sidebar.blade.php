@@ -91,7 +91,7 @@
                 <span class="sidebar-menu-icon">
                     <i data-feather="archive"></i>
                 </span>
-                <span class="sidebar-menu-text">Gestão Documentos</span>
+                <span class="sidebar-menu-text">Gestão Qualidade</span>
                 <span class="sidebar-menu-arrow">
                     <i data-feather="chevron-right"></i>
                 </span>
@@ -147,7 +147,7 @@
                  <li>
             @can('view', App\Models\Menu::find(4))    
             <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['folder.index','archives.index','plans.index']) ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs(['folders.index','archives.index','plans.index']) ? 'active' : '' }}">
 
                 <span class="sidebar-menu-icon">
                     <i data-feather="folder"></i>
@@ -160,7 +160,7 @@
             <ul class="sidebar-submenu ">
                 <li>
                     <a href="{{ route('folders.index') }}"
-                        class="sidebar-submenu-item {{ request()->routeIs('folder.index') ? 'active' : '' }}">
+                        class="sidebar-submenu-item {{ request()->routeIs('folders.index') ? 'active' : '' }}">
                         Pasta</a>
                 </li>
                 <li>
@@ -174,6 +174,29 @@
                         Planos</a>
                 </li>
            </ul>
+              @endcan
+        </li>
+        <!-- Portaria -->
+                 <li>
+            @can('view', App\Models\Menu::find(5))    
+            <a href="javascript:void(0);"
+                class="sidebar-menu {{ request()->routeIs(['vehicles.index']) ? 'active' : '' }}">
+
+                <span class="sidebar-menu-icon">
+                    <i data-feather="shield"></i>
+                </span>
+                <span class="sidebar-menu-text">Gestão Portaria</span>
+                <span class="sidebar-menu-arrow">
+                    <i data-feather="chevron-right"></i>
+                </span>
+            </a>
+            <ul class="sidebar-submenu ">
+                <li>
+                    <a href="{{ route('vehicles.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('vehicles.index') ? 'active' : '' }}">
+                        Frota</a>
+                </li>
+            </ul>
               @endcan
         </li>
 

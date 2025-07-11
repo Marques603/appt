@@ -1,6 +1,6 @@
 <x-app-layout>
-    <x-page-title page="Portaria" header="Controle da Portaria" />
-    @section('title', 'Controle da Portaria | Inusittá')
+    <x-page-title page="Frota" header="Controle de Frota" />
+    @section('title', 'Controle de Frota | Inusittá')
 
     @if(session('success'))
     <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
@@ -119,18 +119,20 @@
                 <h6 class="whitespace-nowrap text-sm font-medium">
                   {{ $vehicle->brand }} - {{ $vehicle->model }}
                 </h6>             
-                <div class="relative w-20 h-9 rounded-md overflow-hidden border border-black">
+                <div class="relative w-32 h-12 rounded-md overflow-hidden border border-black">
               <img 
                 src="{{ asset('images/placa.png') }}" 
                 alt="Placa" 
                 class="w-full h-full object-cover">
-              
-              <div class="absolute inset-0 flex items-end justify-center mb-0.5">
-                <span class="text-[11px] font-bold text-black leading-none">
-                  {{ $vehicle->plate }}
-                </span>
-              </div>
-            </div>
+              <div class="absolute inset-0 flex items-end justify-center bg-black/20 pb-2">
+  <span class="text-[14px] font-bold text tracking-wider">
+    {{ $vehicle->plate }}
+  </span>
+</div>
+
+
+
+
                 </div>
               </div>
                 </td>
@@ -165,7 +167,7 @@
                 <span>
                   {{ $lastMovement && $lastMovement->return_time 
                       ? \Carbon\Carbon::parse($lastMovement->return_time)->format('d/m/Y H:i') 
-                      : '-' }}
+                      : '---' }}
                 </span>
               </td>
                 <td>{{ $vehicle->current_km }} km</td>
@@ -217,10 +219,6 @@
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h6>Confirmação</h6>
-                          <button type="button" class="btn btn-plain-secondary" data-dismiss="modal">
-                            <i data-feather="x"></i>
-                          </button>
                         </div>
                         <div class="modal-body">
                           <p class="text-sm text-slate-500">
