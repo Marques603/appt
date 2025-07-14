@@ -23,7 +23,7 @@ class VehicleMovementController extends Controller
             })->orWhere('destination', 'like', "%$search%");
         })
         // Adicione aqui filtros de status e marca, se precisar
-        ->paginate(10)
+        ->paginate(12)
         ->appends($request->query());
 
     // Pega lista única de marcas para filtro

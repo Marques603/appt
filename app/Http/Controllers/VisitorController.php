@@ -10,14 +10,27 @@ use LaravelLang\Lang\Plugins\Fortify\V1;
 
 class VisitorController extends Controller
 {
-public function index()
+public function index(Request $request)
 {
-    $visitors = Visitor::whereNull('updated_at')
-        ->latest()
-        ->paginate(10);
+    $query = Visitor::query();
+
+    if ($request->filled('search')) {
+        $query->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('document', 'like', '%' . $request->search . '%');
+    }
+
+    if ($request->filled('typevisitor')) {
+        $query->where('typevisitor', $request->typevisitor);
+    }
+
+    $query->whereNull('updated_at');
+
+    $visitors = $query->latest()->paginate(12);
 
     return view('visitors.index', compact('visitors'));
 }
+
+
 
     public function create()
     {
@@ -82,13 +95,26 @@ public function index()
     $visitor->update($validated);
     return redirect()->route('visitors.index')->with('success', 'Saída registrada com sucesso.');
 }
-public function index2()
+public function index2(Request $request)
 {
     if (!Gate::allows('view', Menu::find(5))) {
         return redirect()->back()->with('success', 'Este menu não está liberado para o seu perfil.');
     }
 
-    $visitors = Visitor::orderByDesc('id')->paginate(10);
+    $query = Visitor::query();
+
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('document', 'like', '%' . $request->search . '%');
+        });
+    }
+
+    if ($request->filled('typevisitor')) {
+        $query->where('typevisitor', $request->typevisitor);
+    }
+
+    $visitors = $query->orderByDesc('id')->paginate(10);
 
     return view('visitors.index2', compact('visitors'));
 }
