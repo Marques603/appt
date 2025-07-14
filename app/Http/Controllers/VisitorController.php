@@ -32,10 +32,24 @@ public function index(Request $request)
 
 
 
-    public function create()
-    {
-        return view('visitors.create');
+    public function create(Request $request)
+{
+    $visitorData = null;
+
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+
+        $visitorData = \App\Models\Visitor::query()
+            ->where('document', $search)
+            ->orWhere('name', 'like', "%{$search}%")
+            ->latest()
+            ->first();
     }
+
+    return view('visitors.create', compact('visitorData'));
+}
+
+
 
    public function store(Request $request)
 {
@@ -118,6 +132,7 @@ public function index2(Request $request)
 
     return view('visitors.index2', compact('visitors'));
 }
+
 
 
 

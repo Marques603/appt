@@ -183,6 +183,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/visitors/{visitor}/restore', [VisitorController::class, 'restore'])->name('visitors.restore');
     Route::put('/visitors/{visitor}/update-vehicles', [VisitorController::class, 'updateVehicles'])->name('visitors.update.vehicles');
     Route::put('/visitors/{visitor}/registrar-saida', [VisitorController::class, 'updatesaidastatus'])->name('visitors.updatesaidastatus');
+    Route::get('/visitors/create', [VisitorController::class, 'create'])->name('visitors.create');
+
 
 
 });
