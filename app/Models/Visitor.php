@@ -19,6 +19,7 @@ class Visitor extends Model
         'vehicle_model',
         'status',
         'created_by', // Usuário que criou o visitante
+        'responsible_collaborator',
     ];
 
 

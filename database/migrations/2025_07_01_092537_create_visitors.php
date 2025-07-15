@@ -31,6 +31,7 @@ return new class extends Migration
             $table->boolean('status')->default('1'); // Status do visitante, por padrão 'Pendente'
             $table->string('vehicle_plate')->nullable(); // Placa do veículo
             $table->string('vehicle_model')->nullable(); // Modelo do veículo
+            $table->string('responsible_collaborator')->nullable();
             $table->timestamps(); // created_at, updated_at
         });
     }

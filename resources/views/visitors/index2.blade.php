@@ -104,7 +104,7 @@
                             <td><input class="checkbox" type="checkbox" /></td>
                             <td>{{ $visitor->name }}</td>
                             <td>{{ '***.***.' . substr($visitor->document, 8) }}</td>
-                            <td>{{ $visitor->typevisitor }}</td>
+                            <td>{{ ucfirst(mb_strtolower($visitor->typevisitor, 'UTF-8')) }}</td>
                             <td>{{ $visitor->company ?? '-' }}</td>
                             <td>{{ $visitor->service ?? '-' }}</td>
                             <td>{{ $visitor->parking ?? '-' }}</td>

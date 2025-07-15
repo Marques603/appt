@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Models\User;
 use App\Models\Menu;
 use LaravelLang\Lang\Plugins\Fortify\V1;
 
@@ -32,26 +33,36 @@ public function index(Request $request)
 
 
 
-    public function create(Request $request)
+public function create(Request $request)
 {
     $visitorData = null;
 
     if ($request->filled('search')) {
         $search = $request->input('search');
 
-        $visitorData = \App\Models\Visitor::query()
+        $visitorData = Visitor::query()
             ->where('document', $search)
             ->orWhere('name', 'like', "%{$search}%")
             ->latest()
             ->first();
+
+        if ($visitorData) {
+            session()->flash('success', 'Dados encontrados, insira a entrada.');
+        } else {
+            session()->flash('error', 'Dados não encontrados, favor cadastrar abaixo.');
+        }
     }
 
-    return view('visitors.create', compact('visitorData'));
+    $users = User::orderBy('name')->get();
+
+    return view('visitors.create', compact('visitorData', 'users'));
 }
 
 
 
-   public function store(Request $request)
+
+
+ public function store(Request $request)
 {
     $validated = $request->validate([
         'name' => 'required|string|max:255',
@@ -62,18 +73,19 @@ public function index(Request $request)
         'parking' => 'nullable|in:Sim,Não',
         'vehicle_plate' => 'nullable|string|max:20',
         'vehicle_model' => 'nullable|string|max:50',
+        'responsible_collaborator' => 'required|exists:users,id', // id do usuário
     ]);
 
-
-    
     $visitor = new Visitor($validated);
     $visitor->created_by = auth()->id();
-    $visitor->timestamps = false; // <-- Desativa timestamps temporariamente
-    $visitor->created_at = now(); // <-- Define manualmente o created_at
+    $visitor->timestamps = false;
+    $visitor->created_at = now();
     $visitor->save();
 
     return redirect()->route('visitors.index')->with('success', 'Visitante cadastrado com sucesso.');
 }
+
+
 
     public function edit(Visitor $visitor)
     {

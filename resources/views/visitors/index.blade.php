@@ -2,23 +2,7 @@
     <x-page-title page="Controle de Visitantes" header="Controle de Visitantes" />
     @section('title', 'Controle de Visitantes | Inusittá')
 
-    {{-- Toasts --}}
-    @if(session('success'))
-        <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
-            <p>{{ session('success') }}</p>
-        </div>
-        <script>
-            setTimeout(() => document.getElementById('toast')?.remove(), 3000);
-        </script>
-    @endif
-    @if(session('error'))
-        <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-danger-500 text-white rounded shadow-lg z-50" role="alert">
-            <p>{{ session('error') }}</p>
-        </div>
-        <script>
-            setTimeout(() => document.querySelector('.fixed.top-0.right-0')?.remove(), 8000);
-        </script>
-    @endif
+    
 
     <div class="space-y-4">
         <!-- Header igual USERS -->
@@ -65,7 +49,7 @@
                 <thead>
                     <tr>
                         <th class="w-[5%]"><input class="checkbox select-all" type="checkbox" /></th>
-                        <th class="w-[20%] uppercase">Nome</th>
+                        <th class="w-[5%] uppercase">Nome</th>
                         <th class="w-[10%] uppercase">Documento</th>
                         <th class="w-[10%] uppercase">Tipo</th>
                         <th class="w-[15%] uppercase">Empresa</th>
@@ -83,8 +67,8 @@
                         <tr>
                             <td><input class="checkbox" type="checkbox" /></td>
                             <td>{{ $visitor->name }}</td>
-                            <td>{{ $visitor->document ?? '-' }}</td>
-                            <td>{{ $visitor->typevisitor }}</td>
+                            <td>{{ '***.***.' . substr($visitor->document, 8)  ?? '-' }}</td>
+                            <td>{{ ucfirst(mb_strtolower($visitor->typevisitor, 'UTF-8')) }}</td>
                             <td>{{ $visitor->company ?? '-' }}</td>
                             <td>{{ $visitor->service ?? '-' }}</td>
                             <td>{{ $visitor->parking ?? '-' }}</td>
