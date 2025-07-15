@@ -55,8 +55,6 @@
                         <th class="w-[15%] uppercase">Empresa</th>
                         <th class="w-[15%] uppercase">Motivo</th>
                         <th class="w-[10%] uppercase">Estacionamento</th>
-                        <th class="w-[10%] uppercase">Veículo</th>
-                        <th class="w-[10%] uppercase">Placa</th>
                         <th class="w-[15%] uppercase">Entrada</th>
                         <th class="w-[5%] uppercase">Saída</th>
                         <th class="w-[5%] uppercase text-right">Registrar</th>
@@ -71,9 +69,20 @@
                             <td>{{ ucfirst(mb_strtolower($visitor->typevisitor, 'UTF-8')) }}</td>
                             <td>{{ $visitor->company ?? '-' }}</td>
                             <td>{{ $visitor->service ?? '-' }}</td>
-                            <td>{{ $visitor->parking ?? '-' }}</td>
-                            <td>{{ $visitor->vehicle_model ?? '-' }}</td>
-                            <td>{{ $visitor->vehicle_plate ?? '-' }}</td>
+                            <td>
+    @if($visitor->parking === 'SIM')
+        <span
+            class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-md cursor-pointer"
+            data-tooltip="tippy"
+            data-tippy-content="Modelo: {{ $visitor->vehicle_model ?? '-' }} | Placa: {{ $visitor->vehicle_plate ?? '-' }}"
+        >
+            {{ $visitor->parking }}
+        </span>
+    @else
+        <span class="text-slate-400">-</span>
+    @endif
+</td>
+
                             <td>{{ $visitor->created_at ? $visitor->created_at->format('d/m/Y H:i') : '-' }}</td>
                             <td>{{ $visitor->updated_at ? $visitor->updated_at->format('d/m/Y H:i') : '-' }}</td>
                             <td class="text-right">
@@ -82,7 +91,7 @@
                                     @method('PUT')
                                     <button type="submit" class="badge badge-danger flex items-center gap-1">
                                         
-                                        <span>Saída</span>
+                                        <span>SAÍDA</span>
                                     </button>
                                 </form>
                             </td>
