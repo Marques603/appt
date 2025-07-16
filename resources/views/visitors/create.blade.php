@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-page-title page="Cadastro de Visitante" header="Cadastro de Visitante" />
 
-     @section('title', 'Cadastro de Visitante | Inusittá')
+     @section('title', 'Cadastro de visitante | Inusittá')
 
      {{-- Toasts --}}
     @if(session('success'))

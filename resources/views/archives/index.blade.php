@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-page-title page="Arquivos" header="Lista de Arquivos" />
 
-    @section('title', 'Lista de Arquivos | Inusittá')
+    @section('title', 'Lista de arquivos | Inusittá')
     
     @if(session('success'))
         <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">

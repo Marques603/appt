@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-page-title page="Controle de Visitantes" header="Controle de Visitantes" />
-    @section('title', 'Controle de Visitantes | Inusittá')
+    @section('title', 'Controle de visitantes | Inusittá')
 
     
 

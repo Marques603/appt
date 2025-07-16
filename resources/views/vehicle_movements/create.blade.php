@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-page-title page="Veículos" pageUrl="{{ route('vehicles.index') }}" header="Registrar Saída" />
-    @section('title', 'Registrar Saída | Inusittá')
+    @section('title', 'Registrar saída | Inusittá')
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <!-- Preview fixo à esquerda -->
