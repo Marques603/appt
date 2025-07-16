@@ -85,9 +85,11 @@
                 <i class="h-4" data-feather="search"></i>
                 <span class="hidden sm:inline-block">Historico Veículos</span>
             </a>
+             @can('edit', App\Models\Vehicle::class)
              <a class="btn btn-primary" href="{{ route('vehicles.create') }}" role="button">
             <i data-feather="plus" height="1rem" width="1rem"></i>
             <span class="hidden sm:inline-block">Criar</span>
+            @endcan
           </a>
         </div>
       </div>
@@ -187,10 +189,13 @@
                       </div>
                       <div class="dropdown-content">
                         <ul class="dropdown-list">
+                          @can('edit', App\Models\Vehicle::class)
                           <li class="dropdown-list-item">
+                             
                             <a href="{{ route('vehicles.edit', $vehicle) }}" class="dropdown-link">
                               <i class="h-5 text-slate-400" data-feather="edit"></i> <span>Editar</span>
                             </a>
+                            @endcan
                           </li>
                           @if($vehicle->status === 1)
                           <li class="dropdown-list-item">
@@ -205,9 +210,11 @@
                             </a>
                           </li>
                           @endif
+                            @can('edit', App\Models\Vehicle::class)
                           <li class="dropdown-list-item">
                             <a href="javascript:void(0)" class="dropdown-link" data-toggle="modal" data-target="#deleteModal-{{ $vehicle->id }}">
                               <i class="h-5 text-slate-400" data-feather="trash"></i> <span>Excluir</span>
+                              @endcan
                             </a>
                           </li>
                         </ul>

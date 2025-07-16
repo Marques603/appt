@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class VehicleController extends Controller
 {
@@ -36,7 +37,11 @@ class VehicleController extends Controller
 
 
     public function create()
+    
     {
+        // feito o bloqueio de acesso
+        \Gate::authorize('create', Vehicle::class);
+
         return view('vehicles.create');
     }
 
@@ -56,7 +61,10 @@ class VehicleController extends Controller
     }
 
     public function edit(Vehicle $vehicle)
-    {
+    {   
+        // feito o bloqueio de acesso    
+        \Gate::authorize('edit', Vehicle::class);
+
         return view('vehicles.edit', compact('vehicle'));
     }
 
@@ -77,8 +85,10 @@ class VehicleController extends Controller
 
     public function destroy(Vehicle $vehicle)
     {
+        // feito o bloqueio de acesso
+        \Gate::authorize('edit', Vehicle::class);
         $vehicle->delete();
-
+        
         return redirect()->route('vehicles.index')->with('success', 'Veículo excluído com sucesso.');
     }
 }
