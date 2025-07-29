@@ -149,7 +149,7 @@
       </div>
     @endif
 
-    {{-- Modais --}}
+    
     @foreach($notes as $note)
       {{-- Visualização --}}
       <div x-show="openModal === 'viewNote-{{ $note->id }}'" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" style="display: none;">
