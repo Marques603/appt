@@ -150,14 +150,13 @@
                             <div>
                                 <label for="user_id" class="label font-medium mb-1">Colaborador Responsável</label>
                                 <select name="responsible_collaborator" id="responsible_collaborator" class="tom-select w-full dark:bg-slate-800" required>
-    <option value="">Selecione um colaborador</option>
-    @foreach($users as $user)
-        <option value="{{ $user->id }}" @selected(old('responsible_collaborator') == $user->id)>
-            {{ $user->name }}
-        </option>
-    @endforeach
-</select>
-
+                            <option value="">Selecione um colaborador</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" @selected(old('responsible_collaborator') == $user->id)>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
                             </div>
                         </div>
 

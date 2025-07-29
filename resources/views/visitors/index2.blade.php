@@ -131,7 +131,5 @@
                 {{ $visitors->appends(request()->query())->links('vendor.pagination.custom') }}
             </div>
         @endif
-    </div>
-
-    
+    </div> 
 </x-app-layout>

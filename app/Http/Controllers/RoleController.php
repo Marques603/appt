@@ -12,7 +12,7 @@ class RoleController extends Controller
     public function index()
     {
 
-    if (auth()->id() !== 1) {
+    if (auth()->id() !== 5) {
     return redirect()->route('dashboard')->with('status', 'Acesso restrito. Apenas o administrador pode acessar este menu.');
     }   
         $roles = Role::paginate(10);

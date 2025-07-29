@@ -23,6 +23,7 @@ use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\VehicleMovementController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\NoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,11 +57,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar'])->name('users.update.avatar');
 
-    // Rotas de cargos
-    Route::resource('position', PositionController::class);
+    Route::resource('position', PositionController::class)->except(['show']);
     Route::put('position/{position}/details', [PositionController::class, 'updateDetails'])->name('position.update.details');
     Route::put('position/{position}/status', [PositionController::class, 'updateStatus'])->name('position.update.status');
     Route::put('position/{position}/users', [PositionController::class, 'updateUsers'])->name('position.update.users');
+    Route::get('position/tree', [PositionController::class, 'tree'])->name('position.tree');
 
     // Rotas de menus
     Route::resource('menus', MenuController::class);
@@ -168,7 +169,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('movements/{movement}/retorno', [VehicleMovementController::class, 'update'])->name('vehicles.movement.update');
     Route::get('vehicle_movements', [VehicleMovementController::class, 'index'])->name('vehicle_movements.index');
 
-    
 
      // Rotas de Visitantes
     Route::resource('visitors', VisitorController::class);
@@ -185,6 +185,33 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/visitors/{visitor}/registrar-saida', [VisitorController::class, 'updatesaidastatus'])->name('visitors.updatesaidastatus');
     Route::get('/visitors/create', [VisitorController::class, 'create'])->name('visitors.create');
 
+     // Rotas de Notas Fiscais
+    Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
+    Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
+    Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::get('/notes/{note}/edit', [NoteController::class, 'edit'])->name('notes.edit');
+    Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
+    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
+    Route::get('/notes/{note}/show', [NoteController::class, 'show'])->name('notes.show');
+    Route::get('/notes2', [NoteController::class, 'index2'])->name('notes2.index');
+    Route::get('/notes/{note}/restore', [NoteController::class, 'restore'])->name('notes.restore');
+    Route::put('/notes/{note}/update-vehicles', [NoteController::class, 'updateVehicles'])->name('notes.update.vehicles');
+    Route::put('/notes/{note}/registrar-saida', [NoteController::class, 'updatesaidastatus'])->name('notes.updatesaidastatus');
 
+    // Diretores aprovam
+    Route::post('/notes/{note}/approve', [NoteController::class, 'approve'])->name('notes.approve')->middleware('can:approve,note');
+    Route::post('/notes/{note}/reject', [NoteController::class, 'reject'])->name('notes.reject')->middleware('can:approve,note');
+
+    // Usuário lançador
+    Route::get('/notes/{note}/launch', [NoteController::class, 'launchForm'])->name('notes.launch.form')->middleware('can:launch,note');
+    Route::post('/notes/{note}/launch', [NoteController::class, 'launch'])->name('notes.launch')->middleware('can:launch,note');
+
+    // Pagamento
+    Route::post('/notes/{note}/pay', [NoteController::class, 'pay'])->name('notes.pay')->middleware('can:pay,note');
+
+    Route::post('/notes/{note}/aprovar', [NoteController::class, 'aprovar'])->name('notes.aprovar');
+Route::post('/notes/{note}/lancar', [NoteController::class, 'lancar'])->name('notes.lancar');
+Route::post('/notes/{note}/enviar-pagamento', [NoteController::class, 'enviarPagamento'])->name('notes.enviar_pagamento');
+Route::post('/notes/{note}/pagar', [NoteController::class, 'pagar'])->name('notes.pagar');
 
 });

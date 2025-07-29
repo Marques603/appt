@@ -11,7 +11,7 @@ class MenuController extends Controller
     // Listar menus
     public function index()
     {
-        if (auth()->id() !== 1) {
+        if (auth()->id() !== 5) {
     return redirect()->route('dashboard')->with('status', 'Acesso restrito. Apenas o administrador pode acessar este menu.');
     }
 
