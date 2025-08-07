@@ -205,35 +205,26 @@
               @endcan
         </li>
                 <!-- Portaria -->
-                 <li>
-            @can('view', App\Models\Menu::find(6))    
-            <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['notes.index','notes.create']) ? 'active' : '' }}">
+             @can('view', App\Models\Menu::find(6))
+<li>
+<a href="javascript:void(0);" class="sidebar-menu {{ request()->routeIs(['notes.index', 'notes2.index', 'notes3.index']) ? 'active' : '' }}">
+<span class="sidebar-menu-icon"><i data-feather="calendar"></i></span>
+<span class="sidebar-menu-text">Gestão de Notas</span>
+<span class="sidebar-menu-arrow"><i data-feather="chevron-right"></i></span>
+</a>
+<ul class="sidebar-submenu">
+@can('admin', App\Models\Note::class)
+<li><a href="{{ route('notes.index') }}" class="sidebar-submenu-item {{ request()->routeIs('notes.index') ? 'active' : '' }}">Gestão</a></li>
+<li><a href="{{ route('notes2.index') }}" class="sidebar-submenu-item {{ request()->routeIs('notes2.index') ? 'active' : '' }}">Lista de Notas</a></li>
+@endcan
 
-                <span class="sidebar-menu-icon">
-                    <i data-feather="calendar"></i>
-                </span>
-                <span class="sidebar-menu-text">Gestão de Notas</span>
-                <span class="sidebar-menu-arrow">
-                    <i data-feather="chevron-right"></i>
-                </span>
-            </a>
-            <ul class="sidebar-submenu ">
-                <li>
-                    <a href="{{ route('notes.index') }}"
-                        class="sidebar-submenu-item {{ request()->routeIs('notes.index') ? 'active' : '' }}">
-                        Lista de Notas</a>
-                </li>
-                <li>
-                    <a href="{{ route('notes.create') }}"
-                        class="sidebar-submenu-item {{ request()->routeIs('notes.create') ? 'active' : '' }}">
-                        Criar Nota</a>
-                </li>
-            </ul>
-              @endcan
-        </li>
+@can('view', App\Models\Note::class)
+<li><a href="{{ route('notes3.index') }}" class="sidebar-submenu-item {{ request()->routeIs('notes3.index') ? 'active' : '' }}">Minhas Notas</a></li>
+@endcan
+</ul>
+</li>
 
-
+        @endcan
 </aside>
 
         </li>

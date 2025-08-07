@@ -8,7 +8,7 @@ use App\Models\Note;
 
 class NotePolicy
 {
-    public function create(User $user)
+    public function admin(User $user)
     {
         return $user->roles()
             ->where('module', 'notas')

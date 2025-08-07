@@ -34,7 +34,8 @@
                         Preencha as informações abaixo
                     </p>
 
-                    <form action="{{ route('notes.store') }}" method="POST" class="space-y-6">
+                    <form action="{{ route('notes.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+
                         @csrf
 
                         <section class="rounded-lg bg-white p-6 shadow-sm dark:bg-slate-800 space-y-4">
@@ -64,12 +65,39 @@
                                     <input type="text" name="valor" id="valor" class="input" required placeholder="0,00" value="{{ old('valor') }}">
                                 </div>
                                 
+                                {{-- Arquivo PDF --}}
+                                <div class="flex flex-col">
+                                    <label for="pdf_file" class="label label-required font-medium">Arquivo PDF</label>
+                                    <input type="file" name="pdf_file" id="pdf_file" class="input" required accept="application/pdf">
+                                </div>
+
                                 {{-- Data de Vencimento --}}
                                 <div class="flex flex-col">
                                     <label for="payday" class="label label-required font-medium">Data de Vencimento</label>
                                     <input type="date" name="payday" id="payday" class="input" required value="{{ old('payday') }}">
                                 </div>
                                 
+                                @php
+                                $positionsAprovadoras = ['DIRETOR INDUSTRIAL', 'DIRETOR COMERCIAL E MKT', 'DIRETOR ADM. FINANCEIRO', 'DIRETOR PRESIDENTE'];
+
+                                $positions = \App\Models\Position::whereIn('name', $positionsAprovadoras)
+                                            ->where('status', true)
+                                            ->orderBy('name')
+                                            ->get();
+                                @endphp
+
+                                <div class="flex flex-col">
+                                <label for="approval_position_id" class="label font-medium">
+                                    Diretoria responsável
+                                </label>
+                                <select name="approval_position_id" id="approval_position_id" class="input">
+                                    <option value="">Selecione uma diretoria</option>
+                                    @foreach($positions as $position)
+                                    <option value="{{ $position->id }}">{{ $position->name }}</option>
+                                    @endforeach
+                                </select>
+                                </div>
+
                                 {{-- Centro de Custo --}}
                                 <div class="flex flex-col">
                                     <label for="cost_center_id" class="label font-medium">Centro de Custo</label>

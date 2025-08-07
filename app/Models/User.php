@@ -115,5 +115,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Plan::class, 'plan_responsible_user', 'user_id', 'plan_id')->withTimestamps()->withPivot('deleted_at');
     }
-
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'created_by');
+    }
 }

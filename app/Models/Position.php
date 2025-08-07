@@ -29,4 +29,9 @@ public function users()
 {
 return $this->belongsToMany(User::class, 'position_user')->withTimestamps()->withTrashed();
 }
+public function notes()
+{
+return $this->hasMany(Note::class, 'approval_position_id'); 
+// Relacionamento com notas, onde approval_position_id é a chave estrangeira
+}
 }

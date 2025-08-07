@@ -3,150 +3,243 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\CostCenter; // Certifique-se de que o modelo CostCenter está importado
-use App\Models\Note; // Certifique-se de que o modelo Note está importado
 use Illuminate\Support\Facades\Gate;
-use App\Models\Menu; // Certifique-se de que o modelo Menu está importado
-use App\Policies\NotePolicy; // Certifique-se de que a policy NotePolicy está importada
-use Illuminate\Support\Facades\Auth; // Para obter o usuário autenticado
-use App\Models\User; // Para o modelo User, se necessário
-
-use function Laravel\Prompts\note;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Note;
+use App\Models\CostCenter;
+use App\Models\Menu;
+use App\Models\User;
+use App\Policies\NotePolicy;
 
 class NoteController extends Controller
 {
-public function index(Request $request)
-{
-    if (!Gate::allows('view', Menu::find(6))) {
-        return redirect()->route('dashboard')->with('status', 'Este menu não está liberado para o seu perfil.');
+    public function index(Request $request)
+    {
+        $user = auth()->user();
+        $search = $request->input('search');
+        $userPositions = $user->positions->pluck('name')->toArray();
+        $userPositionIds = $user->positions->pluck('id');
+
+        $query = Note::with(['costCenter', 'approvalPosition', 'createdBy']);
+
+        if (in_array('Fiscal de notas', $userPositions)) {
+            $query->where('status', 'Aprovada pelo Diretor');
+        } elseif (in_array('ANALISTA FINANCEIRO', $userPositions)) {
+            $query->where('status', 'Lançada no Financeiro');
+        } else {
+            $query->whereIn('approval_position_id', $userPositionIds);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('provider', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('note_number', 'like', "%{$search}%");
+            });
+        }
+
+        $notes = $query->orderBy('created_by', 'desc')->paginate(10);
+
+        return view('notes.index', compact('notes'));
     }
 
-    $search = $request->input('search');
-    $user = auth()->user();
+    public function create()
+    {
+        $costCenters = CostCenter::all(); // ou ->orderBy('name')->get()
+        return view('notes.create', compact('costCenters'));
+    }
 
-    // Pega todas roles do user no módulo notas
-    $userRoles = $user->roles()->where('module', 'notas')->pluck('name')->toArray();
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'provider'             => 'required|string|max:255',
+            'note_number'          => 'required|string|max:50|unique:notes,note_number',
+            'description'          => 'required|string|max:255',
+            'valor'                => 'required|numeric|min:0',
+            'payday'               => 'required|date',
+            'approval_position_id' => 'required|exists:position,id',
+            'pdf_file'             => 'required|file|mimes:pdf|max:10240', // 10MB
+            'cost_center_id'       => 'required|exists:cost_center,id',
+        ]);
 
-    $notes = Note::query()
-        // Filtro de busca
-        ->when($search, function ($query, $search) {
-            $query->where(function ($subquery) use ($search) {
-                $subquery->where('provider', 'like', "%{$search}%")
-                         ->orWhere('description', 'like', "%{$search}%");
+        if (!$request->hasFile('pdf_file')) {
+            return back()->withErrors(['pdf_file' => 'Arquivo PDF é obrigatório.'])->withInput();
+        }
+
+        $pdfPath = $request->file('pdf_file')->store('notes_pdfs', 'public');
+
+        $note = Note::create([
+            'provider'             => $validated['provider'],
+            'note_number'          => $validated['note_number'],
+            'description'          => $validated['description'],
+            'valor'                => $validated['valor'],
+            'payday'               => $validated['payday'],
+            'approval_position_id' => $validated['approval_position_id'],
+            'cost_center_id'       => $validated['cost_center_id'],
+            'pdf_file'             => $pdfPath,
+            'created_by'           => auth()->id(),
+        ]);
+
+        return redirect()->route('notes.index')->with('success', 'Nota cadastrada e enviada para aprovação.');
+    }
+
+    public function show(Note $note)
+    {
+        return view('notes.show', compact('note'));
+    }
+
+    public function edit(Note $note)
+    {
+        Gate::authorize('edit', Note::class);
+        return view('notes.edit', compact('note'));
+    }
+
+    public function update(Request $request, Note $note)
+    {
+        $validated = $request->validate([
+            'provider'    => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'valor'       => 'required|numeric|min:0',
+            'payday'      => 'required|date',
+            'cost_center' => 'nullable|string|max:255',
+        ]);
+
+        $note->update($validated);
+
+        return redirect()->route('notes.index')->with('success', 'Nota atualizada com sucesso.');
+    }
+
+    public function destroy(Note $note)
+    {
+        $note->delete();
+        return redirect()->route('notes.index')->with('success', 'Nota excluída com sucesso.');
+    }
+
+    public function aprovar(Note $note)
+    {
+        if ($note->status !== 'Aguardando Aprovação') return back();
+
+        $note->status = 'Aprovada pelo Diretor';
+        $note->save();
+
+        return back()->with('success', 'Nota aprovada!');
+    }
+
+    public function lancar(Note $note)
+    {
+        if ($note->status !== 'Aprovada pelo Diretor') return back();
+
+        $note->status = 'Lançada no Financeiro';
+        $note->save();
+
+        return back()->with('success', 'Nota lançada no financeiro!');
+    }
+
+    public function pagar(Note $note)
+    {
+        if ($note->status !== 'Lançada no Financeiro') return back();
+
+        $note->status = 'Paga';
+        $note->save();
+
+        return back()->with('success', 'Nota marcada como paga!');
+    }
+
+    public function index2(Request $request)
+    {
+        $user = auth()->user();
+        $userPositionIds = $user->positions->pluck('id')->toArray();
+
+        $cargosComAcessoTotal = [
+            'DIRETOR INDUSTRIAL',
+            'DIRETOR COMERCIAL E MKT',
+            'DIRETOR ADM. FINANCEIRO',
+            'FISCAL DE NOTAS',
+            'ANALISTA FINANCEIRO',
+        ];
+
+        $temAcessoCompleto = $user->positions()->whereIn('name', $cargosComAcessoTotal)->exists();
+
+        $query = Note::with(['costCenter', 'approvalPosition']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('provider', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
             });
-        })
-        // Filtro por visualização conforme roles
-        ->when(
-            collect($userRoles)->intersect(['admin', 'diretor'])->isNotEmpty(),
-            fn($query) => $query, // admin/diretor vê tudo
-            function ($query) use ($userRoles) {
-                if (in_array('lancamentos', $userRoles)) {
-                    $query->where('status', 'Aprovada pelo Diretor');
-                } elseif (in_array('pagamentos', $userRoles)) {
-                    $query->where('status', 'Lançada no Financeiro');
-                } else {
-                    $query->whereRaw('0 = 1'); // bloqueia acesso
-                }
-            }
-        )
-        ->orderByDesc('payday')
-        ->paginate(10);
+        }
 
-    return view('notes.index', compact('notes'));
-}
+        if ($request->filled('diretoria')) {
+            $query->whereHas('approvalPosition', function ($q) use ($request) {
+                $q->where('name', $request->diretoria);
+            });
+        }
 
-public function create()
-{   
-    $costCenters = CostCenter::all(); // ou CostCenter::orderBy('name')->get();
-    return view('notes.create', compact('costCenters'));
-}
-public function store(Request $request)
-{
-    $validated = $request->validate([
-        'provider' => 'required|string|max:255',
-       
-        'description' => 'required|string|max:255',
-        'valor' => 'required|numeric|min:0',
-        'payday' => 'required|date',
+        if (!$temAcessoCompleto && !empty($userPositionIds)) {
+            $query->whereIn('approval_position_id', $userPositionIds);
+        }
 
-        'cost_center_id' => 'required|exists:cost_center,id', // Certifique-se de que o ID do centro de custo é válido
-    ]);
+        $notes = $query->latest()->paginate(10);
 
-   Note::create([
-    'provider' => $request->provider,
-    'description' => $request->description,
-    'valor' => $request->valor,
-    'payday' => $request->payday,
-    'note_number' => $request->note_number,
-    'cost_center_id' => $request->cost_center_id,
-    'created_by' => auth()->id(), // obrigatório na migration
-]);
+        return view('notes.index2', compact('notes'));
+    }
 
-    return redirect()->route('notes.index')->with('success', 'Nota cadastrada e enviada para aprovação.');
-}
-public function show(Note $note)
-{
-    return view('notes.show', compact('note'));
-}
-public function edit(Note $note)
-{   
-     Gate::authorize('edit', Note::class);
+    public function index3(Request $request)
+    {
+        $query = Note::with(['costCenter'])->where('created_by', auth()->id());
 
-    return view('notes.edit', compact('note'));
-}
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('provider', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
 
-public function update(Request $request, Note $note)
-{
-    $validated = $request->validate([
-        'provider' => 'required|string|max:255',
-        'description' => 'required|string|max:255',
-        'valor' => 'required|numeric|min:0',
-        'payday' => 'required|date',
-        'cost_center' => 'nullable|string|max:255',
-    ]);
+        $notes = $query->latest()->paginate(10);
 
-    $note->update($validated);
+        return view('notes.index3', compact('notes'));
+    }
 
-    return redirect()->route('notes.index')->with('success', 'Nota atualizada com sucesso.');
-}
-public function destroy(Note $note)
-{
-    $note->delete();
+    public function exportCsv()
+    {
+        $notes = Note::all();
+        $filename = 'notes_' . date('Ymd') . '.csv';
 
-    return redirect()->route('notes.index')->with('success', 'Nota excluída com sucesso.');
+        $handle = fopen('php://output', 'w');
+        fputcsv($handle, ['ID', 'Provider', 'Description', 'Value', 'Payday', 'Status']);
 
-}
-public function aprovar(Note $note)
-{
-    if ($note->status !== 'Aguardando Aprovação') return back();
-    $note->status = 'Aprovada pelo Diretor';
-    $note->save();
-    return back()->with('success', 'Nota aprovada!');
-}
+        foreach ($notes as $note) {
+            fputcsv($handle, [
+                $note->id,
+                $note->provider,
+                $note->description,
+                $note->valor,
+                $note->payday->format('Y-m-d'),
+                $note->status,
+            ]);
+        }
 
-public function lancar(Note $note)
-{
-    if ($note->status !== 'Aprovada pelo Diretor') return back();
-    $note->status = 'Lançada no Financeiro';
-    $note->save();
-    return back()->with('success', 'Nota lançada no financeiro!');
-}
+        fclose($handle);
 
-public function enviarPagamento(Note $note)
-{
-    if ($note->status !== 'Lançada no Financeiro') return back();
-    $note->status = 'Enviada para Pagamento';
-    $note->save();
-    return back()->with('success', 'Nota enviada para pagamento!');
-}
+        return response()->stream(
+            function () use ($handle) {
+                fclose($handle);
+            },
+            200,
+            [
+                'Content-Type'        => 'text/csv',
+                'Content-Disposition' => "attachment; filename=\"$filename\"",
+            ]
+        );
+    }
 
-public function pagar(Note $note)
-{
-    if ($note->status !== 'Enviada para Pagamento') return back();
-    $note->status = 'Paga';
-    $note->save();
-    return back()->with('success', 'Nota marcada como paga!');
-}
+    public function exportPdf()
+    {
+        $notes = Note::all();
+        $pdf = \PDF::loadView('notes.pdf', compact('notes'));
 
-
+        return $pdf->download('notes_' . date('Ymd') . '.pdf');
+    }
 }
