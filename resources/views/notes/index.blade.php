@@ -190,12 +190,7 @@
                             </form>
                           </li>
                         @endif
-                        <li class="dropdown-list-item">
-                          <a href="#" class="dropdown-link text-red-600" @click.prevent="openModal = 'deleteNote-{{ $note->id }}'">
-                            <i class="h-5 text-red-600" data-feather="trash-2"></i>
-                            <span>Excluir</span>
-                          </a>
-                        </li>
+
                       </ul>
                     </div>
                   </div>

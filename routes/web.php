@@ -24,6 +24,8 @@ use App\Http\Controllers\VehicleMovementController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\AgreementsController;
+use App\Http\Controllers\Agreements_typeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,7 +154,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cost_center/{cost_center}/update-info', [CostCenterController::class, 'updateInfo'])->name('cost_center.update.info');
     Route::put('/cost_center/{cost_center}/update-status', [CostCenterController::class, 'updateStatus'])->name('cost_center.update.status');
     Route::put('/cost_center/{cost_center}/update-sectors', [CostCenterController::class, 'updateSectors'])->name('cost_center.update.sectors');
-
+      
     // CRUD de veículos - MANTIDAS
     Route::resource('vehicles', VehicleController::class);
     Route::get('/vehicles/export/csv', [VehicleController::class, 'exportCsv'])->name('vehicles.export.csv');
@@ -212,5 +214,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notes/export/csv', [NoteController::class, 'exportCsv'])->name('notes.export.csv');
     Route::get('/notes/export/pdf', [NoteController::class, 'exportPdf'])->name('notes.export.pdf');
     Route::get('/notes/history', [NoteController::class, 'history'])->name('notes.history');
+
+    // Convênios
+    Route::get('/agreements', [AgreementsController::class, 'index'])->name('agreements.index');
+    Route::get('/agreements/create', [AgreementsController::class, 'create'])->name('agreements.create');
+    Route::post('/agreements', [AgreementsController::class, 'store'])->name('agreements.store');  
+    Route::get('/agreements/{agreement}/edit', [AgreementsController::class, 'edit'])->name('agreements.edit');
+    Route::put('/agreements/{agreement}', [AgreementsController::class, 'update'])->name('agreements.update');
+    Route::delete('/agreements/{agreement}', [AgreementsController::class, 'destroy'])->name('agreements.destroy');
+    Route::get('/agreements/{agreement}/show', [AgreementsController::class, 'show'])->name('agreements.show');
+
+    Route::get('/agreements_type', [Agreements_typeController::class, 'index'])->name('agreements_type.index');
+    Route::get('/agreements_type/create', [Agreements_typeController::class, 'create'])->name('agreements_type.create');
+    Route::post('/agreements_type', [Agreements_typeController::class, 'store'])->name('agreements_type.store');
+    Route::get('/agreements_type/{type}/edit', [Agreements_typeController::class, 'edit'])->name('agreements_type.edit');
+    Route::put('/agreements_type/{type}', [Agreements_typeController::class, 'update'])->name('agreements_type.update');
+    Route::delete('/agreements_type/{type}', [Agreements_typeController::class, 'destroy'])->name('agreements_type.destroy');
+    Route::get('/agreements_type/{type}/show', [Agreements_typeController::class, 'show'])->name('agreements_type.show');
 
 });

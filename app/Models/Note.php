@@ -41,4 +41,5 @@ class Note extends Model
     {
         return $this->belongsTo(Position::class, 'approval_position_id');
     }
+    
 }

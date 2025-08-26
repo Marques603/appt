@@ -1,203 +1,135 @@
 <x-app-layout>
-    <x-page-title page="Lista de Cargos" pageUrl="{{ route('position.index') }}" header="Editar Cargo" />
+    <x-page-title page="Organograma" header="Organograma de Cargos" />
 
-    @section('title', 'Editar cargo | Inusittá')
+    <style>
+        .tree {
+            overflow-x: auto;
+            overflow-y: hidden;
+            width: 100%;
+            padding-bottom: 20px;
+        }
 
-    @if(session('success'))
-        <div id="toast" class="fixed top-0 right-0 m-4 p-4 bg-green-500 text-white rounded shadow-lg z-50" role="alert">
-            <p>{{ session('success') }}</p>
-        </div>
-    @endif
+        .tree ul {
+            padding-top: 20px;
+            position: relative;
+            list-style-type: none;
+            white-space: nowrap;
+        }
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
-        <!-- Preview à esquerda -->
-        <section class="col-span-1 flex h-min w-full flex-col gap-6 lg:sticky lg:top-20">
-            <div class="card">
-                <div class="card-body flex flex-col items-center">
-                    <div class="relative flex items-center justify-center h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-700 p-4">
-                        <i data-feather="award" class="w-10 h-10 text-slate-600 dark:text-slate-200"></i>
-                    </div>
-                    <h2 class="mt-4 text-[16px] font-medium text-center text-slate-700 dark:text-slate-200">Cargo</h2>
-                </div>
-            </div>
-        </section>
+        .tree li {
+            display: inline-block;
+            text-align: center;
+            position: relative;
+            padding: 20px 5px 0 5px;
+            vertical-align: top;
+            white-space: normal;
+        }
 
-        <!-- Formulários -->
-        <section class="col-span-1 flex w-full flex-1 flex-col gap-6 lg:col-span-3 lg:w-auto">
+        .tree li::before,
+        .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 20px;
+            border-top: 1px solid #ccc;
+            z-index: -1;
+        }
 
-            <!-- Formulário 1: Detalhes -->
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Detalhes do Cargo</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Edite as informações principais do cargo</p>
+        .tree li::before {
+            right: 50%;
+            border-right: 1px solid #ccc;
+        }
 
-<form method="POST" action="{{ route('position.update.details', $position) }}" class="flex flex-col gap-6">
-    @csrf
-    @method('PUT')
+        .tree li::after {
+            left: 50%;
+            border-left: 1px solid #ccc;
+        }
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        .tree li:only-child::before,
+        .tree li:only-child::after,
+        .tree li:first-child::before,
+        .tree li:last-child::after {
+            display: none;
+        }
 
-        <!-- Code -->
-        <label class="label">
-            <span class="block mb-1">Codigo do Cargo</span>
-            <input type="text" name="code" class="input @error('code') border-red-500 @enderror"
-                value="{{ old('code', $position->code) }}" />
-            @error('name')
-                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-        </label>
-        <!-- Nome -->
-        <label class="label">
-            <span class="block mb-1">Nome do Cargo</span>
-            <input type="text" name="name" class="input @error('name') border-red-500 @enderror"
-                value="{{ old('name', $position->name) }}" />
-            @error('name')
-                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-        </label>
+        .tree ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 1px solid #ccc;
+            width: 0;
+            height: 20px;
+            z-index: -1;
+        }
 
-        <!-- Descrição -->
-        <label class="label">
-            <span class="block mb-1">Descrição do Cargo</span>
-            <input type="text" name="description" class="input @error('description') border-red-500 @enderror"
-                value="{{ old('description', $position->description) }}" />
-            @error('description')
-                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-        </label>
-    </div>
+        .tree .node {
+            display: inline-block;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
 
-    <!-- Select Parent (Cargo Pai) -->
-    <label class="label">
-        <span class="block mb-1">Cargo Pai (Hierarquia)</span>
-        <select name="parent_id" class="input @error('parent_id') border-red-500 @enderror">
-            <option value="">-- Nenhum --</option>
-            @foreach($positions as $pos)
-                <option value="{{ $pos->id }}"
-                    {{ old('parent_id', $position->parent_id) == $pos->id ? 'selected' : '' }}>
-                    {{ $pos->name }}
-                </option>
-            @endforeach
-        </select>
-        @error('parent_id')
-            <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-        @enderror
-    </label>
+        .node strong {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 2px;
+        }
 
-    <!-- Campo Level -->
-    <label class="label">
-        <span class="block mb-1">Nível Hierárquico</span>
-        <input type="number" name="level" min="1" max="100"
-            class="input @error('level') border-red-500 @enderror"
-            value="{{ old('level', $position->level ?? 99) }}" required />
-        @error('level')
-            <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-        @enderror
-    </label>
+        .node em {
+            display: block;
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
 
-    <!-- Campo Is Leader -->
-    <label class="label">
-        <span class="block mb-1">É cargo de liderança?</span>
-        <select name="is_leader" class="input @error('is_leader') border-red-500 @enderror" required>
-            <option value="1" {{ old('is_leader', $position->is_leader) ? 'selected' : '' }}>Sim</option>
-            <option value="0" {{ !old('is_leader', $position->is_leader) ? 'selected' : '' }}>Não</option>
-        </select>
-        @error('is_leader')
-            <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-        @enderror
-    </label>
+    @php
+        $nodesArray = json_decode($nodes, true);
 
-    <div class="flex items-center justify-end gap-4">
-        <a href="{{ route('position.index') }}"
-           class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
-           Cancelar
-        </a>
-        <button type="submit" class="btn btn-primary">Atualizar</button>
-    </div>
-</form>
+        function buildTree($elements, $parentId = null) {
+            $branch = [];
+            foreach ($elements as $element) {
+                if ($element['pid'] === $parentId) {
+                    $children = buildTree($elements, $element['id']);
+                    if ($children) {
+                        $element['children'] = $children;
+                    }
+                    $branch[] = $element;
+                }
+            }
+            return $branch;
+        }
 
-                </div>
-            </div>
+        function renderTree($tree) {
+            echo '<ul>';
+            foreach ($tree as $node) {
+                echo '<li>';
+                echo '<div class="node">';
+                echo '<strong>' . htmlspecialchars($node['name']) . '</strong>';
 
-            <!-- Formulário 2: Status -->
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Status do Cargo</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Defina o status atual deste cargo</p>
+                if (!empty($node['users'])) {
+                    echo '<em>' . implode('<br>', array_map('htmlspecialchars', $node['users'])) . '</em>';
+                }
 
-                    <form method="POST" action="{{ route('position.update.status', $position) }}">
-                        @csrf
-                        @method('PUT')
+                echo '</div>';
 
-                        <label for="status" class="toggle my-2 flex items-center justify-between">
-                            <div class="label">
-                                <p class="text-sm font-normal text-slate-400">Ativar Cargo</p>
-                            </div>
-                            <div class="relative">
-                                <input type="hidden" name="status" value="0">
-                                <input
-                                    class="toggle-input peer sr-only"
-                                    id="status"
-                                    type="checkbox"
-                                    name="status"
-                                    value="1"
-                                    {{ old('status', $position->status) == 1 ? 'checked' : '' }}>
-                                <div class="toggle-body"></div>
-                            </div>
-                        </label>
+                if (isset($node['children'])) {
+                    renderTree($node['children']);
+                }
 
-                        @error('status')
-                            <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-                        @enderror
+                echo '</li>';
+            }
+            echo '</ul>';
+        }
 
-                        <div class="flex items-center justify-end gap-4 mt-6">
-                            <a href="{{ route('position.index') }}"
-                               class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
-                               Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">Atualizar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        $tree = buildTree($nodesArray);
+    @endphp
 
-            <!-- Formulário 3: Usuários Ocupando -->
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="text-[16px] font-semibold text-slate-700 dark:text-slate-300">Usuários Vinculados</h2>
-                    <p class="mb-4 text-sm font-normal text-slate-400">Selecione os usuários que ocupam este cargo</p>
-
-                    <form method="POST" action="{{ route('position.update.users', $position) }}">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="mb-4">
-                            <span class="block mb-1 text-sm text-slate-600 dark:text-slate-300">Usuários</span>
-                            <select name="users[]" multiple
-                                class="tom-select w-full min-h-[2.5rem] py-2 @error('users') border-red-500 @enderror"
-                                autocomplete="off">
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}"
-                                        {{ $position->users->contains($user->id) ? 'selected' : '' }}>
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('users')
-                                <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="flex items-center justify-end gap-4 mt-4">
-                            <a href="{{ route('position.index') }}"
-                               class="btn border border-slate-300 text-slate-500 dark:border-slate-700 dark:text-slate-300">
-                               Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">Atualizar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
+    <div class="tree">
+        @php renderTree($tree); @endphp
     </div>
 </x-app-layout>

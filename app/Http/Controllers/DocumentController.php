@@ -28,7 +28,7 @@ public function index(Request $request)
     $user = auth()->user();
     $sectorIds = $user->sectors->pluck('id');
     $isQuality = $sectorIds->contains(function ($id) {
-        return in_array($id, [1,2, 16]);
+        return in_array($id, [4, 16]);
     });
 
     $documents = Document::query()
@@ -178,8 +178,6 @@ public function updateFile(Request $request, Document $document)
     return redirect()->route('documents.edit', $newDocument->id)
                      ->with('success', 'Arquivo atualizado. Documento anterior arquivado e nova revisão criada.');
 }
-
-
 
     // Atualiza as macros vinculadas
     public function updateMacros(Request $request, Document $document)

@@ -119,7 +119,7 @@
                  <li>
             @can('view', App\Models\Menu::find(3))    
             <a href="javascript:void(0);"
-                class="sidebar-menu {{ request()->routeIs(['cost_center.index','position.index']) ? 'active' : '' }}">
+                class="sidebar-menu {{ request()->routeIs(['cost_center.index','position.index','agreements.index','agreements_type.index']) ? 'active' : '' }}">
 
                 <span class="sidebar-menu-icon">
                     <i data-feather="heart"></i>
@@ -139,6 +139,17 @@
                     <a href="{{ route('position.index') }}"
                         class="sidebar-submenu-item {{ request()->routeIs('position.index') ? 'active' : '' }}">
                         Cargos</a>
+                </li>
+                 <li>
+                    <a href="{{ route('agreements.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('agreements.index') ? 'active' : '' }}">
+                        Convênios</a>
+                </li>
+                </li>
+                 <li>
+                    <a href="{{ route('agreements_type.index') }}"
+                        class="sidebar-submenu-item {{ request()->routeIs('agreements_type.index') ? 'active' : '' }}">
+                        Tipo de convênio</a>
                 </li>
            </ul>
               @endcan
@@ -204,7 +215,7 @@
             </ul>
               @endcan
         </li>
-                <!-- Portaria -->
+               
              @can('view', App\Models\Menu::find(6))
 <li>
 <a href="javascript:void(0);" class="sidebar-menu {{ request()->routeIs(['notes.index', 'notes2.index', 'notes3.index']) ? 'active' : '' }}">
@@ -223,11 +234,8 @@
 @endcan
 </ul>
 </li>
+@endcan
 
-        @endcan
 </aside>
-
         </li>
-
-
 </aside>
