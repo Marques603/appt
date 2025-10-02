@@ -232,4 +232,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/agreements_type/{type}', [Agreements_typeController::class, 'destroy'])->name('agreements_type.destroy');
     Route::get('/agreements_type/{type}/show', [Agreements_typeController::class, 'show'])->name('agreements_type.show');
 
+    // Documentação
+    Route::resource('documentation', DocumentationController::class);
+    Route::get('/documentation', [DocumentationController::class, 'introduction'])->name('documentation.introduction');
+    Route::get('/documentation', [DocumentationController::class, 'index'])->name('documentation.index');
+    Route::get('/documentation/create', [DocumentationController::class, 'create'])->name('documentation.create');
+    
 });
